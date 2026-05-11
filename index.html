@@ -432,8 +432,9 @@
   function setPayment(p) {
     selectedPayment = p;
     document.querySelectorAll('.pay-btn').forEach(b => {
-      b.classList.toggle('selected', b.textContent.includes(p.split(' ')[0]) || b.textContent.includes(p));
+      b.classList.remove('selected');
     });
+    event.currentTarget.classList.add('selected');
   }
 
   function showView(v) {
