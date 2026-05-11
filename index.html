@@ -362,11 +362,11 @@
     tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: CLIENT_ID,
       scope: SCOPES,
-      callback: (resp) => {
+      callback: async (resp) => {
         if (resp.error) { showAuthError('Ошибка входа: ' + resp.error); return; }
         accessToken = resp.access_token;
         localStorage.setItem('gtoken', accessToken);
-        fetchUserInfo();
+        await fetchUserInfo();
       }
     });
     tokenClient.requestAccessToken();
@@ -382,7 +382,6 @@
       return;
     }
     const u = await r.json();
-    console.log('userinfo status:', r.status, 'user:', JSON.stringify(u));
     document.getElementById('auth-screen').style.display = 'none';
     const appEl = document.getElementById('app-screen');
     appEl.style.display = 'flex';
