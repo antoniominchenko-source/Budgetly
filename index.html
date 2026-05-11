@@ -382,6 +382,7 @@
       return;
     }
     const u = await r.json();
+    console.log('userinfo status:', r.status, 'user:', JSON.stringify(u));
     document.getElementById('auth-screen').style.display = 'none';
     const appEl = document.getElementById('app-screen');
     appEl.style.display = 'flex';
