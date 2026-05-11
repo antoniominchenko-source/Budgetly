@@ -357,29 +357,35 @@
     });
   }
  
-  async function signIn() {
+  async function signIn(silent = false) {
     await loadGsi();
+    const hint = localStorage.getItem('user_hint') || '';
     tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: CLIENT_ID,
       scope: SCOPES,
-      callback: (resp) => {
-        if (resp.error) { showAuthError('Ошибка входа: ' + resp.error); return; }
+      hint: hint,
+      callback: async (resp) => {
+        if (resp.error) {
+          if (silent) return;
+          showAuthError('Ошибка входа: ' + resp.error);
+          return;
+        }
         accessToken = resp.access_token;
-        localStorage.setItem('gtoken', accessToken);
-        fetchUserInfo();
+        await fetchUserInfo();
       }
     });
-    tokenClient.requestAccessToken();
+    tokenClient.requestAccessToken({ prompt: silent ? 'none' : '' });
   }
  
   async function fetchUserInfo() {
     const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
       headers: { Authorization: 'Bearer ' + accessToken }
     });
+    if (r.status === 401) { accessToken = null; return; }
     const u = await r.json();
+    if (u.email) localStorage.setItem('user_hint', u.email);
     document.getElementById('auth-screen').style.display = 'none';
-    const appEl = document.getElementById('app-screen');
-    appEl.style.display = 'flex';
+    document.getElementById('app-screen').style.display = 'flex';
     const av = document.getElementById('user-avatar');
     if (u.picture) {
       av.innerHTML = `<img src="${u.picture}" alt="" />`;
@@ -393,6 +399,7 @@
     if (!confirm('Выйти из аккаунта?')) return;
     accessToken = null;
     localStorage.removeItem('gtoken');
+    localStorage.removeItem('user_hint');
     document.getElementById('app-screen').style.display = 'none';
     document.getElementById('auth-screen').style.display = 'flex';
   }
@@ -529,20 +536,10 @@
  
   // ── AUTO LOGIN ──
   window.addEventListener('load', async () => {
-    const saved = localStorage.getItem('gtoken');
-    if (!saved) return;
-    accessToken = saved;
-    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-      headers: { Authorization: 'Bearer ' + accessToken }
-    });
-    if (r.status === 401) { localStorage.removeItem('gtoken'); return; }
-    const u = await r.json();
-    document.getElementById('auth-screen').style.display = 'none';
-    document.getElementById('app-screen').style.display = 'flex';
-    const av = document.getElementById('user-avatar');
-    if (u.picture) { av.innerHTML = `<img src="${u.picture}" alt="" />`; }
-    else { av.textContent = (u.name || 'U')[0].toUpperCase(); }
-    renderCategories();
+    const hint = localStorage.getItem('user_hint');
+    if (!hint) return;
+    // Try silent token refresh — no popup shown
+    await signIn(true);
   });
  
   // ── TOAST ──
