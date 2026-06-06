@@ -1,6 +1,6 @@
 {
-  "name": "Мой бюджет",
-  "short_name": "Бюджет",
+  "name": "ABudget",
+  "short_name": "ABudget",
   "description": "Личный трекер бюджета",
   "start_url": "/Budgetly/",
   "display": "standalone",
