@@ -462,15 +462,34 @@
 
     // ВАЖНО: строка содержит только A:G (Дата, Тип, Категория, Описание,
     // Сумма, Способ оплаты, Примечание). Колонку H ("Месяц (авто)") мы
-    // НЕ трогаем — там в таблице формула, и append с диапазоном A:G
-    // её не перезапишет.
+    // НЕ трогаем вообще — ни запросом, ни диапазоном.
     const row = [dateSerial, currentType, selectedCat, desc, amount, selectedPayment, ''];
 
+    const SHEET_NAME = '📋 Транзакции';
+
     try {
+      // 1) Узнаём номер первой свободной строки по столбцу A
+      //    (а не через append — он сам решает, где писать, и иногда задевает H)
+      const colARes = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_NAME)}!A:A`,
+        { headers: { Authorization: 'Bearer ' + accessToken } }
+      );
+      if (!colARes.ok) {
+        const e = await colARes.json();
+        if (colARes.status === 401) { tokenClient.requestAccessToken(); return; }
+        throw new Error(e.error?.message || colARes.status);
+      }
+      const colAData = await colARes.json();
+      const filledRows = (colAData.values || []).length; // включая заголовки
+      const targetRow = filledRows + 1; // первая пустая строка
+
+      // 2) Пишем СТРОГО в A{row}:G{row} — H в этом запросе не участвует
+      //    и физически не может быть изменён.
+      const range = `${encodeURIComponent(SHEET_NAME)}!A${targetRow}:G${targetRow}`;
       const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/%F0%9F%93%8B%20%D0%A2%D1%80%D0%B0%D0%BD%D0%B7%D0%B0%D0%BA%D1%86%D0%B8%D0%B8!A:G:append?valueInputOption=USER_ENTERED`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`,
         {
-          method: 'POST',
+          method: 'PUT',
           headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
           body: JSON.stringify({ values: [row] })
         }
