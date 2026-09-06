@@ -248,8 +248,8 @@
 
       <!-- TYPE -->
       <div class="type-toggle">
-        <div class="type-opt active-expense" id="opt-expense" onclick="setType('Výdaj')">− Výdaj</div>
-        <div class="type-opt" id="opt-income" onclick="setType('Příjem')">+ Příjem</div>
+        <div class="type-opt active-expense" id="opt-expense" onclick="setType('expense')">− Výdaj</div>
+        <div class="type-opt" id="opt-income" onclick="setType('income')">+ Příjem</div>
       </div>
 
       <!-- AMOUNT -->
@@ -277,9 +277,9 @@
       <div>
         <div class="section-label">Způsob platby</div>
         <div class="payment-grid">
-          <div class="pay-btn selected" onclick="setPayment('Karta')">💳 Karta</div>
-          <div class="pay-btn" onclick="setPayment('Hotovost')">💵 Hotovost</div>
-          <div class="pay-btn" onclick="setPayment('Bankovní převod')">🏦 Převod</div>
+          <div class="pay-btn selected" onclick="setPayment('Карта')">💳 Karta</div>
+          <div class="pay-btn" onclick="setPayment('Наличные')">💵 Hotovost</div>
+          <div class="pay-btn" onclick="setPayment('Банковский перевод')">🏦 Převod</div>
         </div>
       </div>
 
@@ -319,30 +319,46 @@
   const CLIENT_ID = '330349583357-kb7inj4ctcs5gnvdfpf9ktkeftrco36n.apps.googleusercontent.com'; // ← заменить
   const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
+  // ВАЖНО: значения "ru" — это именно то, что уходит в Google Sheets
+  // (там на них завязаны выпадающие списки и формулы). "label" — это
+  // то, что видит пользователь на чешском. Менять "ru" нельзя без
+  // одновременного изменения самой таблицы.
+
+  const TYPES = {
+    expense: { ru: 'Расход', label: 'Výdaj' },
+    income:  { ru: 'Доход',  label: 'Příjem' }
+  };
+
   const CATEGORIES = {
-    'Výdaj': [
-      { name: 'Bydlení a služby', icon: '🏠' },
-      { name: 'Technika', icon: '💻' },
-      { name: 'Doprava', icon: '🚗' },
-      { name: 'Jídlo', icon: '🛒' },
-      { name: 'Pochutiny', icon: '☕' },
-      { name: 'Pomoc / převody', icon: '🤝' },
-      { name: 'Zábava', icon: '🎮' },
-      { name: 'Úvěry', icon: '💳' },
-      { name: 'Oblečení', icon: '👕' },
-      { name: 'Zdraví a sport', icon: '💊' },
-      { name: 'Domácnost', icon: '🧹' },
-      { name: 'Úspory', icon: '🏦' },
-      { name: 'Nečekané výdaje', icon: '⚡' },
+    expense: [
+      { ru: 'Жильё и услуги',          label: 'Bydlení a služby',   icon: '🏠' },
+      { ru: 'Техника',                  label: 'Technika',           icon: '💻' },
+      { ru: 'Транспорт',                label: 'Doprava',            icon: '🚗' },
+      { ru: 'Еда',                      label: 'Jídlo',               icon: '🛒' },
+      { ru: 'Вкусности',                label: 'Pochutiny',           icon: '☕' },
+      { ru: 'Помощь / переводы',        label: 'Pomoc / převody',    icon: '🤝' },
+      { ru: 'Развлечения',              label: 'Zábava',              icon: '🎮' },
+      { ru: 'Кредиты',                  label: 'Úvěry',               icon: '💳' },
+      { ru: 'Одежда',                   label: 'Oblečení',            icon: '👕' },
+      { ru: 'Здоровье и спорт',         label: 'Zdraví a sport',     icon: '💊' },
+      { ru: 'Быт / дом',                label: 'Domácnost',           icon: '🧹' },
+      { ru: 'Сбережения',               label: 'Úspory',              icon: '🏦' },
+      { ru: 'Непредвиденные расходы',   label: 'Nečekané výdaje',    icon: '⚡' },
     ],
-    'Příjem': [
-      { name: 'Příjmy', icon: '💰' },
+    income: [
+      { ru: 'Доходы', label: 'Příjmy', icon: '💰' },
     ]
   };
 
-  let currentType = 'Výdaj';
-  let selectedCat = null;
-  let selectedPayment = 'Karta';
+  const ALL_CATEGORIES = [...CATEGORIES.expense, ...CATEGORIES.income];
+
+  function findCategory(ru) {
+    return ALL_CATEGORIES.find(c => c.ru === ru) || { label: ru, icon: '📝' };
+  }
+
+  let currentType = 'expense'; // 'expense' | 'income'
+  let selectedCat = null;      // хранит русское значение (для таблицы)
+  let selectedPayment = 'Карта'; // хранит русское значение (для таблицы)
   let tokenClient = null;
   let accessToken = null;
   let localHistory = JSON.parse(localStorage.getItem('budget_history') || '[]');
@@ -401,14 +417,14 @@
   }
 
   // ── UI ──
-  function setType(type) {
-    currentType = type;
+  function setType(key) {
+    currentType = key;
     selectedCat = null;
-    document.getElementById('opt-expense').className = 'type-opt' + (type === 'Výdaj' ? ' active-expense' : '');
-    document.getElementById('opt-income').className = 'type-opt' + (type === 'Příjem' ? ' active-income' : '');
+    document.getElementById('opt-expense').className = 'type-opt' + (key === 'expense' ? ' active-expense' : '');
+    document.getElementById('opt-income').className = 'type-opt' + (key === 'income' ? ' active-income' : '');
     const btn = document.getElementById('submit-btn');
-    btn.className = 'submit-btn ' + (type === 'Výdaj' ? 'expense' : 'income');
-    btn.textContent = type === 'Výdaj' ? 'Přidat výdaj' : 'Přidat příjem';
+    btn.className = 'submit-btn ' + (key === 'expense' ? 'expense' : 'income');
+    btn.textContent = key === 'expense' ? 'Přidat výdaj' : 'Přidat příjem';
     renderCategories();
   }
 
@@ -417,24 +433,21 @@
     grid.innerHTML = '';
     (CATEGORIES[currentType] || []).forEach(c => {
       const btn = document.createElement('div');
-      btn.className = 'cat-btn' + (selectedCat === c.name ? ' selected' : '');
-      btn.innerHTML = `<span class="cat-icon">${c.icon}</span>${c.name}`;
-      btn.onclick = () => selectCat(c.name);
+      btn.className = 'cat-btn' + (selectedCat === c.ru ? ' selected' : '');
+      btn.innerHTML = `<span class="cat-icon">${c.icon}</span>${c.label}`;
+      btn.onclick = () => selectCat(c.ru);
       grid.appendChild(btn);
     });
   }
 
-  function selectCat(name) {
-    selectedCat = name;
+  function selectCat(ru) {
+    selectedCat = ru;
     renderCategories();
   }
 
-  function setPayment(p) {
-    selectedPayment = p;
-    document.querySelectorAll('.pay-btn').forEach(b => {
-      b.classList.toggle('selected', b.textContent.includes(p.split(' ')[0]) || b.textContent.includes(p));
-      b.classList.remove('selected');
-    });
+  function setPayment(ru) {
+    selectedPayment = ru;
+    document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('selected'));
     event.currentTarget.classList.add('selected');
   }
 
@@ -459,11 +472,14 @@
     const now = new Date();
     const dateSerial = Math.floor((now - new Date(1899,11,30)) / 86400000);
     const desc = document.getElementById('desc').value.trim();
+    const typeRu = TYPES[currentType].ru;
 
     // ВАЖНО: строка содержит только A:G (Дата, Тип, Категория, Описание,
     // Сумма, Способ оплаты, Примечание). Колонку H ("Месяц (авто)") мы
-    // НЕ трогаем вообще — ни запросом, ни диапазоном.
-    const row = [dateSerial, currentType, selectedCat, desc, amount, selectedPayment, ''];
+    // НЕ трогаем вообще — ни запросом, ни диапазоном. Тип/Категория/Способ
+    // оплаты пишутся строго на русском, как в исходной таблице и её
+    // выпадающих списках/формулах.
+    const row = [dateSerial, typeRu, selectedCat, desc, amount, selectedPayment, ''];
 
     const SHEET_NAME = '📋 Транзакции';
 
@@ -501,12 +517,19 @@
         throw new Error(e.error?.message || res.status);
       }
 
-      // save local
-      localHistory.unshift({ type: currentType, cat: selectedCat, amount, desc, payment: selectedPayment, date: now.toLocaleDateString('cs-CZ') });
+      // save local (для локальной истории храним и ru-значения, и удобные метки)
+      localHistory.unshift({
+        typeKey: currentType,
+        catRu: selectedCat,
+        amount,
+        desc,
+        payment: selectedPayment,
+        date: now.toLocaleDateString('cs-CZ')
+      });
       if (localHistory.length > 50) localHistory.pop();
       localStorage.setItem('budget_history', JSON.stringify(localHistory));
 
-      showToast(`✓ ${currentType} ${amount.toLocaleString('cs-CZ')} Kč`, 'success');
+      showToast(`✓ ${TYPES[currentType].label} ${amount.toLocaleString('cs-CZ')} Kč`, 'success');
       document.getElementById('amount').value = '';
       document.getElementById('desc').value = '';
       selectedCat = null;
@@ -530,18 +553,18 @@
       return;
     }
     document.getElementById('history-count').textContent = localHistory.length + ' záznamů';
-    const allCats = Object.values(CATEGORIES).flat();
     localHistory.forEach(h => {
-      const catInfo = allCats.find(c => c.name === h.cat) || { icon: '📝' };
+      const catInfo = findCategory(h.catRu);
+      const typeLabel = TYPES[h.typeKey] ? TYPES[h.typeKey].label : h.typeKey;
       const el = document.createElement('div');
       el.className = 'history-item';
       el.innerHTML = `
         <div class="h-icon">${catInfo.icon}</div>
         <div class="h-info">
-          <div class="h-name">${h.desc || h.cat}</div>
-          <div class="h-cat">${h.cat} · ${h.date}</div>
+          <div class="h-name">${h.desc || catInfo.label}</div>
+          <div class="h-cat">${catInfo.label} · ${h.date}</div>
         </div>
-        <div class="h-amount ${h.type === 'Výdaj' ? 'exp' : 'inc'}">${h.type === 'Výdaj' ? '−' : '+'}${h.amount.toLocaleString('cs-CZ')} Kč</div>
+        <div class="h-amount ${h.typeKey === 'expense' ? 'exp' : 'inc'}">${h.typeKey === 'expense' ? '−' : '+'}${h.amount.toLocaleString('cs-CZ')} Kč</div>
       `;
       list.appendChild(el);
     });
