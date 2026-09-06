@@ -400,7 +400,7 @@
   // главном экране, а вход в Google запрашивается тихо и автоматически
   // только в момент первого сохранения записи.
   // Эта строка выполняется САМОЙ ПЕРВОЙ, до всего остального кода.
-  const AUTH_ENABLED = false;
+  const AUTH_ENABLED = true;
   if (!AUTH_ENABLED) {
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'flex';
