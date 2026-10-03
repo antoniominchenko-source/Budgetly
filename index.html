@@ -31,6 +31,8 @@
       --red-bg: rgba(248,113,113,0.1);
       --red-border: rgba(248,113,113,0.25);
       --blue: #60a5fa;
+      --amber: #fbbf24;
+      --violet: #a78bfa;
       --radius: 12px;
       --radius-sm: 8px;
     }
@@ -193,23 +195,25 @@
     }
     .btn-ghost:active { background: var(--bg2); }
 
-    /* TOAST */
+    /* TOAST (допускает вторую строку — подсказку по плану) */
     .toast {
       position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
       background: var(--bg3); border: 0.5px solid var(--border2);
-      padding: 10px 20px; border-radius: 100px;
-      font-size: 14px; color: var(--text);
-      opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap;
+      padding: 10px 20px; border-radius: 18px;
+      font-size: 14px; color: var(--text); text-align: center;
+      white-space: pre-line; max-width: 92vw;
+      opacity: 0; transition: all 0.25s; pointer-events: none;
       z-index: 100;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .toast.success { border-color: var(--green-border); color: var(--green); }
     .toast.error { border-color: var(--red-border); color: var(--red); }
+    .toast.warn { border-color: rgba(251,191,36,0.35); color: var(--amber); }
 
     /* NAV */
     .bottom-nav {
       border-top: 0.5px solid var(--border);
-      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
       padding: 8px 0 max(8px, env(safe-area-inset-bottom));
     }
     .nav-btn {
@@ -234,7 +238,7 @@
     .h-amount { font-size: 16px; font-weight: 600; }
     .h-amount.exp { color: var(--red); }
     .h-amount.inc { color: var(--green); }
-    .history-empty { text-align: center; color: var(--text2); font-size: 14px; padding: 3rem; }
+    .history-empty { text-align: center; color: var(--text2); font-size: 14px; padding: 3rem 1rem; line-height: 1.6; }
 
     /* LIMIT SCREEN */
     .limit-card {
@@ -254,6 +258,45 @@
     .limit-bar { height: 100%; border-radius: 100px; background: var(--green); width: 0%; transition: width 0.2s; }
     .limit-bar.warn { background: #fbbf24; }
     .limit-bar.over { background: var(--red); }
+
+    /* PLAN SCREEN */
+    .icon-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bg3); border: 0.5px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--text2); cursor: pointer;
+    }
+    .icon-btn:active { background: var(--bg2); }
+    .icon-btn.spin { animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .plan-top-right { display: flex; align-items: center; gap: 10px; }
+    .plan-month { font-size: 12px; color: var(--text2); text-transform: capitalize; }
+
+    .group-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .group-card {
+      background: var(--bg2); border: 0.5px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px;
+      display: flex; flex-direction: column; gap: 3px; min-width: 0;
+    }
+    .group-name { font-size: 11px; color: var(--text2); }
+    .group-val { font-size: 15px; font-weight: 600; white-space: nowrap; }
+    .group-sub { font-size: 11px; color: var(--text3); white-space: nowrap; }
+    .mini-bar { height: 4px; border-radius: 100px; background: var(--bg3); overflow: hidden; margin-top: 4px; }
+    .mini-bar > div { height: 100%; border-radius: 100px; }
+
+    .plan-list { display: flex; flex-direction: column; gap: 8px; }
+    .plan-row {
+      background: var(--bg2); border: 0.5px solid var(--border);
+      border-radius: var(--radius); padding: 12px 14px;
+    }
+    .plan-row-top { display: flex; align-items: center; gap: 10px; }
+    .plan-row-icon { font-size: 18px; }
+    .plan-row-name { flex: 1; font-size: 14px; font-weight: 500; }
+    .plan-row-amt { font-size: 13px; color: var(--text2); white-space: nowrap; }
+    .plan-row-sub { font-size: 12px; color: var(--text2); margin-top: 8px; }
+    .plan-row-sub.over { color: var(--red); }
+    .plan-row-sub.free { color: var(--amber); }
+    .plan-note { font-size: 12px; color: var(--text2); text-align: center; }
   </style>
 </head>
 <body>
@@ -305,7 +348,8 @@
       <!-- DESCRIPTION -->
       <div>
         <div class="section-label">Popis</div>
-        <input class="text-input" id="desc" type="text" placeholder="Nepovinné" />
+        <input class="text-input" id="desc" type="text" placeholder="Nepovinné" list="desc-list" autocomplete="off" />
+        <datalist id="desc-list"></datalist>
       </div>
 
       <!-- PAYMENT -->
@@ -332,6 +376,20 @@
       <div style="font-size:12px;color:var(--text2)" id="history-count"></div>
     </div>
     <div class="history-list" id="history-list"></div>
+  </div>
+
+  <!-- PLAN VIEW -->
+  <div id="plan-view" style="display:none;flex-direction:column;flex:1;">
+    <div class="topbar">
+      <div class="topbar-title">Plán</div>
+      <div class="plan-top-right">
+        <div class="plan-month" id="plan-month"></div>
+        <div class="icon-btn" id="plan-refresh" onclick="loadPlan()">⟳</div>
+      </div>
+    </div>
+    <div class="scroll-area" id="plan-body">
+      <div class="history-empty">Načítám plán…</div>
+    </div>
   </div>
 
   <!-- LIMIT VIEW -->
@@ -383,6 +441,10 @@
     <div class="nav-btn" id="nav-hist" onclick="showView('history')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="8" y1="17" x2="14" y2="17"/></svg>
       Historie
+    </div>
+    <div class="nav-btn" id="nav-plan" onclick="showView('plan')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg>
+      Plán
     </div>
     <div class="nav-btn" id="nav-limit" onclick="showView('limit')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 12 L16 8"/><path d="M12 7 V8"/></svg>
@@ -516,6 +578,9 @@
       av.textContent = (u.name || 'U')[0].toUpperCase();
     }
     renderCategories();
+    // тихо подгружаем план в фоне — чтобы после сохранения траты
+    // сразу показать, сколько осталось в категории
+    loadPlan();
   }
 
   function signOut() {
@@ -524,11 +589,13 @@
       // при следующем сохранении Google спросит доступ заново
       if (!confirm('Odpojit Google účet? Při dalším ukládání se přístup zeptá znovu.')) return;
       accessToken = null;
+      planState = null;
       showToast('Google účet odpojen', 'success');
       return;
     }
     if (!confirm('Odhlásit se z účtu?')) return;
     accessToken = null;
+    planState = null;
     document.getElementById('app-screen').style.display = 'none';
     document.getElementById('auth-screen').style.display = 'flex';
   }
@@ -576,12 +643,262 @@
   function showView(v) {
     document.getElementById('add-view').style.display = v === 'add' ? 'flex' : 'none';
     document.getElementById('history-view').style.display = v === 'history' ? 'flex' : 'none';
+    document.getElementById('plan-view').style.display = v === 'plan' ? 'flex' : 'none';
     document.getElementById('limit-view').style.display = v === 'limit' ? 'flex' : 'none';
     document.getElementById('nav-add').className = 'nav-btn' + (v === 'add' ? ' active' : '');
     document.getElementById('nav-hist').className = 'nav-btn' + (v === 'history' ? ' active' : '');
+    document.getElementById('nav-plan').className = 'nav-btn' + (v === 'plan' ? ' active' : '');
     document.getElementById('nav-limit').className = 'nav-btn' + (v === 'limit' ? ' active' : '');
     if (v === 'history') renderHistory();
     if (v === 'limit') renderLimit();
+    if (v === 'plan') {
+      if (planState) renderPlan();   // сразу показываем то, что уже есть…
+      loadPlan();                    // …и обновляем свежими данными
+    }
+  }
+
+  // ── DESCRIPTION AUTOCOMPLETE ──
+  // подсказки в поле «Popis» из недавних записей (локально, без запросов)
+  function refreshDescList() {
+    const seen = new Set();
+    const dl = document.getElementById('desc-list');
+    dl.innerHTML = '';
+    for (const h of localHistory) {
+      const d = (h.desc || '').trim();
+      if (!d || seen.has(d.toLowerCase())) continue;
+      seen.add(d.toLowerCase());
+      const o = document.createElement('option');
+      o.value = d;
+      dl.appendChild(o);
+      if (seen.size >= 30) break;
+    }
+  }
+
+  // ── PLAN (план из листа «🎯 План» + факт из транзакций) ──
+  //
+  // ЧИТАЕМ (только чтение, ничего не пишем):
+  //   '🎯 План'!B15:D26  — категория | группа | сумма плана
+  //   '🎯 План'!D7       — плановый доход
+  //   '📋 Транзакции'!A3:F — все транзакции (факт за текущий месяц
+  //                          считаем здесь же, в приложении)
+  // Если поменяешь расположение ячеек на листе «План» — поправь адреса ниже.
+  const PLAN_SHEET = '🎯 План';
+  const TX_SHEET = '📋 Транзакции';
+
+  // «Еда» и «Вкусности» в плане — один общий бюджет
+  const MERGED_FOOD = { name: 'Еда и вкусности', parts: ['Еда', 'Вкусности'], label: 'Jídlo a pochutiny', icon: '🛒' };
+
+  const GROUPS = [
+    { ru: 'Обязательное', label: 'Povinné',     color: 'var(--blue)' },
+    { ru: 'По желанию',   label: 'Podle chuti', color: 'var(--amber)' },
+    { ru: 'Откладывать',  label: 'Odkládat',    color: 'var(--violet)' },
+  ];
+
+  let planState = null; // { cats, incomePlan, incomeFact, loadedAt }
+  let planLoading = false;
+
+  const fmt = n => Math.round(n).toLocaleString('cs-CZ');
+  const escapeHtml = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+
+  function planCatInfo(name) {
+    return name === MERGED_FOOD.name ? MERGED_FOOD : findCategory(name);
+  }
+
+  function daysLeftInMonth() {
+    const now = new Date();
+    const dim = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    return Math.max(1, dim - now.getDate() + 1); // считая сегодняшний день
+  }
+
+  // в колонке A бывают и настоящие даты (число-серийник), и текст «05.04.2026»
+  function parseTxDate(v) {
+    if (typeof v === 'number') {
+      const d = new Date(Math.round((v - 25569) * 86400000));
+      return { y: d.getUTCFullYear(), m: d.getUTCMonth() };
+    }
+    if (typeof v === 'string') {
+      const m = v.trim().match(/^(\d{1,2})\.(\d{1,2})[.\s]+(\d{4})$/);
+      if (m) return { y: +m[3], m: +m[2] - 1 };
+    }
+    return null;
+  }
+
+  function barColor(ratio) {
+    if (ratio > 1) return 'var(--red)';
+    if (ratio >= 0.8) return 'var(--amber)';
+    return 'var(--green)';
+  }
+
+  async function loadPlan(isRetry) {
+    if (planLoading) return;
+    planLoading = true;
+    const body = document.getElementById('plan-body');
+    const refreshBtn = document.getElementById('plan-refresh');
+    refreshBtn.classList.add('spin');
+    if (!planState) body.innerHTML = '<div class="history-empty">Načítám plán…</div>';
+
+    try {
+      await ensureAccessToken();
+      const ranges = [`'${PLAN_SHEET}'!B15:D26`, `'${PLAN_SHEET}'!D7`, `'${TX_SHEET}'!A3:F`];
+      const q = ranges.map(r => 'ranges=' + encodeURIComponent(r)).join('&');
+      const res = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchGet?${q}&valueRenderOption=UNFORMATTED_VALUE`,
+        { headers: { Authorization: 'Bearer ' + accessToken } }
+      );
+
+      if (res.status === 401 && !isRetry) {            // токен протух — просим новый и пробуем ещё раз
+        accessToken = null;
+        planLoading = false;
+        return loadPlan(true);
+      }
+      if (!res.ok) {
+        const e = await res.json().catch(() => ({}));
+        const msg = e.error?.message || res.status;
+        if (!planState) {
+          const missing = /Unable to parse range|not found/i.test(String(msg));
+          body.innerHTML = `<div class="history-empty">${missing
+            ? `V tabulce chybí list „${PLAN_SHEET}“.<br>Nahraj novou verzi tabulky s plánem.`
+            : 'Plán se nepodařilo načíst:<br>' + escapeHtml(msg)}</div>`;
+        } else {
+          showToast('Plán se nepodařilo obnovit', 'error');
+        }
+        return;
+      }
+
+      const data = await res.json();
+      const [planR, incR, txR] = data.valueRanges;
+
+      // факт за текущий месяц из транзакций
+      const now = new Date();
+      const spent = {};
+      let incomeFact = 0;
+      (txR.values || []).forEach(r => {
+        const d = parseTxDate(r[0]);
+        if (!d || d.y !== now.getFullYear() || d.m !== now.getMonth()) return;
+        const amt = Number(r[4]);
+        if (!amt) return;
+        if (r[1] === 'Расход') spent[r[2]] = (spent[r[2]] || 0) + amt;
+        else if (r[1] === 'Доход') incomeFact += amt;
+      });
+
+      const cats = (planR.values || [])
+        .map(r => ({ name: r[0] || '', group: r[1] || 'Обязательное', plan: Number(r[2]) || 0 }))
+        .filter(c => c.name)
+        .map(c => {
+          c.parts = c.name === MERGED_FOOD.name ? MERGED_FOOD.parts : [c.name];
+          c.fact = c.parts.reduce((a, p) => a + (spent[p] || 0), 0);
+          return c;
+        });
+
+      planState = {
+        cats,
+        incomePlan: Number((incR.values || [[0]])[0][0]) || 0,
+        incomeFact,
+        loadedAt: Date.now()
+      };
+      renderPlan();
+    } catch (e) {
+      if (!planState) body.innerHTML = '<div class="history-empty">Plán se nepodařilo načíst:<br>' + escapeHtml(e.message || e) + '</div>';
+    } finally {
+      planLoading = false;
+      refreshBtn.classList.remove('spin');
+    }
+  }
+
+  function renderPlan() {
+    const body = document.getElementById('plan-body');
+    const s = planState;
+    if (!s) return;
+
+    const now = new Date();
+    const dl = daysLeftInMonth();
+    document.getElementById('plan-month').textContent = now.toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' });
+
+    const planned = s.cats.filter(c => c.plan > 0);
+    const totalPlan = planned.reduce((a, c) => a + c.plan, 0);
+    const totalFact = planned.reduce((a, c) => a + c.fact, 0);
+    const unplanned = s.cats.filter(c => c.plan <= 0).reduce((a, c) => a + c.fact, 0);
+
+    if (!totalPlan) {
+      body.innerHTML = `<div class="history-empty">V listu „${PLAN_SHEET}“ zatím nejsou vyplněné částky plánu.<br>Vyplň žluté buňky a klepni na ⟳.</div>`;
+      return;
+    }
+
+    const rem = totalPlan - totalFact;
+    const pct = Math.max(0, Math.min(100, totalFact / totalPlan * 100));
+
+    let html = `
+      <div class="limit-card">
+        <div class="limit-remaining ${rem < 0 ? 'over' : 'ok'}">${fmt(rem)} Kč</div>
+        <div class="limit-sub">${rem < 0
+          ? `plán překročen o ${fmt(-rem)} Kč (z ${fmt(totalPlan)} Kč)`
+          : `zbývá z plánu ${fmt(totalPlan)} Kč · ${dl} ${dl === 1 ? 'den' : (dl < 5 ? 'dny' : 'dní')} do konce měsíce`}</div>
+        <div class="limit-bar-wrap"><div class="limit-bar ${rem < 0 ? 'over' : (pct >= 80 ? 'warn' : '')}" style="width:${pct}%"></div></div>
+      </div>`;
+
+    // три группы
+    html += '<div class="group-grid">' + GROUPS.map(g => {
+      const gc = planned.filter(c => c.group === g.ru);
+      const gp = gc.reduce((a, c) => a + c.plan, 0);
+      const gf = gc.reduce((a, c) => a + c.fact, 0);
+      const ratio = gp > 0 ? gf / gp : 0;
+      return `
+        <div class="group-card">
+          <div class="group-name">${g.label}</div>
+          <div class="group-val">${gp > 0 ? fmt(gf) : '—'}</div>
+          <div class="group-sub">${gp > 0 ? 'z ' + fmt(gp) + ' Kč' : 'bez plánu'}</div>
+          <div class="mini-bar"><div style="width:${Math.min(100, ratio * 100)}%;background:${gp > 0 ? barColor(ratio) : 'transparent'}"></div></div>
+        </div>`;
+    }).join('') + '</div>';
+
+    // категории: сначала по группам, внутри — как в таблице
+    const order = g => { const i = GROUPS.findIndex(x => x.ru === g); return i < 0 ? 99 : i; };
+    const rows = s.cats
+      .filter(c => c.plan > 0 || c.fact > 0)
+      .sort((a, b) => order(a.group) - order(b.group));
+
+    html += '<div class="plan-list">' + rows.map(c => {
+      const info = planCatInfo(c.name);
+      const ratio = c.plan > 0 ? c.fact / c.plan : 0;
+      let sub, cls = '';
+      if (c.plan <= 0) { sub = 'bez plánu'; cls = 'free'; }
+      else if (c.fact > c.plan) { sub = `přes plán o ${fmt(c.fact - c.plan)} Kč`; cls = 'over'; }
+      else { const r = c.plan - c.fact; sub = `zbývá ${fmt(r)} Kč · ≈ ${fmt(r / dl)} Kč/den`; }
+      return `
+        <div class="plan-row">
+          <div class="plan-row-top">
+            <div class="plan-row-icon">${info.icon}</div>
+            <div class="plan-row-name">${escapeHtml(info.label)}</div>
+            <div class="plan-row-amt">${fmt(c.fact)}${c.plan > 0 ? ' / ' + fmt(c.plan) : ''} Kč</div>
+          </div>
+          ${c.plan > 0 ? `<div class="limit-bar-wrap" style="margin-top:10px;height:6px"><div class="limit-bar" style="width:${Math.min(100, ratio * 100)}%;background:${barColor(ratio)}"></div></div>` : ''}
+          <div class="plan-row-sub ${cls}">${sub}</div>
+        </div>`;
+    }).join('') + '</div>';
+
+    // доход и «мимо плана»
+    const notes = [];
+    if (s.incomePlan > 0 || s.incomeFact > 0) {
+      notes.push(`Příjem: ${fmt(s.incomeFact)}${s.incomePlan > 0 ? ' / ' + fmt(s.incomePlan) : ''} Kč`);
+    }
+    if (unplanned > 0) notes.push(`Mimo plán: ${fmt(unplanned)} Kč`);
+    if (notes.length) html += `<div class="plan-note">${notes.join(' · ')}</div>`;
+
+    body.innerHTML = html;
+  }
+
+  // после сохранения расхода: обновляем факт в памяти и возвращаем
+  // короткую подсказку «сколько осталось в категории» (или null)
+  function planAfterSave(catRu, amount) {
+    if (!planState) return null;
+    const c = planState.cats.find(x => x.parts.includes(catRu));
+    if (!c) return null;
+    c.fact += amount;
+    if (c.plan <= 0) return null;
+    const info = planCatInfo(c.name);
+    const rem = c.plan - c.fact;
+    if (rem < 0) return { warn: true, text: `⚠ ${info.label}: přes plán o ${fmt(-rem)} Kč` };
+    return { warn: false, text: `${info.label}: zbývá ${fmt(rem)} Kč (≈ ${fmt(rem / daysLeftInMonth())} Kč/den)` };
   }
 
   // ── SUBMIT ──
@@ -664,6 +981,7 @@
       });
       if (localHistory.length > 50) localHistory.pop();
       localStorage.setItem('budget_history', JSON.stringify(localHistory));
+      refreshDescList();
 
       // если задан лимит и это расход — автоматически списываем со счётчика
       if (currentType === 'expense' && budgetLimit) {
@@ -671,7 +989,15 @@
         saveLimit();
       }
 
-      showToast(`✓ ${TYPES[currentType].label} ${amount.toLocaleString('cs-CZ')} Kč`, 'success');
+      // подсказка по плану: сколько осталось в категории
+      const planHint = currentType === 'expense' ? planAfterSave(selectedCat, amount) : null;
+      let toastMsg = `✓ ${TYPES[currentType].label} ${amount.toLocaleString('cs-CZ')} Kč`;
+      if (planHint) toastMsg += '\n' + planHint.text;
+      showToast(toastMsg, planHint && planHint.warn ? 'warn' : 'success', planHint ? 4200 : 2500);
+
+      // если план ещё не загружался (например, при отключённом экране входа) — подгружаем в фоне
+      if (!planState) loadPlan();
+
       document.getElementById('amount').value = '';
       document.getElementById('desc').value = '';
       selectedCat = null;
@@ -775,12 +1101,17 @@
   }
 
   // ── TOAST ──
-  function showToast(msg, type = '') {
+  let toastTimer = null;
+  function showToast(msg, type = '', ms = 2500) {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.className = 'toast show ' + type;
-    setTimeout(() => { t.className = 'toast'; }, 2500);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.className = 'toast'; }, ms);
   }
+
+  // подсказки для поля «Popis»
+  refreshDescList();
 
   // категории должны быть видны сразу, даже если AUTH_ENABLED = false
   if (!AUTH_ENABLED) {
