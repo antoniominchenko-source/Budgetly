@@ -1,1122 +1,1338 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>U-Budget</title>
-  <meta name="theme-color" content="#0f0f0f" />
-  <meta name="mobile-web-app-capable" content="true" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="U-Budget" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>U-Budget</title>
+<meta name="theme-color" content="#0a0a0a" />
+<meta name="mobile-web-app-capable" content="true" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="U-Budget" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --s1: #141414;
+    --s2: #1c1c1c;
+    --s3: #242424;
+    --line: rgba(255,255,255,.07);
+    --line2: rgba(255,255,255,.13);
+    --t1: #ffffff;
+    --t2: #9ca3af;
+    --t3: #6b7280;
+    --mint: #00d9a3;
+    --mint-dim: rgba(0,217,163,.12);
+    --red: #ff4d4d;
+    --red-dim: rgba(255,77,77,.10);
+    --radius: 16px;
+    --font-ui: 'Inter', -apple-system, sans-serif;
+    --font-d: 'Space Grotesk', 'Inter', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { background: var(--bg); }
+  body {
+    background: var(--bg); color: var(--t1);
+    font-family: var(--font-ui);
+    min-height: 100dvh; max-width: 480px; margin: 0 auto;
+    display: flex; flex-direction: column;
+  }
+  ::-webkit-scrollbar { display: none; }
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  .caps { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--t3); }
+  .num { font-family: var(--font-d); font-variant-numeric: tabular-nums; }
 
-    :root {
-      --bg: #0f0f0f;
-      --bg2: #1a1a1a;
-      --bg3: #242424;
-      --border: rgba(255,255,255,0.08);
-      --border2: rgba(255,255,255,0.14);
-      --text: #f0f0f0;
-      --text2: #888;
-      --text3: #555;
-      --green: #4ade80;
-      --green-bg: rgba(74,222,128,0.1);
-      --green-border: rgba(74,222,128,0.25);
-      --red: #f87171;
-      --red-bg: rgba(248,113,113,0.1);
-      --red-border: rgba(248,113,113,0.25);
-      --blue: #60a5fa;
-      --amber: #fbbf24;
-      --violet: #a78bfa;
-      --radius: 12px;
-      --radius-sm: 8px;
-    }
+  /* ─── AUTH ─── */
+  #auth-screen {
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    padding: 2rem 1.5rem; gap: 0;
+  }
+  .auth-word {
+    font-family: var(--font-d); font-size: 44px; font-weight: 700; letter-spacing: -.02em; line-height: 1.05;
+  }
+  .auth-word em { font-style: normal; color: var(--mint); }
+  .auth-sub { margin-top: 14px; font-size: 14px; color: var(--t2); line-height: 1.6; max-width: 300px; }
+  .auth-tick { margin: 34px 0 26px; display: flex; flex-direction: column; gap: 12px; }
+  .auth-tick div { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--t2); }
+  .auth-tick i { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); flex-shrink: 0; }
+  .google-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: var(--mint); border: none; border-radius: 12px;
+    padding: 15px 24px; font-size: 15px; font-weight: 600; color: #04120d;
+    font-family: var(--font-ui); cursor: pointer; transition: transform .12s ease, filter .2s;
+    width: 100%;
+  }
+  .google-btn:active { transform: scale(.97); filter: brightness(1.1); }
+  #auth-error { margin-top: 14px; font-size: 13px; color: var(--red); text-align: center; display: none; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      max-width: 480px;
-      margin: 0 auto;
-    }
+  /* ─── APP SHELL ─── */
+  #app-screen { display: none; flex-direction: column; flex: 1; min-height: 0; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px 10px;
+  }
+  .topbar-title { font-family: var(--font-d); font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  .topbar-title span { color: var(--mint); }
+  .avatar {
+    width: 34px; height: 34px; border-radius: 50%; overflow: hidden;
+    background: var(--s2); border: 1px solid var(--line2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; color: var(--t2); cursor: pointer;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* AUTH SCREEN */
-    #auth-screen {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      gap: 1.5rem;
-    }
-    .auth-icon {
-      width: 72px; height: 72px;
-      background: var(--bg2);
-      border-radius: 20px;
-      border: 0.5px solid var(--border2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px;
-    }
-    .auth-title { font-size: 24px; font-weight: 600; text-align: center; }
-    .auth-sub { font-size: 14px; color: var(--text2); text-align: center; line-height: 1.5; }
-    .google-btn {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--bg2); border: 0.5px solid var(--border2);
-      border-radius: var(--radius); padding: 14px 24px;
-      font-size: 15px; font-weight: 500; color: var(--text);
-      cursor: pointer; transition: background 0.15s;
-      width: 100%;  justify-content: center;
-    }
-    .google-btn:active { background: var(--bg3); }
-    .google-btn svg { flex-shrink: 0; }
+  .view { display: none; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; padding: 4px 16px 110px; }
+  .view.active { display: flex; }
+  .view > * { animation: rise .45s cubic-bezier(.2,.8,.2,1) both; }
+  .view > *:nth-child(2) { animation-delay: .05s; }
+  .view > *:nth-child(3) { animation-delay: .1s; }
+  .view > *:nth-child(4) { animation-delay: .15s; }
+  .view > *:nth-child(5) { animation-delay: .2s; }
+  .view > *:nth-child(6) { animation-delay: .25s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
-    /* MAIN APP */
-    #app-screen { display: none; flex-direction: column; flex: 1; }
+  .card {
+    background: var(--s1); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px 18px; margin-top: 12px;
+  }
 
-    .topbar {
-      padding: 16px 20px 12px;
-      display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 0.5px solid var(--border);
-    }
-    .topbar-title { font-size: 17px; font-weight: 600; }
-    .user-btn {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--bg3); border: 0.5px solid var(--border2);
-      cursor: pointer; overflow: hidden; display: flex; align-items: center; justify-content: center;
-      font-size: 13px; color: var(--text2);
-    }
-    .user-btn img { width: 100%; height: 100%; object-fit: cover; }
+  /* ─── MONTH SWITCHER ─── */
+  .month-switch { display: flex; align-items: center; justify-content: space-between; padding: 6px 4px 2px; }
+  .month-label { font-family: var(--font-d); font-size: 15px; font-weight: 600; }
+  .month-label span { color: var(--t3); font-weight: 500; }
+  .chev {
+    width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--s1); color: var(--t2); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: transform .12s, color .2s;
+  }
+  .chev:active { transform: scale(.9); color: var(--t1); }
+  .chev.off { opacity: .3; pointer-events: none; }
 
-    .scroll-area { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+  /* ─── HERO ─── */
+  .hero { padding: 20px 20px 18px; }
+  .hero-amount { margin-top: 6px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .hero-amount .big { font-family: var(--font-d); font-size: 44px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
+  .hero-amount .cur { font-family: var(--font-d); font-size: 20px; color: var(--t3); font-weight: 500; }
+  .hero-sub { margin-top: 6px; font-size: 12.5px; color: var(--t2); }
+  .hero-sub b { color: var(--t1); font-weight: 600; }
+  .bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.07); margin-top: 14px; overflow: hidden; }
+  .bar > i {
+    display: block; height: 100%; border-radius: 3px; background: var(--mint);
+    width: 0; transition: width .7s cubic-bezier(.2,.8,.2,1);
+  }
+  .bar > i.over { background: var(--red); }
+  .hero-row { display: flex; gap: 10px; margin-top: 16px; }
+  .hero-chip { flex: 1; border-top: 1px solid var(--line); padding-top: 10px; }
+  .hero-chip .v { font-family: var(--font-d); font-size: 16px; font-weight: 600; margin-top: 3px; }
+  .hero-chip .v.mint { color: var(--mint); }
+  .hero-chip .v.red { color: var(--red); }
 
-    /* TYPE TOGGLE */
-    .type-toggle {
-      display: grid; grid-template-columns: 1fr 1fr;
-      background: var(--bg2); border-radius: var(--radius);
-      padding: 4px; gap: 4px;
-      border: 0.5px solid var(--border);
-    }
-    .type-opt {
-      padding: 10px; border-radius: var(--radius-sm);
-      text-align: center; font-size: 14px; font-weight: 500;
-      cursor: pointer; transition: all 0.15s; color: var(--text2);
-    }
-    .type-opt.active-expense { background: var(--red-bg); color: var(--red); border: 0.5px solid var(--red-border); }
-    .type-opt.active-income { background: var(--green-bg); color: var(--green); border: 0.5px solid var(--green-border); }
+  /* ─── SLOT DIGITS ─── */
+  .slot { display: inline-flex; }
+  .slot .dc { display: inline-block; height: 1em; overflow: hidden; }
+  .slot .ds { display: flex; flex-direction: column; transition: transform .6s cubic-bezier(.16,.84,.24,1); }
+  .slot .ds span { height: 1em; line-height: 1; display: block; }
+  .slot .st { display: inline-block; }
 
-    /* AMOUNT */
-    .amount-wrap {
-      background: var(--bg2); border-radius: var(--radius);
-      border: 0.5px solid var(--border); padding: 16px 20px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .amount-currency { font-size: 22px; color: var(--text2); font-weight: 300; }
-    .amount-input {
-      flex: 1; background: none; border: none; outline: none;
-      font-size: 32px; font-weight: 600; color: var(--text);
-      width: 100%;
-    }
-    .amount-input::placeholder { color: var(--text3); }
+  /* ─── LIMIT CARD ─── */
+  .limit-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; }
+  .limit-card .l { flex: 1; min-width: 0; }
+  .limit-card .v { font-family: var(--font-d); font-size: 20px; font-weight: 600; margin-top: 4px; }
+  .limit-card .v.ok { color: var(--mint); }
+  .limit-card .v.bad { color: var(--red); }
+  .limit-card .sub { font-size: 11.5px; color: var(--t3); margin-top: 2px; }
+  .limit-card .bar { margin-top: 10px; }
+  .pill-btn {
+    border: 1px solid var(--line2); background: none; color: var(--t2); border-radius: 10px;
+    padding: 8px 14px; font-size: 12.5px; font-weight: 600; font-family: var(--font-ui); cursor: pointer;
+    transition: transform .12s;
+  }
+  .pill-btn:active { transform: scale(.94); }
 
-    /* SECTION */
-    .section-label { font-size: 12px; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  /* ─── SECTION HEAD ─── */
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; margin: 22px 4px 2px; }
+  .sec-head .link { font-size: 12px; color: var(--t3); cursor: pointer; }
 
-    /* CATEGORIES */
-    .cat-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .cat-btn {
-      background: var(--bg2); border: 0.5px solid var(--border);
-      border-radius: var(--radius-sm); padding: 10px 12px;
-      font-size: 13px; color: var(--text2); cursor: pointer;
-      transition: all 0.15s; text-align: left;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .cat-btn .cat-icon { font-size: 15px; }
-    .cat-btn.selected { background: var(--bg3); border-color: var(--border2); color: var(--text); }
+  /* ─── CATEGORY BARS ─── */
+  .catrow { padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .catrow:last-child { border-bottom: none; }
+  .catrow .top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .catrow .name { display: flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 500; }
+  .catrow .name svg { width: 16px; height: 16px; color: var(--t3); flex-shrink: 0; }
+  .catrow .vals { font-size: 12.5px; color: var(--t2); white-space: nowrap; }
+  .catrow .vals b { font-family: var(--font-d); color: var(--t1); font-weight: 600; }
+  .catrow .vals.over b { color: var(--red); }
+  .catrow .bar { margin-top: 8px; height: 5px; }
 
-    /* INPUTS */
-    .text-input {
-      width: 100%; background: var(--bg2); border: 0.5px solid var(--border);
-      border-radius: var(--radius); padding: 13px 16px;
-      font-size: 15px; color: var(--text); outline: none;
-      transition: border-color 0.15s;
-    }
-    .text-input::placeholder { color: var(--text3); }
-    .text-input:focus { border-color: var(--border2); }
+  /* ─── SPARKLINE ─── */
+  .spark-wrap { padding: 14px 14px 8px; }
+  .spark-wrap canvas { width: 100%; height: 64px; display: block; }
+  .spark-foot { display: flex; justify-content: space-between; padding: 6px 4px 8px; }
 
-    /* PAYMENT */
-    .payment-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-    .pay-btn {
-      background: var(--bg2); border: 0.5px solid var(--border);
-      border-radius: var(--radius-sm); padding: 10px 8px;
-      font-size: 12px; color: var(--text2); cursor: pointer;
-      transition: all 0.15s; text-align: center;
-    }
-    .pay-btn.selected { background: var(--bg3); border-color: var(--border2); color: var(--text); }
+  /* ─── TRANSACTION LIST ─── */
+  .tx { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .tx:last-child { border-bottom: none; }
+  .tx .ic {
+    width: 36px; height: 36px; border-radius: 11px; background: var(--s2);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .tx .ic svg { width: 17px; height: 17px; color: var(--t2); }
+  .tx .inf { flex: 1; min-width: 0; }
+  .tx .n { font-size: 13.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tx .c { font-size: 11.5px; color: var(--t3); margin-top: 1px; }
+  .tx .a { font-family: var(--font-d); font-size: 14px; font-weight: 600; white-space: nowrap; }
+  .tx .a.exp { color: var(--t1); }
+  .tx .a.inc { color: var(--mint); }
+  .day-head { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); padding: 16px 4px 2px; }
+  .empty { padding: 34px 20px; text-align: center; font-size: 13px; color: var(--t3); line-height: 1.7; }
 
-    /* SUBMIT */
-    .submit-wrap { padding: 0 20px 32px; }
-    .submit-btn {
-      width: 100%; padding: 16px;
-      border: none; border-radius: var(--radius);
-      font-size: 16px; font-weight: 600; cursor: pointer;
-      transition: all 0.15s; position: relative;
-    }
-    .submit-btn.expense { background: var(--red); color: #0f0f0f; }
-    .submit-btn.income { background: var(--green); color: #0f0f0f; }
-    .submit-btn:active { transform: scale(0.98); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  /* ─── ADD VIEW ─── */
+  .seg {
+    display: flex; background: var(--s1); border: 1px solid var(--line); border-radius: 13px;
+    padding: 4px; position: relative; margin-top: 10px;
+  }
+  .seg .thumb {
+    position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
+    border-radius: 10px; background: var(--red); transition: transform .3s cubic-bezier(.2,.8,.2,1), background .3s;
+  }
+  .seg.inc .thumb { transform: translateX(100%); background: var(--mint); }
+  .seg button {
+    flex: 1; position: relative; z-index: 1; background: none; border: none; padding: 11px 0;
+    font-size: 14px; font-weight: 600; color: var(--t2); font-family: var(--font-ui);
+    cursor: pointer; transition: color .25s; border-radius: 10px;
+  }
+  .seg button.on { color: #0a0a0a; }
 
-    /* SECONDARY BUTTONS */
-    .btn-row { display: flex; gap: 8px; }
-    .btn-secondary {
-      flex: 1; padding: 13px; border: 0.5px solid var(--border2);
-      border-radius: var(--radius); background: var(--bg2); color: var(--text);
-      font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s;
-    }
-    .btn-secondary:active { background: var(--bg3); transform: scale(0.98); }
-    .btn-secondary.plus { color: var(--green); }
-    .btn-secondary.minus { color: var(--red); }
-    .btn-ghost {
-      width: 100%; padding: 13px; border: 0.5px solid var(--border);
-      border-radius: var(--radius); background: transparent; color: var(--text2);
-      font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s;
-    }
-    .btn-ghost:active { background: var(--bg2); }
+  .amount-box { text-align: center; padding: 20px 0 8px; }
+  .amount-box .val { font-family: var(--font-d); font-size: 52px; font-weight: 700; letter-spacing: -.02em; line-height: 1.05; min-height: 1.05em; }
+  .amount-box .val .cur { font-size: 24px; color: var(--t3); font-weight: 500; margin-left: 6px; }
+  .amount-box .val.placeholder { color: var(--t3); }
 
-    /* TOAST (допускает вторую строку — подсказку по плану) */
-    .toast {
-      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: var(--bg3); border: 0.5px solid var(--border2);
-      padding: 10px 20px; border-radius: 18px;
-      font-size: 14px; color: var(--text); text-align: center;
-      white-space: pre-line; max-width: 92vw;
-      opacity: 0; transition: all 0.25s; pointer-events: none;
-      z-index: 100;
-    }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .toast.success { border-color: var(--green-border); color: var(--green); }
-    .toast.error { border-color: var(--red-border); color: var(--red); }
-    .toast.warn { border-color: rgba(251,191,36,0.35); color: var(--amber); }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+  .cat {
+    background: var(--s1); border: 1px solid var(--line); border-radius: 13px;
+    padding: 11px 4px 9px; display: flex; flex-direction: column; align-items: center; gap: 7px;
+    cursor: pointer; transition: transform .1s, border-color .2s, background .2s;
+  }
+  .cat:active { transform: scale(.94); }
+  .cat svg { width: 19px; height: 19px; color: var(--t2); transition: color .2s; }
+  .cat span { font-size: 10px; color: var(--t2); text-align: center; line-height: 1.25; transition: color .2s; }
+  .cat.sel { border-color: var(--mint); background: var(--mint-dim); }
+  .cat.sel svg, .cat.sel span { color: var(--mint); }
+  .seg.inc ~ .grid .cat.sel { border-color: var(--mint); background: var(--mint-dim); }
 
-    /* NAV */
-    .bottom-nav {
-      border-top: 0.5px solid var(--border);
-      display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
-      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
-    }
-    .nav-btn {
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
-      padding: 6px; cursor: pointer; color: var(--text3); font-size: 10px;
-      transition: color 0.15s;
-    }
-    .nav-btn.active { color: var(--blue); }
-    .nav-btn svg { width: 22px; height: 22px; }
+  .chips { display: flex; gap: 8px; margin-top: 14px; }
+  .chip {
+    flex: 1; text-align: center; padding: 9px 0; border-radius: 11px; font-size: 12.5px; font-weight: 500;
+    background: var(--s1); border: 1px solid var(--line); color: var(--t2); cursor: pointer;
+    transition: all .2s;
+  }
+  .chip.sel { border-color: var(--mint); color: var(--mint); background: var(--mint-dim); }
 
-    /* HISTORY SCREEN */
-    .history-list { flex: 1; overflow-y: auto; padding: 12px 20px; display: flex; flex-direction: column; gap: 8px; }
-    .history-item {
-      background: var(--bg2); border: 0.5px solid var(--border);
-      border-radius: var(--radius); padding: 12px 16px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .h-icon { font-size: 20px; }
-    .h-info { flex: 1; }
-    .h-name { font-size: 14px; font-weight: 500; }
-    .h-cat { font-size: 12px; color: var(--text2); margin-top: 2px; }
-    .h-amount { font-size: 16px; font-weight: 600; }
-    .h-amount.exp { color: var(--red); }
-    .h-amount.inc { color: var(--green); }
-    .history-empty { text-align: center; color: var(--text2); font-size: 14px; padding: 3rem 1rem; line-height: 1.6; }
+  .text-input {
+    width: 100%; margin-top: 10px; background: var(--s1); border: 1px solid var(--line); border-radius: 12px;
+    padding: 13px 14px; font-size: 14px; color: var(--t1); font-family: var(--font-ui); outline: none;
+    transition: border-color .2s;
+  }
+  .text-input:focus { border-color: var(--line2); }
+  .text-input::placeholder { color: var(--t3); }
 
-    /* LIMIT SCREEN */
-    .limit-card {
-      background: var(--bg2); border: 0.5px solid var(--border);
-      border-radius: var(--radius); padding: 24px 20px;
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      text-align: center;
-    }
-    .limit-remaining { font-size: 36px; font-weight: 700; }
-    .limit-remaining.over { color: var(--red); }
-    .limit-remaining.ok { color: var(--green); }
-    .limit-sub { font-size: 13px; color: var(--text2); }
-    .limit-bar-wrap {
-      width: 100%; height: 8px; border-radius: 100px;
-      background: var(--bg3); margin-top: 10px; overflow: hidden;
-    }
-    .limit-bar { height: 100%; border-radius: 100px; background: var(--green); width: 0%; transition: width 0.2s; }
-    .limit-bar.warn { background: #fbbf24; }
-    .limit-bar.over { background: var(--red); }
+  .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+  .pad button {
+    background: var(--s1); border: 1px solid var(--line); border-radius: 13px; height: 52px;
+    font-family: var(--font-d); font-size: 21px; font-weight: 500; color: var(--t1);
+    cursor: pointer; transition: transform .08s, background .2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pad button:active { transform: scale(.93); background: var(--s3); }
+  .pad button svg { width: 22px; height: 22px; color: var(--t2); }
 
-    /* PLAN SCREEN */
-    .icon-btn {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--bg3); border: 0.5px solid var(--border2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; color: var(--text2); cursor: pointer;
-    }
-    .icon-btn:active { background: var(--bg2); }
-    .icon-btn.spin { animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .plan-top-right { display: flex; align-items: center; gap: 10px; }
-    .plan-month { font-size: 12px; color: var(--text2); text-transform: capitalize; }
+  .submit {
+    margin-top: 12px; width: 100%; border: none; border-radius: 14px; padding: 16px;
+    font-size: 15.5px; font-weight: 700; font-family: var(--font-ui); cursor: pointer;
+    background: var(--red); color: #14040a; transition: transform .12s, filter .2s, opacity .2s;
+  }
+  .submit.inc { background: var(--mint); color: #04120d; }
+  .submit:active { transform: scale(.97); }
+  .submit:disabled { opacity: .55; }
 
-    .group-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .group-card {
-      background: var(--bg2); border: 0.5px solid var(--border);
-      border-radius: var(--radius-sm); padding: 10px;
-      display: flex; flex-direction: column; gap: 3px; min-width: 0;
-    }
-    .group-name { font-size: 11px; color: var(--text2); }
-    .group-val { font-size: 15px; font-weight: 600; white-space: nowrap; }
-    .group-sub { font-size: 11px; color: var(--text3); white-space: nowrap; }
-    .mini-bar { height: 4px; border-radius: 100px; background: var(--bg3); overflow: hidden; margin-top: 4px; }
-    .mini-bar > div { height: 100%; border-radius: 100px; }
+  /* ─── PLAN ─── */
+  .group-row { padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .group-row:last-child { border-bottom: none; }
+  .group-row .top { display: flex; justify-content: space-between; align-items: baseline; }
+  .group-row .gname { font-size: 13.5px; font-weight: 600; }
+  .group-row .gvals { font-size: 12.5px; color: var(--t2); }
+  .group-row .gvals b { font-family: var(--font-d); color: var(--t1); font-weight: 600; }
+  .group-row .gvals.over b { color: var(--red); }
 
-    .plan-list { display: flex; flex-direction: column; gap: 8px; }
-    .plan-row {
-      background: var(--bg2); border: 0.5px solid var(--border);
-      border-radius: var(--radius); padding: 12px 14px;
-    }
-    .plan-row-top { display: flex; align-items: center; gap: 10px; }
-    .plan-row-icon { font-size: 18px; }
-    .plan-row-name { flex: 1; font-size: 14px; font-weight: 500; }
-    .plan-row-amt { font-size: 13px; color: var(--text2); white-space: nowrap; }
-    .plan-row-sub { font-size: 12px; color: var(--text2); margin-top: 8px; }
-    .plan-row-sub.over { color: var(--red); }
-    .plan-row-sub.free { color: var(--amber); }
-    .plan-note { font-size: 12px; color: var(--text2); text-align: center; }
-  </style>
+  .refresh-ic { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--s1); color: var(--t2); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .refresh-ic svg { width: 16px; height: 16px; }
+  .refresh-ic.spin svg { animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── BOTTOM NAV ─── */
+  .nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px; z-index: 50;
+    display: flex; padding: 10px 14px calc(14px + env(safe-area-inset-bottom));
+    background: rgba(10,10,10,.82); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-top: 1px solid var(--line);
+  }
+  .nav button {
+    flex: 1; background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: var(--t3); font-size: 10px; font-weight: 600; font-family: var(--font-ui); cursor: pointer;
+    padding: 4px 0; transition: color .2s;
+  }
+  .nav button svg { width: 21px; height: 21px; }
+  .nav button.on { color: var(--mint); }
+
+  /* ─── MODAL ─── */
+  .overlay {
+    position: fixed; inset: 0; z-index: 100; display: none;
+    background: rgba(10,10,10,.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    align-items: flex-end; justify-content: center;
+  }
+  .overlay.open { display: flex; }
+  .sheet {
+    width: 100%; max-width: 480px; background: var(--s1);
+    border: 1px solid var(--line2); border-bottom: none;
+    border-radius: 22px 22px 0 0; padding: 20px 20px calc(24px + env(safe-area-inset-bottom));
+    animation: sheetup .35s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes sheetup { from { transform: translateY(60px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .sheet h3 { font-family: var(--font-d); font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .sheet .hint { font-size: 12.5px; color: var(--t3); margin-bottom: 14px; }
+  .sheet .row { display: flex; gap: 8px; margin-top: 10px; }
+  .sheet .row .text-input { margin-top: 0; }
+  .sheet .grow-btn {
+    border: 1px solid var(--line2); background: var(--s2); color: var(--t1); border-radius: 12px;
+    padding: 12px 16px; font-size: 13.5px; font-weight: 600; font-family: var(--font-ui); cursor: pointer;
+    transition: transform .1s; white-space: nowrap;
+  }
+  .sheet .grow-btn:active { transform: scale(.95); }
+  .sheet .primary {
+    width: 100%; margin-top: 14px; border: none; border-radius: 13px; padding: 14px;
+    background: var(--mint); color: #04120d; font-size: 14.5px; font-weight: 700; font-family: var(--font-ui); cursor: pointer;
+  }
+  .sheet .ghost {
+    width: 100%; margin-top: 8px; border: none; border-radius: 13px; padding: 12px;
+    background: none; color: var(--t3); font-size: 13px; font-weight: 600; font-family: var(--font-ui); cursor: pointer;
+  }
+
+  /* ─── TOAST ─── */
+  #toast {
+    position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%) translateY(16px);
+    max-width: 400px; width: calc(100% - 40px);
+    background: rgba(28,28,28,.92); backdrop-filter: blur(18px);
+    border: 1px solid var(--line2); border-radius: 14px; padding: 13px 16px;
+    font-size: 13.5px; font-weight: 500; text-align: center; white-space: pre-line; line-height: 1.5;
+    opacity: 0; pointer-events: none; transition: opacity .3s, transform .3s; z-index: 200;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #toast.success { border-color: rgba(0,217,163,.4); }
+  #toast.error { border-color: rgba(255,77,77,.45); }
+  #toast.warn { border-color: rgba(255,77,77,.45); color: #ffb4b4; }
+
+  .skel { height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--s2) 25%, var(--s3) 50%, var(--s2) 75%); background-size: 200% 100%; animation: sk 1.2s infinite; }
+  @keyframes sk { to { background-position: -200% 0; } }
+</style>
 </head>
 <body>
-
-<!-- AUTH -->
+<!-- ═══ AUTH ═══ -->
 <div id="auth-screen">
-  <div class="auth-icon">💰</div>
-  <div>
-    <div class="auth-title">Můj rozpočet</div>
-    <div class="auth-sub" style="margin-top:8px">Přihlas se přes Google, aby se záznamy<br>ukládaly do tvé tabulky</div>
+  <div class="auth-word">Tvoje peníze,<br/>pod <em>kontrolou.</em></div>
+  <div class="auth-sub">Zapisuj výdaje během pár vteřin. Vše se ukládá přímo do tvé tabulky v Google Sheets.</div>
+  <div class="auth-tick">
+    <div><i></i>Přehled měsíce — utraceno, plán, zůstatek na den</div>
+    <div><i></i>Kategorie s plánem a okamžitá kontrola</div>
+    <div><i></i>Data zůstávají ve tvé tabulce, ne u nás</div>
   </div>
   <button class="google-btn" onclick="signIn()">
-    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z"/></svg>
-    Přihlásit se přes Google
+    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#04120d" d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81Z"/></svg>
+    Pokračovat přes Google
   </button>
-  <div id="auth-error" style="font-size:13px;color:var(--red);text-align:center;display:none"></div>
+  <div id="auth-error"></div>
 </div>
 
-<!-- APP -->
+<!-- ═══ APP ═══ -->
 <div id="app-screen">
-  <div id="add-view" style="display:flex;flex-direction:column;flex:1;">
-    <div class="topbar">
-      <div class="topbar-title">Přidat</div>
-      <div class="user-btn" id="user-avatar" onclick="signOut()">A</div>
-    </div>
-    <div class="scroll-area">
-
-      <!-- TYPE -->
-      <div class="type-toggle">
-        <div class="type-opt active-expense" id="opt-expense" onclick="setType('expense')">− Výdaj</div>
-        <div class="type-opt" id="opt-income" onclick="setType('income')">+ Příjem</div>
-      </div>
-
-      <!-- AMOUNT -->
-      <div>
-        <div class="section-label">Částka</div>
-        <div class="amount-wrap">
-          <span class="amount-currency">Kč</span>
-          <input class="amount-input" id="amount" type="number" inputmode="decimal" placeholder="0" />
-        </div>
-      </div>
-
-      <!-- CATEGORY -->
-      <div>
-        <div class="section-label">Kategorie</div>
-        <div class="cat-grid" id="cat-grid"></div>
-      </div>
-
-      <!-- DESCRIPTION -->
-      <div>
-        <div class="section-label">Popis</div>
-        <input class="text-input" id="desc" type="text" placeholder="Nepovinné" list="desc-list" autocomplete="off" />
-        <datalist id="desc-list"></datalist>
-      </div>
-
-      <!-- PAYMENT -->
-      <div>
-        <div class="section-label">Způsob platby</div>
-        <div class="payment-grid">
-          <div class="pay-btn selected" onclick="setPayment('Карта')">💳 Karta</div>
-          <div class="pay-btn" onclick="setPayment('Наличные')">💵 Hotovost</div>
-          <div class="pay-btn" onclick="setPayment('Банковский перевод')">🏦 Převod</div>
-        </div>
-      </div>
-
-      <div style="height:8px"></div>
-    </div>
-    <div class="submit-wrap">
-      <button class="submit-btn expense" id="submit-btn" onclick="submitEntry()">Přidat výdaj</button>
-    </div>
+  <div class="topbar">
+    <div class="topbar-title">U<span>·</span>Budget</div>
+    <div class="avatar" id="user-avatar" title="Odhlásit">U</div>
   </div>
 
-  <!-- HISTORY VIEW -->
-  <div id="history-view" style="display:none;flex-direction:column;flex:1;">
-    <div class="topbar">
-      <div class="topbar-title">Historie</div>
-      <div style="font-size:12px;color:var(--text2)" id="history-count"></div>
+  <!-- DASHBOARD -->
+  <div class="view" id="view-dash">
+    <div class="month-switch">
+      <button class="chev" id="m-prev" onclick="shiftMonth(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="month-label" id="dash-month">—</div>
+      <button class="chev" id="m-next" onclick="shiftMonth(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
-    <div class="history-list" id="history-list"></div>
+
+    <div class="card hero">
+      <div class="caps" id="hero-label">Utraceno tento měsíc</div>
+      <div class="hero-amount">
+        <span class="big slot num" id="hero-amount"></span>
+        <span class="cur">Kč</span>
+      </div>
+      <div class="hero-sub" id="hero-sub"></div>
+      <div class="bar" id="hero-bar-wrap"><i id="hero-bar"></i></div>
+      <div class="hero-row">
+        <div class="hero-chip"><div class="caps">Příjmy</div><div class="v mint num" id="chip-income">—</div></div>
+        <div class="hero-chip"><div class="caps">Bilance</div><div class="v num" id="chip-balance">—</div></div>
+        <div class="hero-chip"><div class="caps" id="chip-day-label">Na den zbývá</div><div class="v num" id="chip-day">—</div></div>
+      </div>
+    </div>
+
+    <div class="card limit-card" id="limit-card" onclick="openLimitSheet()">
+      <div class="l">
+        <div class="caps">Limit měsíce</div>
+        <div class="v num" id="limit-v">—</div>
+        <div class="sub" id="limit-sub">Nastav si limit a hlídej si ho</div>
+        <div class="bar"><i id="limit-bar"></i></div>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>
+    </div>
+
+    <div class="sec-head"><div class="caps">Průběh měsíce</div><div class="link" id="spark-note"></div></div>
+    <div class="card spark-wrap"><canvas id="spark"></canvas>
+      <div class="spark-foot"><span class="caps" id="spark-from">1.</span><span class="caps" id="spark-to"></span></div>
+    </div>
+
+    <div class="sec-head"><div class="caps">Kategorie vs. plán</div><div class="link" onclick="showView('plan')">Celý plán ›</div></div>
+    <div class="card" id="dash-cats"></div>
+
+    <div class="sec-head"><div class="caps">Poslední záznamy</div><div class="link" onclick="showView('history')">Vše ›</div></div>
+    <div class="card" id="dash-recent"></div>
   </div>
 
-  <!-- PLAN VIEW -->
-  <div id="plan-view" style="display:none;flex-direction:column;flex:1;">
-    <div class="topbar">
-      <div class="topbar-title">Plán</div>
-      <div class="plan-top-right">
-        <div class="plan-month" id="plan-month"></div>
-        <div class="icon-btn" id="plan-refresh" onclick="loadPlan()">⟳</div>
-      </div>
+  <!-- ADD -->
+  <div class="view" id="view-add">
+    <div class="seg" id="type-seg">
+      <div class="thumb"></div>
+      <button id="opt-expense" class="on" onclick="setType('expense')">− Výdaj</button>
+      <button id="opt-income" onclick="setType('income')">+ Příjem</button>
     </div>
-    <div class="scroll-area" id="plan-body">
-      <div class="history-empty">Načítám plán…</div>
-    </div>
+
+    <div class="amount-box"><div class="val num placeholder" id="amount-val"><span class="slot" id="amount-slot">0</span><span class="cur">Kč</span></div></div>
+
+    <div class="caps" style="margin:4px 4px 0">Kategorie</div>
+    <div class="grid" id="cat-grid"></div>
+
+    <div class="chips" id="pay-chips"></div>
+    <input class="text-input" id="desc" type="text" placeholder="Poznámka (nepovinné)" list="desc-list" autocomplete="off" />
+    <datalist id="desc-list"></datalist>
+
+    <div class="pad" id="pad"></div>
+    <button class="submit" id="submit-btn" onclick="submitEntry()">Přidat výdaj</button>
   </div>
 
-  <!-- LIMIT VIEW -->
-  <div id="limit-view" style="display:none;flex-direction:column;flex:1;">
-    <div class="topbar">
-      <div class="topbar-title">Limit</div>
+  <!-- PLAN -->
+  <div class="view" id="view-plan">
+    <div class="month-switch">
+      <div class="month-label" id="plan-month">Plán měsíce</div>
+      <button class="refresh-ic" id="plan-refresh" onclick="refreshData(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></button>
     </div>
-    <div class="scroll-area">
+    <div id="plan-body"></div>
+  </div>
 
-      <div class="limit-card">
-        <div class="limit-remaining" id="limit-remaining">— Kč</div>
-        <div class="limit-sub" id="limit-sub">Limit ještě není nastaven</div>
-        <div class="limit-bar-wrap"><div class="limit-bar" id="limit-bar"></div></div>
-      </div>
-
-      <div>
-        <div class="section-label">Nastavit nový limit</div>
-        <div class="amount-wrap">
-          <span class="amount-currency">Kč</span>
-          <input class="amount-input" id="limit-set-amount" type="number" inputmode="decimal" placeholder="např. 700" />
-        </div>
-      </div>
-      <button class="btn-secondary" style="width:100%" onclick="setLimit()">Nastavit limit (nové období)</button>
-
-      <div>
-        <div class="section-label">Ruční úprava zůstatku</div>
-        <div class="amount-wrap">
-          <span class="amount-currency">Kč</span>
-          <input class="amount-input" id="limit-adjust-amount" type="number" inputmode="decimal" placeholder="0" />
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn-secondary minus" onclick="adjustLimit(-1)">− Odečíst</button>
-        <button class="btn-secondary plus" onclick="adjustLimit(1)">+ Přidat</button>
-      </div>
-
-      <button class="btn-ghost" onclick="resetLimit()">Obnovit zůstatek na plný limit</button>
-
-      <div style="height:8px"></div>
+  <!-- HISTORY -->
+  <div class="view" id="view-history">
+    <div class="month-switch">
+      <div class="month-label">Historie <span id="history-count"></span></div>
+      <button class="refresh-ic" id="hist-refresh" onclick="refreshData(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></button>
     </div>
+    <div id="history-body"></div>
   </div>
 
   <!-- NAV -->
-  <div class="bottom-nav">
-    <div class="nav-btn active" id="nav-add" onclick="showView('add')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+  <nav class="nav">
+    <button id="nav-dash" class="on" onclick="showView('dash')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="9.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="5.5" rx="2"/><rect x="13.5" y="12" width="7.5" height="9" rx="2"/><rect x="3" y="16" width="7.5" height="5" rx="2"/></svg>
+      Přehled
+    </button>
+    <button id="nav-add" onclick="showView('add')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
       Přidat
-    </div>
-    <div class="nav-btn" id="nav-hist" onclick="showView('history')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="8" y1="17" x2="14" y2="17"/></svg>
-      Historie
-    </div>
-    <div class="nav-btn" id="nav-plan" onclick="showView('plan')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.8" fill="currentColor"/></svg>
+    </button>
+    <button id="nav-plan" onclick="showView('plan')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
       Plán
+    </button>
+    <button id="nav-history" onclick="showView('history')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1" fill="currentColor"/><circle cx="3.5" cy="12" r="1" fill="currentColor"/><circle cx="3.5" cy="18" r="1" fill="currentColor"/></svg>
+      Historie
+    </button>
+  </nav>
+</div>
+
+<!-- ═══ LIMIT SHEET ═══ -->
+<div class="overlay" id="limit-overlay" onclick="if(event.target===this)closeLimitSheet()">
+  <div class="sheet">
+    <h3>Limit měsíce</h3>
+    <div class="hint">Jednoduchý počítadlo: nastav částku, výdaje se od ní odečítají. Ukládá se jen v tomto zařízení.</div>
+    <div class="row">
+      <input class="text-input" id="limit-set-amount" type="number" inputmode="decimal" placeholder="Nový limit, Kč" />
+      <button class="grow-btn" onclick="setLimit()">Nastavit</button>
     </div>
-    <div class="nav-btn" id="nav-limit" onclick="showView('limit')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 12 L16 8"/><path d="M12 7 V8"/></svg>
-      Limit
+    <div class="row">
+      <input class="text-input" id="limit-adjust-amount" type="number" inputmode="decimal" placeholder="Částka, Kč" />
+      <button class="grow-btn" onclick="adjustLimit(1)">+ Přidat</button>
+      <button class="grow-btn" onclick="adjustLimit(-1)">− Odečíst</button>
     </div>
+    <button class="primary" onclick="resetLimit()">Obnovit zůstatek na plný limit</button>
+    <button class="ghost" onclick="closeLimitSheet()">Zavřít</button>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
+<div id="toast"></div>
 <script>
-  // ── AUTH TOGGLE ──
-  // Поставь true, чтобы вернуть экран входа через Google при каждом
-  // открытии приложения. Пока false — приложение сразу открывается на
-  // главном экране, а вход в Google запрашивается тихо и автоматически
-  // только в момент первого сохранения записи.
-  // Эта строка выполняется САМОЙ ПЕРВОЙ, до всего остального кода.
-  const AUTH_ENABLED = true;
-  if (!AUTH_ENABLED) {
-    document.getElementById('auth-screen').style.display = 'none';
-    document.getElementById('app-screen').style.display = 'flex';
+// ── CONFIG ──
+// Поставь false, чтобы скрыть экран входа: приложение откроется сразу,
+// а Google спросит разрешение при первом сохранении/загрузке данных.
+const AUTH_ENABLED = true;
+
+const SHEET_ID = '1zG-PlP8ORyqz036hfjHDbH-thBda1JdZ2OPH1QaYqig';
+const CLIENT_ID = '330349583357-kb7inj4ctcs5gnvdfpf9ktkeftrco36n.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+const TX_SHEET = '📋 Транзакции';
+const PLAN_SHEET = '🎯 План';
+const MERGED_FOOD = { name: 'Еда и вкусности', parts: ['Еда', 'Вкусности'] };
+
+// "ru" — точные значения для таблицы (на них завязаны списки и формулы). Не менять!
+const TYPES = {
+  expense: { ru: 'Расход', label: 'Výdaj' },
+  income:  { ru: 'Доход',  label: 'Příjem' }
+};
+
+const ICONS = {
+  home:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>',
+  chip:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>',
+  bus:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="3" width="16" height="14" rx="3"/><path d="M4 10h16M8 21l-1-4M16 21l1-4"/><circle cx="8.5" cy="14" r=".8" fill="currentColor"/><circle cx="15.5" cy="14" r=".8" fill="currentColor"/></svg>',
+  cart:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h2l2.4 10.4a1.5 1.5 0 0 0 1.5 1.1h7.6a1.5 1.5 0 0 0 1.5-1.2L21 8H7"/><circle cx="10.5" cy="20.5" r="1"/><circle cx="17.5" cy="20.5" r="1"/></svg>',
+  coffee: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17M7 5.5c0-1 .8-1 .8-2M11 5.5c0-1 .8-1 .8-2"/></svg>',
+  heart:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.4 5.2 5.2 0 0 1 21.3 11c-1.8 4.4-9.3 9-9.3 9z"/></svg>',
+  play:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>',
+  card:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h4"/></svg>',
+  shirt:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3L4 6l2 4 2-1v12h8V9l2 1 2-4-5-3a3 3 0 0 1-6 0z"/></svg>',
+  pulse:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>',
+  basket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l3.5-6M19 9l-3.5-6M3 9h18l-1.6 9.4a2 2 0 0 1-2 1.6H6.6a2 2 0 0 1-2-1.6L3 9z"/><path d="M9 13v4M15 13v4"/></svg>',
+  bank:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6"/><path d="M4 9v11M20 9v11M8 13v4M12 13v4M16 13v4M2 20h20"/></svg>',
+  zap:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13.5H11L9.5 22 19 10h-6.5L13 2z"/></svg>',
+  coins:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="6"/><path d="M14.5 5.4a6 6 0 1 1-9.1 9.1"/><path d="M7 9h4M9 7v4"/></svg>',
+  note:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>'
+};
+
+const CATEGORIES = {
+  expense: [
+    { ru: 'Жильё и услуги',        label: 'Bydlení',    icon: 'home' },
+    { ru: 'Техника',               label: 'Technika',   icon: 'chip' },
+    { ru: 'Транспорт',             label: 'Doprava',    icon: 'bus' },
+    { ru: 'Еда',                   label: 'Jídlo',      icon: 'cart' },
+    { ru: 'Вкусности',             label: 'Pochutiny',  icon: 'coffee' },
+    { ru: 'Помощь / переводы',     label: 'Pomoc',      icon: 'heart' },
+    { ru: 'Развлечения',           label: 'Zábava',     icon: 'play' },
+    { ru: 'Кредиты',               label: 'Úvěry',      icon: 'card' },
+    { ru: 'Одежда',                label: 'Oblečení',   icon: 'shirt' },
+    { ru: 'Здоровье и спорт',      label: 'Zdraví',     icon: 'pulse' },
+    { ru: 'Быт / дом',             label: 'Domácnost',  icon: 'basket' },
+    { ru: 'Сбережения',            label: 'Úspory',     icon: 'bank' },
+    { ru: 'Непредвиденные расходы',label: 'Nečekané',   icon: 'zap' },
+  ],
+  income: [ { ru: 'Доходы', label: 'Příjmy', icon: 'coins' } ]
+};
+const ALL_CATEGORIES = [...CATEGORIES.expense, ...CATEGORIES.income];
+function findCategory(ru) { return ALL_CATEGORIES.find(c => c.ru === ru) || { label: ru, icon: 'note' }; }
+
+const PAYMENTS = [
+  { ru: 'Карта',               label: 'Karta' },
+  { ru: 'Наличные',            label: 'Hotovost' },
+  { ru: 'Банковский перевод',  label: 'Převod' },
+  { ru: 'Другое',              label: 'Jiné' },
+];
+const GROUP_LABELS = { 'Обязательное': 'Povinné', 'По желанию': 'Navíc', 'Откладывать': 'Spoření' };
+const CS_MONTHS = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+
+// ── STATE ──
+let currentType = 'expense';
+let selectedCat = null;
+let selectedPayment = 'Карта';
+let amountStr = '';
+let tokenClient = null;
+let accessToken = null;
+let localHistory = JSON.parse(localStorage.getItem('budget_history') || '[]');
+let budgetLimit = JSON.parse(localStorage.getItem('budget_limit') || 'null');
+let dataLoading = false;
+let dataState = null;      // { months: Map, planCats, incomePlan, loadedAt }
+const now0 = new Date();
+let selY = now0.getFullYear(), selM = now0.getMonth();
+
+// ── HELPERS ──
+const $ = id => document.getElementById(id);
+const fmt = n => (Math.round(n * 100) / 100).toLocaleString('cs-CZ', { maximumFractionDigits: 2 });
+const fmt0 = n => Math.round(n).toLocaleString('cs-CZ');
+function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+function daysLeftInMonth() {
+  const n = new Date();
+  return daysInMonth(n.getFullYear(), n.getMonth()) - n.getDate() + 1;
+}
+function monthKey(y, m) { return y * 12 + m; }
+
+let toastTimer = null;
+function showToast(msg, type = 'success', ms = 2600) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = '', ms);
+}
+
+// ── SLOT DIGITS ──
+function slotSet(el, text) {
+  if (el._slot === text) return;
+  const prev = el._slot || '';
+  const pat = s => s.replace(/\d/g, '#');
+  el._slot = text;
+  if (pat(prev) !== pat(text) || el.childElementCount !== text.length) {
+    // rebuild: изменилась структура (количество/позиции цифр)
+    el.innerHTML = '';
+    for (const ch of text) {
+      if (/\d/.test(ch)) {
+        const dc = document.createElement('span'); dc.className = 'dc';
+        const ds = document.createElement('span'); ds.className = 'ds';
+        for (let d = 0; d <= 9; d++) { const s = document.createElement('span'); s.textContent = d; ds.appendChild(s); }
+        ds.style.transform = `translateY(-${ch}em)`;
+        dc.appendChild(ds); el.appendChild(dc);
+      } else {
+        const st = document.createElement('span'); st.className = 'st'; st.textContent = ch;
+        el.appendChild(st);
+      }
+    }
+    return;
   }
-
-  const SHEET_ID = '1zG-PlP8ORyqz036hfjHDbH-thBda1JdZ2OPH1QaYqig';
-  const CLIENT_ID = '330349583357-kb7inj4ctcs5gnvdfpf9ktkeftrco36n.apps.googleusercontent.com'; // ← заменить
-  const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
-
-  // ВАЖНО: значения "ru" — это именно то, что уходит в Google Sheets
-  // (там на них завязаны выпадающие списки и формулы). "label" — это
-  // то, что видит пользователь на чешском. Менять "ru" нельзя без
-  // одновременного изменения самой таблицы.
-
-  const TYPES = {
-    expense: { ru: 'Расход', label: 'Výdaj' },
-    income:  { ru: 'Доход',  label: 'Příjem' }
-  };
-
-  const CATEGORIES = {
-    expense: [
-      { ru: 'Жильё и услуги',          label: 'Bydlení a služby',   icon: '🏠' },
-      { ru: 'Техника',                  label: 'Technika',           icon: '💻' },
-      { ru: 'Транспорт',                label: 'Doprava',            icon: '🚗' },
-      { ru: 'Еда',                      label: 'Jídlo',               icon: '🛒' },
-      { ru: 'Вкусности',                label: 'Pochutiny',           icon: '☕' },
-      { ru: 'Помощь / переводы',        label: 'Pomoc / převody',    icon: '🤝' },
-      { ru: 'Развлечения',              label: 'Zábava',              icon: '🎮' },
-      { ru: 'Кредиты',                  label: 'Úvěry',               icon: '💳' },
-      { ru: 'Одежда',                   label: 'Oblečení',            icon: '👕' },
-      { ru: 'Здоровье и спорт',         label: 'Zdraví a sport',     icon: '💊' },
-      { ru: 'Быт / дом',                label: 'Domácnost',           icon: '🧹' },
-      { ru: 'Сбережения',               label: 'Úspory',              icon: '🏦' },
-      { ru: 'Непредвиденные расходы',   label: 'Nečekané výdaje',    icon: '⚡' },
-    ],
-    income: [
-      { ru: 'Доходы', label: 'Příjmy', icon: '💰' },
-    ]
-  };
-
-  const ALL_CATEGORIES = [...CATEGORIES.expense, ...CATEGORIES.income];
-
-  function findCategory(ru) {
-    return ALL_CATEGORIES.find(c => c.ru === ru) || { label: ru, icon: '📝' };
+  // animate existing columns (структура та же — крутим барабаны)
+  const cols = el.querySelectorAll('.ds');
+  let ci = 0;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (!/\d/.test(ch)) continue;
+    const ds = cols[ci];
+    const from = +prev[i];
+    ci++;
+    if (+ch !== from) {
+      ds.style.transitionDelay = (ci * 28) + 'ms';
+      ds.style.transform = `translateY(-${ch}em)`;
+      setTimeout(() => ds.style.transitionDelay = '0ms', 700);
+    }
   }
+}
 
-  let currentType = 'expense'; // 'expense' | 'income'
-  let selectedCat = null;      // хранит русское значение (для таблицы)
-  let selectedPayment = 'Карта'; // хранит русское значение (для таблицы)
-  let tokenClient = null;
-  let accessToken = null;
-  let localHistory = JSON.parse(localStorage.getItem('budget_history') || '[]');
-
-  // budgetLimit хранится только локально, в саму Google-таблицу не пишется
-  let budgetLimit = JSON.parse(localStorage.getItem('budget_limit') || 'null'); // { limit, remaining } | null
-
-  // ── GOOGLE AUTH ──
-  function loadGsi() {
-    return new Promise(resolve => {
-      const s = document.createElement('script');
-      s.src = 'https://accounts.google.com/gsi/client';
-      s.onload = resolve;
-      document.head.appendChild(s);
-    });
-  }
-
-  async function signIn() {
-    await loadGsi();
+// ── GOOGLE AUTH ──
+function loadGsi() {
+  return new Promise(resolve => {
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.onload = resolve;
+    document.head.appendChild(s);
+  });
+}
+async function signIn() {
+  await loadGsi();
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID, scope: SCOPES,
+    callback: resp => {
+      if (resp.error) { showAuthError('Chyba přihlášení: ' + resp.error); return; }
+      accessToken = resp.access_token;
+      fetchUserInfo();
+    }
+  });
+  tokenClient.requestAccessToken();
+}
+function ensureAccessToken() {
+  if (accessToken) return Promise.resolve(accessToken);
+  return loadGsi().then(() => new Promise((resolve, reject) => {
     tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: SCOPES,
-      callback: (resp) => {
-        if (resp.error) { showAuthError('Chyba přihlášení: ' + resp.error); return; }
+      client_id: CLIENT_ID, scope: SCOPES,
+      callback: resp => {
+        if (resp.error) { reject(new Error(resp.error)); return; }
         accessToken = resp.access_token;
-        fetchUserInfo();
+        resolve(accessToken);
       }
     });
     tokenClient.requestAccessToken();
+  }));
+}
+async function fetchUserInfo() {
+  const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + accessToken } });
+  const u = await r.json();
+  $('auth-screen').style.display = 'none';
+  $('app-screen').style.display = 'flex';
+  const av = $('user-avatar');
+  if (u.picture) av.innerHTML = `<img src="${u.picture}" alt="" />`;
+  else av.textContent = (u.name || 'U')[0].toUpperCase();
+  av.onclick = () => { if (confirm('Odhlásit se z Google účtu?')) signOut(); };
+  renderCategories(); renderPayments(); renderPad();
+  refreshData();
+}
+function signOut() {
+  if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
+  accessToken = null; dataState = null;
+  location.reload();
+}
+function showAuthError(msg) { const e = $('auth-error'); e.textContent = msg; e.style.display = 'block'; }
+</script>
+<script>
+// ── DATA (Google Sheets) ──
+function parseTxDate(v) {
+  if (v == null || v === '') return null;
+  if (typeof v === 'number') {
+    const d = new Date(Math.round((v - 25569) * 86400000));
+    return { y: d.getUTCFullYear(), m: d.getUTCMonth(), d: d.getUTCDate() };
   }
+  const s = String(v).trim();
+  let m = s.match(/^(\d{1,2})\.\s?(\d{1,2})\.\s?(\d{4})/);
+  if (m) return { y: +m[3], m: +m[2] - 1, d: +m[1] };
+  const d = new Date(s);
+  if (!isNaN(d)) return { y: d.getFullYear(), m: d.getMonth(), d: d.getDate() };
+  return null;
+}
 
-  // Тихий запрос токена "по требованию" — используется, когда экран
-  // входа отключён (AUTH_ENABLED = false). Всплывающее окно Google
-  // появится только в момент реального сохранения записи, а не при
-  // каждом открытии приложения.
-  function ensureAccessToken() {
-    if (accessToken) return Promise.resolve(accessToken);
-    return loadGsi().then(() => new Promise((resolve, reject) => {
-      tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
-        callback: (resp) => {
-          if (resp.error) { reject(new Error(resp.error)); return; }
-          accessToken = resp.access_token;
-          resolve(accessToken);
-        }
-      });
-      tokenClient.requestAccessToken();
-    }));
-  }
-
-  async function fetchUserInfo() {
-    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-      headers: { Authorization: 'Bearer ' + accessToken }
-    });
-    const u = await r.json();
-    document.getElementById('auth-screen').style.display = 'none';
-    const appEl = document.getElementById('app-screen');
-    appEl.style.display = 'flex';
-    const av = document.getElementById('user-avatar');
-    if (u.picture) {
-      av.innerHTML = `<img src="${u.picture}" alt="" />`;
-    } else {
-      av.textContent = (u.name || 'U')[0].toUpperCase();
-    }
-    renderCategories();
-    // тихо подгружаем план в фоне — чтобы после сохранения траты
-    // сразу показать, сколько осталось в категории
-    loadPlan();
-  }
-
-  function signOut() {
-    if (!AUTH_ENABLED) {
-      // экран входа отключён — просто сбрасываем токен,
-      // при следующем сохранении Google спросит доступ заново
-      if (!confirm('Odpojit Google účet? Při dalším ukládání se přístup zeptá znovu.')) return;
+async function refreshData(force) {
+  if (dataLoading) return;
+  if (dataState && !force && Date.now() - dataState.loadedAt < 30000) { renderAll(); return; }
+  dataLoading = true;
+  ['plan-refresh', 'hist-refresh'].forEach(id => $(id) && $(id).classList.add('spin'));
+  try {
+    await ensureAccessToken();
+    const ranges = [`'${PLAN_SHEET}'!B15:D26`, `'${PLAN_SHEET}'!D7`, `'${TX_SHEET}'!A3:G`];
+    const q = ranges.map(r => 'ranges=' + encodeURIComponent(r)).join('&');
+    let res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchGet?${q}&valueRenderOption=UNFORMATTED_VALUE`,
+      { headers: { Authorization: 'Bearer ' + accessToken } }
+    );
+    if (res.status === 401) {
       accessToken = null;
-      planState = null;
-      showToast('Google účet odpojen', 'success');
-      return;
-    }
-    if (!confirm('Odhlásit se z účtu?')) return;
-    accessToken = null;
-    planState = null;
-    document.getElementById('app-screen').style.display = 'none';
-    document.getElementById('auth-screen').style.display = 'flex';
-  }
-
-  function showAuthError(msg) {
-    const el = document.getElementById('auth-error');
-    el.textContent = msg; el.style.display = 'block';
-  }
-
-  // ── UI ──
-  function setType(key) {
-    currentType = key;
-    selectedCat = null;
-    document.getElementById('opt-expense').className = 'type-opt' + (key === 'expense' ? ' active-expense' : '');
-    document.getElementById('opt-income').className = 'type-opt' + (key === 'income' ? ' active-income' : '');
-    const btn = document.getElementById('submit-btn');
-    btn.className = 'submit-btn ' + (key === 'expense' ? 'expense' : 'income');
-    btn.textContent = key === 'expense' ? 'Přidat výdaj' : 'Přidat příjem';
-    renderCategories();
-  }
-
-  function renderCategories() {
-    const grid = document.getElementById('cat-grid');
-    grid.innerHTML = '';
-    (CATEGORIES[currentType] || []).forEach(c => {
-      const btn = document.createElement('div');
-      btn.className = 'cat-btn' + (selectedCat === c.ru ? ' selected' : '');
-      btn.innerHTML = `<span class="cat-icon">${c.icon}</span>${c.label}`;
-      btn.onclick = () => selectCat(c.ru);
-      grid.appendChild(btn);
-    });
-  }
-
-  function selectCat(ru) {
-    selectedCat = ru;
-    renderCategories();
-  }
-
-  function setPayment(ru) {
-    selectedPayment = ru;
-    document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
-  }
-
-  function showView(v) {
-    document.getElementById('add-view').style.display = v === 'add' ? 'flex' : 'none';
-    document.getElementById('history-view').style.display = v === 'history' ? 'flex' : 'none';
-    document.getElementById('plan-view').style.display = v === 'plan' ? 'flex' : 'none';
-    document.getElementById('limit-view').style.display = v === 'limit' ? 'flex' : 'none';
-    document.getElementById('nav-add').className = 'nav-btn' + (v === 'add' ? ' active' : '');
-    document.getElementById('nav-hist').className = 'nav-btn' + (v === 'history' ? ' active' : '');
-    document.getElementById('nav-plan').className = 'nav-btn' + (v === 'plan' ? ' active' : '');
-    document.getElementById('nav-limit').className = 'nav-btn' + (v === 'limit' ? ' active' : '');
-    if (v === 'history') renderHistory();
-    if (v === 'limit') renderLimit();
-    if (v === 'plan') {
-      if (planState) renderPlan();   // сразу показываем то, что уже есть…
-      loadPlan();                    // …и обновляем свежими данными
-    }
-  }
-
-  // ── DESCRIPTION AUTOCOMPLETE ──
-  // подсказки в поле «Popis» из недавних записей (локально, без запросов)
-  function refreshDescList() {
-    const seen = new Set();
-    const dl = document.getElementById('desc-list');
-    dl.innerHTML = '';
-    for (const h of localHistory) {
-      const d = (h.desc || '').trim();
-      if (!d || seen.has(d.toLowerCase())) continue;
-      seen.add(d.toLowerCase());
-      const o = document.createElement('option');
-      o.value = d;
-      dl.appendChild(o);
-      if (seen.size >= 30) break;
-    }
-  }
-
-  // ── PLAN (план из листа «🎯 План» + факт из транзакций) ──
-  //
-  // ЧИТАЕМ (только чтение, ничего не пишем):
-  //   '🎯 План'!B15:D26  — категория | группа | сумма плана
-  //   '🎯 План'!D7       — плановый доход
-  //   '📋 Транзакции'!A3:F — все транзакции (факт за текущий месяц
-  //                          считаем здесь же, в приложении)
-  // Если поменяешь расположение ячеек на листе «План» — поправь адреса ниже.
-  const PLAN_SHEET = '🎯 План';
-  const TX_SHEET = '📋 Транзакции';
-
-  // «Еда» и «Вкусности» в плане — один общий бюджет
-  const MERGED_FOOD = { name: 'Еда и вкусности', parts: ['Еда', 'Вкусности'], label: 'Jídlo a pochutiny', icon: '🛒' };
-
-  const GROUPS = [
-    { ru: 'Обязательное', label: 'Povinné',     color: 'var(--blue)' },
-    { ru: 'По желанию',   label: 'Podle chuti', color: 'var(--amber)' },
-    { ru: 'Откладывать',  label: 'Odkládat',    color: 'var(--violet)' },
-  ];
-
-  let planState = null; // { cats, incomePlan, incomeFact, loadedAt }
-  let planLoading = false;
-
-  const fmt = n => Math.round(n).toLocaleString('cs-CZ');
-  const escapeHtml = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-
-  function planCatInfo(name) {
-    return name === MERGED_FOOD.name ? MERGED_FOOD : findCategory(name);
-  }
-
-  function daysLeftInMonth() {
-    const now = new Date();
-    const dim = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    return Math.max(1, dim - now.getDate() + 1); // считая сегодняшний день
-  }
-
-  // в колонке A бывают и настоящие даты (число-серийник), и текст «05.04.2026»
-  function parseTxDate(v) {
-    if (typeof v === 'number') {
-      const d = new Date(Math.round((v - 25569) * 86400000));
-      return { y: d.getUTCFullYear(), m: d.getUTCMonth() };
-    }
-    if (typeof v === 'string') {
-      const m = v.trim().match(/^(\d{1,2})\.(\d{1,2})[.\s]+(\d{4})$/);
-      if (m) return { y: +m[3], m: +m[2] - 1 };
-    }
-    return null;
-  }
-
-  function barColor(ratio) {
-    if (ratio > 1) return 'var(--red)';
-    if (ratio >= 0.8) return 'var(--amber)';
-    return 'var(--green)';
-  }
-
-  async function loadPlan(isRetry) {
-    if (planLoading) return;
-    planLoading = true;
-    const body = document.getElementById('plan-body');
-    const refreshBtn = document.getElementById('plan-refresh');
-    refreshBtn.classList.add('spin');
-    if (!planState) body.innerHTML = '<div class="history-empty">Načítám plán…</div>';
-
-    try {
       await ensureAccessToken();
-      const ranges = [`'${PLAN_SHEET}'!B15:D26`, `'${PLAN_SHEET}'!D7`, `'${TX_SHEET}'!A3:F`];
-      const q = ranges.map(r => 'ranges=' + encodeURIComponent(r)).join('&');
-      const res = await fetch(
+      res = await fetch(
         `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchGet?${q}&valueRenderOption=UNFORMATTED_VALUE`,
         { headers: { Authorization: 'Bearer ' + accessToken } }
       );
-
-      if (res.status === 401 && !isRetry) {            // токен протух — просим новый и пробуем ещё раз
-        accessToken = null;
-        planLoading = false;
-        return loadPlan(true);
-      }
-      if (!res.ok) {
-        const e = await res.json().catch(() => ({}));
-        const msg = e.error?.message || res.status;
-        if (!planState) {
-          const missing = /Unable to parse range|not found/i.test(String(msg));
-          body.innerHTML = `<div class="history-empty">${missing
-            ? `V tabulce chybí list „${PLAN_SHEET}“.<br>Nahraj novou verzi tabulky s plánem.`
-            : 'Plán se nepodařilo načíst:<br>' + escapeHtml(msg)}</div>`;
-        } else {
-          showToast('Plán se nepodařilo obnovit', 'error');
-        }
-        return;
-      }
-
-      const data = await res.json();
-      const [planR, incR, txR] = data.valueRanges;
-
-      // факт за текущий месяц из транзакций
-      const now = new Date();
-      const spent = {};
-      let incomeFact = 0;
-      (txR.values || []).forEach(r => {
-        const d = parseTxDate(r[0]);
-        if (!d || d.y !== now.getFullYear() || d.m !== now.getMonth()) return;
-        const amt = Number(r[4]);
-        if (!amt) return;
-        if (r[1] === 'Расход') spent[r[2]] = (spent[r[2]] || 0) + amt;
-        else if (r[1] === 'Доход') incomeFact += amt;
-      });
-
-      const cats = (planR.values || [])
-        .map(r => ({ name: r[0] || '', group: r[1] || 'Обязательное', plan: Number(r[2]) || 0 }))
-        .filter(c => c.name)
-        .map(c => {
-          c.parts = c.name === MERGED_FOOD.name ? MERGED_FOOD.parts : [c.name];
-          c.fact = c.parts.reduce((a, p) => a + (spent[p] || 0), 0);
-          return c;
-        });
-
-      planState = {
-        cats,
-        incomePlan: Number((incR.values || [[0]])[0][0]) || 0,
-        incomeFact,
-        loadedAt: Date.now()
-      };
-      renderPlan();
-    } catch (e) {
-      if (!planState) body.innerHTML = '<div class="history-empty">Plán se nepodařilo načíst:<br>' + escapeHtml(e.message || e) + '</div>';
-    } finally {
-      planLoading = false;
-      refreshBtn.classList.remove('spin');
     }
-  }
-
-  function renderPlan() {
-    const body = document.getElementById('plan-body');
-    const s = planState;
-    if (!s) return;
-
-    const now = new Date();
-    const dl = daysLeftInMonth();
-    document.getElementById('plan-month').textContent = now.toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' });
-
-    const planned = s.cats.filter(c => c.plan > 0);
-    const totalPlan = planned.reduce((a, c) => a + c.plan, 0);
-    const totalFact = planned.reduce((a, c) => a + c.fact, 0);
-    const unplanned = s.cats.filter(c => c.plan <= 0).reduce((a, c) => a + c.fact, 0);
-
-    if (!totalPlan) {
-      body.innerHTML = `<div class="history-empty">V listu „${PLAN_SHEET}“ zatím nejsou vyplněné částky plánu.<br>Vyplň žluté buňky a klepni na ⟳.</div>`;
-      return;
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(e.error?.message || res.status);
     }
+    const data = await res.json();
+    const [planR, incR, txR] = data.valueRanges;
 
-    const rem = totalPlan - totalFact;
-    const pct = Math.max(0, Math.min(100, totalFact / totalPlan * 100));
+    const planCats = (planR.values || [])
+      .map(r => ({ name: r[0] || '', group: r[1] || 'Обязательное', plan: Number(r[2]) || 0 }))
+      .filter(c => c.name)
+      .map(c => { c.parts = c.name === MERGED_FOOD.name ? MERGED_FOOD.parts : [c.name]; return c; });
 
-    let html = `
-      <div class="limit-card">
-        <div class="limit-remaining ${rem < 0 ? 'over' : 'ok'}">${fmt(rem)} Kč</div>
-        <div class="limit-sub">${rem < 0
-          ? `plán překročen o ${fmt(-rem)} Kč (z ${fmt(totalPlan)} Kč)`
-          : `zbývá z plánu ${fmt(totalPlan)} Kč · ${dl} ${dl === 1 ? 'den' : (dl < 5 ? 'dny' : 'dní')} do konce měsíce`}</div>
-        <div class="limit-bar-wrap"><div class="limit-bar ${rem < 0 ? 'over' : (pct >= 80 ? 'warn' : '')}" style="width:${pct}%"></div></div>
-      </div>`;
-
-    // три группы
-    html += '<div class="group-grid">' + GROUPS.map(g => {
-      const gc = planned.filter(c => c.group === g.ru);
-      const gp = gc.reduce((a, c) => a + c.plan, 0);
-      const gf = gc.reduce((a, c) => a + c.fact, 0);
-      const ratio = gp > 0 ? gf / gp : 0;
-      return `
-        <div class="group-card">
-          <div class="group-name">${g.label}</div>
-          <div class="group-val">${gp > 0 ? fmt(gf) : '—'}</div>
-          <div class="group-sub">${gp > 0 ? 'z ' + fmt(gp) + ' Kč' : 'bez plánu'}</div>
-          <div class="mini-bar"><div style="width:${Math.min(100, ratio * 100)}%;background:${gp > 0 ? barColor(ratio) : 'transparent'}"></div></div>
-        </div>`;
-    }).join('') + '</div>';
-
-    // категории: сначала по группам, внутри — как в таблице
-    const order = g => { const i = GROUPS.findIndex(x => x.ru === g); return i < 0 ? 99 : i; };
-    const rows = s.cats
-      .filter(c => c.plan > 0 || c.fact > 0)
-      .sort((a, b) => order(a.group) - order(b.group));
-
-    html += '<div class="plan-list">' + rows.map(c => {
-      const info = planCatInfo(c.name);
-      const ratio = c.plan > 0 ? c.fact / c.plan : 0;
-      let sub, cls = '';
-      if (c.plan <= 0) { sub = 'bez plánu'; cls = 'free'; }
-      else if (c.fact > c.plan) { sub = `přes plán o ${fmt(c.fact - c.plan)} Kč`; cls = 'over'; }
-      else { const r = c.plan - c.fact; sub = `zbývá ${fmt(r)} Kč · ≈ ${fmt(r / dl)} Kč/den`; }
-      return `
-        <div class="plan-row">
-          <div class="plan-row-top">
-            <div class="plan-row-icon">${info.icon}</div>
-            <div class="plan-row-name">${escapeHtml(info.label)}</div>
-            <div class="plan-row-amt">${fmt(c.fact)}${c.plan > 0 ? ' / ' + fmt(c.plan) : ''} Kč</div>
-          </div>
-          ${c.plan > 0 ? `<div class="limit-bar-wrap" style="margin-top:10px;height:6px"><div class="limit-bar" style="width:${Math.min(100, ratio * 100)}%;background:${barColor(ratio)}"></div></div>` : ''}
-          <div class="plan-row-sub ${cls}">${sub}</div>
-        </div>`;
-    }).join('') + '</div>';
-
-    // доход и «мимо плана»
-    const notes = [];
-    if (s.incomePlan > 0 || s.incomeFact > 0) {
-      notes.push(`Příjem: ${fmt(s.incomeFact)}${s.incomePlan > 0 ? ' / ' + fmt(s.incomePlan) : ''} Kč`);
-    }
-    if (unplanned > 0) notes.push(`Mimo plán: ${fmt(unplanned)} Kč`);
-    if (notes.length) html += `<div class="plan-note">${notes.join(' · ')}</div>`;
-
-    body.innerHTML = html;
-  }
-
-  // после сохранения расхода: обновляем факт в памяти и возвращаем
-  // короткую подсказку «сколько осталось в категории» (или null)
-  function planAfterSave(catRu, amount) {
-    if (!planState) return null;
-    const c = planState.cats.find(x => x.parts.includes(catRu));
-    if (!c) return null;
-    c.fact += amount;
-    if (c.plan <= 0) return null;
-    const info = planCatInfo(c.name);
-    const rem = c.plan - c.fact;
-    if (rem < 0) return { warn: true, text: `⚠ ${info.label}: přes plán o ${fmt(-rem)} Kč` };
-    return { warn: false, text: `${info.label}: zbývá ${fmt(rem)} Kč (≈ ${fmt(rem / daysLeftInMonth())} Kč/den)` };
-  }
-
-  // ── SUBMIT ──
-  async function submitEntry() {
-    const amount = parseFloat(document.getElementById('amount').value);
-    if (!amount || amount <= 0) { showToast('Zadej částku', 'error'); return; }
-    if (!selectedCat) { showToast('Vyber kategorii', 'error'); return; }
-
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.textContent = 'Ukládám...';
-
-    // если ещё нет токена (актуально при отключённом экране входа) —
-    // тихо запрашиваем его именно сейчас, а не при открытии приложения
-    try {
-      await ensureAccessToken();
-    } catch (e) {
-      showToast('Přihlášení do Google selhalo', 'error');
-      btn.disabled = false;
-      setType(currentType);
-      return;
-    }
-
-    const now = new Date();
-    const dateSerial = Math.floor((now - new Date(1899,11,30)) / 86400000);
-    const desc = document.getElementById('desc').value.trim();
-    const typeRu = TYPES[currentType].ru;
-
-    // ВАЖНО: строка содержит только A:G (Дата, Тип, Категория, Описание,
-    // Сумма, Способ оплаты, Примечание). Колонку H ("Месяц (авто)") мы
-    // НЕ трогаем вообще — ни запросом, ни диапазоном. Тип/Категория/Способ
-    // оплаты пишутся строго на русском, как в исходной таблице и её
-    // выпадающих списках/формулах.
-    const row = [dateSerial, typeRu, selectedCat, desc, amount, selectedPayment, ''];
-
-    const SHEET_NAME = '📋 Транзакции';
-
-    try {
-      // 1) Узнаём номер первой свободной строки по столбцу A
-      //    (а не через append — он сам решает, где писать, и иногда задевает H)
-      const colARes = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_NAME)}!A:A`,
-        { headers: { Authorization: 'Bearer ' + accessToken } }
-      );
-      if (!colARes.ok) {
-        const e = await colARes.json();
-        if (colARes.status === 401) { tokenClient.requestAccessToken(); return; }
-        throw new Error(e.error?.message || colARes.status);
-      }
-      const colAData = await colARes.json();
-      const filledRows = (colAData.values || []).length; // включая заголовки
-      const targetRow = filledRows + 1; // первая пустая строка
-
-      // 2) Пишем СТРОГО в A{row}:G{row} — H в этом запросе не участвует
-      //    и физически не может быть изменён.
-      const range = `${encodeURIComponent(SHEET_NAME)}!A${targetRow}:G${targetRow}`;
-      const res = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`,
-        {
-          method: 'PUT',
-          headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ values: [row] })
-        }
-      );
-      if (!res.ok) {
-        const e = await res.json();
-        // token may be expired — re-auth
-        if (res.status === 401) { tokenClient.requestAccessToken(); return; }
-        throw new Error(e.error?.message || res.status);
-      }
-
-      // save local (для локальной истории храним и ru-значения, и удобные метки)
-      localHistory.unshift({
-        typeKey: currentType,
-        catRu: selectedCat,
-        amount,
-        desc,
-        payment: selectedPayment,
-        date: now.toLocaleDateString('cs-CZ')
-      });
-      if (localHistory.length > 50) localHistory.pop();
-      localStorage.setItem('budget_history', JSON.stringify(localHistory));
-      refreshDescList();
-
-      // если задан лимит и это расход — автоматически списываем со счётчика
-      if (currentType === 'expense' && budgetLimit) {
-        budgetLimit.remaining -= amount;
-        saveLimit();
-      }
-
-      // подсказка по плану: сколько осталось в категории
-      const planHint = currentType === 'expense' ? planAfterSave(selectedCat, amount) : null;
-      let toastMsg = `✓ ${TYPES[currentType].label} ${amount.toLocaleString('cs-CZ')} Kč`;
-      if (planHint) toastMsg += '\n' + planHint.text;
-      showToast(toastMsg, planHint && planHint.warn ? 'warn' : 'success', planHint ? 4200 : 2500);
-
-      // если план ещё не загружался (например, при отключённом экране входа) — подгружаем в фоне
-      if (!planState) loadPlan();
-
-      document.getElementById('amount').value = '';
-      document.getElementById('desc').value = '';
-      selectedCat = null;
-      renderCategories();
-
-    } catch(e) {
-      showToast('Chyba: ' + e.message, 'error');
-    } finally {
-      btn.disabled = false;
-      setType(currentType);
-    }
-  }
-
-  // ── HISTORY ──
-  function renderHistory() {
-    const list = document.getElementById('history-list');
-    list.innerHTML = '';
-    if (!localHistory.length) {
-      list.innerHTML = '<div class="history-empty">Zatím žádné záznamy</div>';
-      document.getElementById('history-count').textContent = '';
-      return;
-    }
-    document.getElementById('history-count').textContent = localHistory.length + ' záznamů';
-    localHistory.forEach(h => {
-      const catInfo = findCategory(h.catRu);
-      const el = document.createElement('div');
-      el.className = 'history-item';
-      el.innerHTML = `
-        <div class="h-icon">${catInfo.icon}</div>
-        <div class="h-info">
-          <div class="h-name">${h.desc || catInfo.label}</div>
-          <div class="h-cat">${catInfo.label} · ${h.date}</div>
-        </div>
-        <div class="h-amount ${h.typeKey === 'expense' ? 'exp' : 'inc'}">${h.typeKey === 'expense' ? '−' : '+'}${h.amount.toLocaleString('cs-CZ')} Kč</div>
-      `;
-      list.appendChild(el);
+    // агрегация транзакций по месяцам
+    const months = new Map();
+    const txs = [];
+    (txR.values || []).forEach(r => {
+      const pd = parseTxDate(r[0]);
+      if (!pd) return;
+      const amt = Number(r[4]);
+      if (!amt) return;
+      const type = r[1], cat = r[2] || '', desc = r[3] || '', pay = r[5] || '';
+      txs.push({ ...pd, type, cat, desc, pay, amt });
+      const k = monthKey(pd.y, pd.m);
+      if (!months.has(k)) months.set(k, { income: 0, expense: 0, byCat: {}, daily: {}, txs: [] });
+      const mo = months.get(k);
+      if (type === 'Расход') {
+        mo.expense += amt;
+        mo.byCat[cat] = (mo.byCat[cat] || 0) + amt;
+        mo.daily[pd.d] = (mo.daily[pd.d] || 0) + amt;
+      } else if (type === 'Доход') mo.income += amt;
+      mo.txs.push({ ...pd, type, cat, desc, pay, amt });
     });
+    txs.sort((a, b) => (b.y * 372 + b.m * 31 + b.d) - (a.y * 372 + a.m * 31 + a.d));
+    months.forEach(mo => mo.txs.reverse());
+
+    dataState = {
+      months, txs, planCats,
+      incomePlan: Number((incR.values || [[0]])[0][0]) || 0,
+      loadedAt: Date.now()
+    };
+    renderAll();
+  } catch (e) {
+    if (!dataState) {
+      $('dash-cats').innerHTML = '<div class="empty">Data se nepodařilo načíst:<br/>' + escapeHtml(e.message || e) + '</div>';
+      $('plan-body').innerHTML = '<div class="empty">Plán se nepodařilo načíst:<br/>' + escapeHtml(e.message || e) + '</div>';
+    } else showToast('Obnovení selhalo: ' + (e.message || e), 'error');
+  } finally {
+    dataLoading = false;
+    ['plan-refresh', 'hist-refresh'].forEach(id => $(id) && $(id).classList.remove('spin'));
+  }
+}
+
+function curMonth() {
+  if (!dataState) return null;
+  return dataState.months.get(monthKey(selY, selM)) || { income: 0, expense: 0, byCat: {}, daily: {}, txs: [] };
+}
+function planTotal() { return dataState ? dataState.planCats.reduce((a, c) => a + c.plan, 0) : 0; }
+function isCurrentMonth() { const n = new Date(); return selY === n.getFullYear() && selM === n.getMonth(); }
+
+function shiftMonth(dir) {
+  selM += dir;
+  if (selM < 0) { selM = 11; selY--; }
+  if (selM > 11) { selM = 0; selY++; }
+  renderDash();
+}
+
+// ── RENDER: ALL ──
+function renderAll() { renderDash(); renderPlan(); renderHistory(); renderLimit(); }
+
+// ── RENDER: DASHBOARD ──
+function renderDash() {
+  $('dash-month').innerHTML = CS_MONTHS[selM] + ' <span>' + selY + '</span>';
+  const n = new Date();
+  $('m-next').classList.toggle('off', selY * 12 + selM >= n.getFullYear() * 12 + n.getMonth());
+  if (!dataState) {
+    slotSet($('hero-amount'), '0');
+    $('hero-sub').textContent = 'Načítám data z tabulky…';
+    return;
+  }
+  const mo = curMonth();
+  const pt = planTotal();
+  slotSet($('hero-amount'), fmt0(mo.expense));
+  $('chip-income').textContent = '+' + fmt0(mo.income);
+  const bal = mo.income - mo.expense;
+  $('chip-balance').textContent = (bal >= 0 ? '+' : '−') + fmt0(Math.abs(bal));
+  $('chip-balance').className = 'v num ' + (bal >= 0 ? 'mint' : 'red');
+
+  const bar = $('hero-bar');
+  if (pt > 0) {
+    const pct = Math.min(100, mo.expense / pt * 100);
+    bar.style.width = pct + '%';
+    bar.className = mo.expense > pt ? 'over' : '';
+    const rem = pt - mo.expense;
+    $('hero-sub').innerHTML = rem >= 0
+      ? `z plánu <b>${fmt0(pt)} Kč</b> — zbývá <b>${fmt0(rem)} Kč</b>`
+      : `plán <b>${fmt0(pt)} Kč</b> překročen o <b>${fmt0(-rem)} Kč</b>`;
+    if (isCurrentMonth()) {
+      const dl = daysLeftInMonth();
+      $('chip-day-label').textContent = 'Na den zbývá';
+      $('chip-day').textContent = rem > 0 ? fmt0(rem / dl) : '0';
+      $('chip-day').className = 'v num' + (rem > 0 ? '' : ' red');
+    } else {
+      $('chip-day-label').textContent = 'Průměr / den';
+      $('chip-day').textContent = fmt0(mo.expense / daysInMonth(selY, selM));
+      $('chip-day').className = 'v num';
+    }
+  } else {
+    bar.style.width = '0%';
+    $('hero-sub').innerHTML = mo.txs.length
+      ? `${mo.txs.length} záznamů — plán zatím není vyplněný`
+      : 'Tento měsíc zatím bez záznamů';
+    $('chip-day-label').textContent = 'Průměr / den';
+    $('chip-day').textContent = mo.expense ? fmt0(mo.expense / daysInMonth(selY, selM)) : '—';
+    $('chip-day').className = 'v num';
   }
 
-  // ── LIMIT ──
-  function saveLimit() {
-    localStorage.setItem('budget_limit', JSON.stringify(budgetLimit));
+  drawSpark(mo);
+  renderDashCats(mo);
+  renderRecent(mo);
+}
+
+function renderDashCats(mo) {
+  const box = $('dash-cats');
+  const cats = dataState.planCats
+    .filter(c => c.plan > 0)
+    .map(c => ({ ...c, fact: c.parts.reduce((a, p) => a + (mo.byCat[p] || 0), 0) }))
+    .sort((a, b) => (b.fact / b.plan) - (a.fact / a.plan))
+    .slice(0, 6);
+  if (!cats.length) {
+    box.innerHTML = '<div class="empty">Vyplň plán v tabulce (žluté buňky)<br/>a uvidíš tady postup kategorií.</div>';
+    return;
+  }
+  box.innerHTML = '';
+  cats.forEach(c => {
+    const over = c.fact > c.plan;
+    const info = findCategory(c.parts[0]);
+    const el = document.createElement('div');
+    el.className = 'catrow';
+    el.innerHTML = `
+      <div class="top">
+        <div class="name">${ICONS[info.icon] || ICONS.note}${c.name === MERGED_FOOD.name ? 'Jídlo a pochutiny' : escapeHtml(info.label)}</div>
+        <div class="vals ${over ? 'over' : ''}"><b>${fmt0(c.fact)}</b> / ${fmt0(c.plan)} Kč</div>
+      </div>
+      <div class="bar"><i class="${over ? 'over' : ''}" style="width:${Math.min(100, c.plan ? c.fact / c.plan * 100 : 0)}%"></i></div>`;
+    box.appendChild(el);
+  });
+}
+
+function txRowHtml(t) {
+  const info = findCategory(t.cat);
+  const exp = t.type === 'Расход';
+  return `
+    <div class="tx">
+      <div class="ic">${ICONS[info.icon] || ICONS.note}</div>
+      <div class="inf">
+        <div class="n">${escapeHtml(t.desc || info.label)}</div>
+        <div class="c">${escapeHtml(info.label)}${t.pay ? ' · ' + escapeHtml((PAYMENTS.find(p => p.ru === t.pay) || {}).label || t.pay) : ''}</div>
+      </div>
+      <div class="a ${exp ? 'exp' : 'inc'}">${exp ? '−' : '+'}${fmt0(t.amt)} Kč</div>
+    </div>`;
+}
+
+function renderRecent(mo) {
+  const box = $('dash-recent');
+  const list = [...mo.txs].reverse().slice(0, 6);
+  box.innerHTML = list.length
+    ? list.map(txRowHtml).join('')
+    : '<div class="empty">Žádné záznamy</div>';
+}
+
+// ── SPARKLINE ──
+function drawSpark(mo) {
+  const cv = $('spark');
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth || 320, H = 64;
+  cv.width = W * dpr; cv.height = H * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const dim = daysInMonth(selY, selM);
+  const lastDay = isCurrentMonth() ? new Date().getDate() : dim;
+  const cum = [];
+  let run = 0;
+  for (let d = 1; d <= lastDay; d++) { run += mo.daily[d] || 0; cum.push(run); }
+  $('spark-to').textContent = lastDay + '.';
+  $('spark-note').textContent = cum.length ? 'celkem ' + fmt0(run) + ' Kč' : '';
+  if (!cum.length || run === 0) return;
+
+  const max = Math.max(...cum) * 1.08;
+  const px = i => 4 + i / Math.max(1, cum.length - 1) * (W - 8);
+  const py = v => H - 8 - (v / max) * (H - 18);
+
+  // fill
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, 'rgba(0,217,163,.20)');
+  grad.addColorStop(1, 'rgba(0,217,163,0)');
+  ctx.beginPath();
+  ctx.moveTo(px(0), py(cum[0]));
+  cum.forEach((v, i) => ctx.lineTo(px(i), py(v)));
+  ctx.lineTo(px(cum.length - 1), H - 4); ctx.lineTo(px(0), H - 4); ctx.closePath();
+  ctx.fillStyle = grad; ctx.fill();
+
+  // line — постепенное «прорисовывание»
+  const total = cum.length;
+  let step = 0;
+  const t0 = performance.now();
+  function frame(t) {
+    const p = Math.min(1, (t - t0) / 550);
+    const upto = Math.max(2, Math.floor(total * p));
+    ctx.clearRect(0, 0, W, H);
+    ctx.beginPath();
+    ctx.moveTo(px(0), py(cum[0]));
+    for (let i = 1; i < upto; i++) ctx.lineTo(px(i), py(cum[i]));
+    ctx.lineTo(px(upto - 1), H - 4); ctx.lineTo(px(0), H - 4); ctx.closePath();
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(px(0), py(cum[0]));
+    for (let i = 1; i < upto; i++) ctx.lineTo(px(i), py(cum[i]));
+    ctx.strokeStyle = '#00d9a3'; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.stroke();
+    // endpoint
+    const ex = px(upto - 1), ey = py(cum[upto - 1]);
+    ctx.beginPath(); ctx.arc(ex, ey, 3.2, 0, 7); ctx.fillStyle = '#00d9a3'; ctx.fill();
+    ctx.beginPath(); ctx.arc(ex, ey, 6.5, 0, 7); ctx.fillStyle = 'rgba(0,217,163,.25)'; ctx.fill();
+    if (p < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+</script>
+<script>
+// ── NAVIGATION ──
+function showView(name) {
+  ['dash', 'add', 'plan', 'history'].forEach(v => {
+    $('view-' + v).classList.toggle('active', v === name);
+    $('nav-' + v).classList.toggle('on', v === name);
+  });
+  if (name === 'dash') renderDash();
+  if (name === 'plan') { if (!dataState) refreshData(); else renderPlan(); }
+  if (name === 'history') { if (!dataState) refreshData(); else renderHistory(); }
+  if ((name === 'plan' || name === 'history') && dataState && Date.now() - dataState.loadedAt > 60000) refreshData(true);
+}
+
+// ── ADD VIEW ──
+function setType(t) {
+  currentType = t;
+  $('type-seg').classList.toggle('inc', t === 'income');
+  $('opt-expense').classList.toggle('on', t === 'expense');
+  $('opt-income').classList.toggle('on', t === 'income');
+  selectedCat = null;
+  renderCategories();
+  const btn = $('submit-btn');
+  btn.textContent = t === 'expense' ? 'Přidat výdaj' : 'Přidat příjem';
+  btn.classList.toggle('inc', t === 'income');
+}
+
+function renderCategories() {
+  const grid = $('cat-grid');
+  grid.innerHTML = '';
+  CATEGORIES[currentType].forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'cat' + (selectedCat === c.ru ? ' sel' : '');
+    el.innerHTML = (ICONS[c.icon] || ICONS.note) + `<span>${c.label}</span>`;
+    el.onclick = () => { selectedCat = c.ru; renderCategories(); };
+    grid.appendChild(el);
+  });
+}
+
+function renderPayments() {
+  const box = $('pay-chips');
+  box.innerHTML = '';
+  PAYMENTS.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'chip' + (selectedPayment === p.ru ? ' sel' : '');
+    el.textContent = p.label;
+    el.onclick = () => { selectedPayment = p.ru; renderPayments(); };
+    box.appendChild(el);
+  });
+}
+
+function renderPad() {
+  const pad = $('pad');
+  pad.innerHTML = '';
+  const keys = ['1','2','3','4','5','6','7','8','9',',','0','00','⌫'];
+  keys.forEach(k => {
+    const b = document.createElement('button');
+    if (k === '⌫') b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5h11a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-5-7 5-7z"/><path d="M12 10l5 5M17 10l-5 5"/></svg>';
+    else b.textContent = k;
+    b.onclick = () => padPress(k);
+    pad.appendChild(b);
+  });
+}
+
+function padPress(k) {
+  if (k === '⌫') amountStr = amountStr.slice(0, -1);
+  else if (k === ',') { if (!amountStr.includes(',')) amountStr = (amountStr || '0') + ','; }
+  else if (k === '00') { if (amountStr && !amountStr.includes(',')) amountStr += '00'; }
+  else {
+    if (amountStr.includes(',')) {
+      const dec = amountStr.split(',')[1];
+      if (dec.length >= 2) return;
+      amountStr += k;
+    } else {
+      if (amountStr.replace(/^0+/, '').length >= 7) return;
+      amountStr = amountStr === '0' ? k : amountStr + k;
+    }
+  }
+  renderAmount();
+}
+
+function renderAmount() {
+  const box = $('amount-val');
+  const slot = $('amount-slot');
+  if (!amountStr) {
+    slotSet(slot, '0');
+    box.classList.add('placeholder');
+    return;
+  }
+  box.classList.remove('placeholder');
+  const [int, dec] = amountStr.split(',');
+  const grouped = (parseInt(int, 10) || 0).toLocaleString('cs-CZ');
+  slotSet(slot, grouped + (amountStr.includes(',') ? ',' + (dec || '') : ''));
+}
+
+function parseAmount() {
+  if (!amountStr) return 0;
+  const v = parseFloat(amountStr.replace(/\s/g, '').replace(',', '.'));
+  return isNaN(v) ? 0 : Math.round(v * 100) / 100;
+}
+
+function refreshDescList() {
+  const dl = $('desc-list');
+  dl.innerHTML = '';
+  const seen = new Set();
+  localHistory.forEach(h => {
+    if (h.desc && !seen.has(h.desc)) { seen.add(h.desc); const o = document.createElement('option'); o.value = h.desc; dl.appendChild(o); }
+  });
+}
+
+function planAfterSave(catRu, amount) {
+  if (!dataState) return null;
+  const c = dataState.planCats.find(x => x.parts.includes(catRu));
+  if (!c || !c.plan) return null;
+  const mo = curMonth();
+  const fact = c.parts.reduce((a, p) => a + (mo.byCat[p] || 0), 0) + amount;
+  const rem = c.plan - fact;
+  const info = findCategory(catRu);
+  if (rem < 0) return { warn: true, text: `⚠ ${info.label}: přes plán o ${fmt0(-rem)} Kč` };
+  return { warn: false, text: `${info.label}: zbývá ${fmt0(rem)} Kč` + (isCurrentMonth() ? ` (≈ ${fmt0(rem / daysLeftInMonth())} Kč/den)` : '') };
+}
+
+// ── SUBMIT ──
+async function submitEntry() {
+  const amount = parseAmount();
+  if (!amount || amount <= 0) { showToast('Zadej částku', 'error'); return; }
+  if (!selectedCat) { showToast('Vyber kategorii', 'error'); return; }
+
+  const btn = $('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Ukládám…';
+
+  try { await ensureAccessToken(); }
+  catch (e) {
+    showToast('Přihlášení do Google selhalo', 'error');
+    btn.disabled = false;
+    setType(currentType);
+    return;
   }
 
-  function setLimit() {
-    const val = parseFloat(document.getElementById('limit-set-amount').value);
-    if (!val || val <= 0) { showToast('Zadej částku limitu', 'error'); return; }
-    budgetLimit = { limit: val, remaining: val };
-    saveLimit();
-    document.getElementById('limit-set-amount').value = '';
-    showToast(`✓ Limit nastaven: ${val.toLocaleString('cs-CZ')} Kč`, 'success');
-    renderLimit();
-  }
+  const now = new Date();
+  const dateSerial = Math.floor((now - new Date(1899, 11, 30)) / 86400000);
+  const desc = $('desc').value.trim();
+  const typeRu = TYPES[currentType].ru;
 
-  function adjustLimit(sign) {
-    if (!budgetLimit) { showToast('Nejdřív nastav limit', 'error'); return; }
-    const val = parseFloat(document.getElementById('limit-adjust-amount').value);
-    if (!val || val <= 0) { showToast('Zadej částku', 'error'); return; }
-    budgetLimit.remaining += sign * val;
-    saveLimit();
-    document.getElementById('limit-adjust-amount').value = '';
-    showToast(sign > 0 ? `+ ${val.toLocaleString('cs-CZ')} Kč přidáno` : `− ${val.toLocaleString('cs-CZ')} Kč odečteno`, 'success');
-    renderLimit();
-  }
+  // Пишем СТРОГО A:G — колонка H («Месяц (авто)») в запросе не участвует.
+  const row = [dateSerial, typeRu, selectedCat, desc, amount, selectedPayment, ''];
 
-  function resetLimit() {
-    if (!budgetLimit) { showToast('Nejdřív nastav limit', 'error'); return; }
-    if (!confirm('Obnovit zůstatek na plný limit ' + budgetLimit.limit.toLocaleString('cs-CZ') + ' Kč?')) return;
-    budgetLimit.remaining = budgetLimit.limit;
-    saveLimit();
-    showToast('✓ Zůstatek obnoven', 'success');
-    renderLimit();
-  }
+  try {
+    // 1) первая свободная строка по столбцу A
+    const colARes = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TX_SHEET)}!A:A`,
+      { headers: { Authorization: 'Bearer ' + accessToken } }
+    );
+    if (!colARes.ok) {
+      if (colARes.status === 401) { accessToken = null; tokenClient.requestAccessToken(); return; }
+      const e = await colARes.json();
+      throw new Error(e.error?.message || colARes.status);
+    }
+    const colAData = await colARes.json();
+    const targetRow = (colAData.values || []).length + 1;
 
-  function renderLimit() {
-    const remainingEl = document.getElementById('limit-remaining');
-    const subEl = document.getElementById('limit-sub');
-    const barEl = document.getElementById('limit-bar');
-
-    if (!budgetLimit) {
-      remainingEl.textContent = '— Kč';
-      remainingEl.className = 'limit-remaining';
-      subEl.textContent = 'Limit ještě není nastaven';
-      barEl.style.width = '0%';
-      barEl.className = 'limit-bar';
-      return;
+    // 2) запись строки
+    const range = `${encodeURIComponent(TX_SHEET)}!A${targetRow}:G${targetRow}`;
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`,
+      {
+        method: 'PUT',
+        headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values: [row] })
+      }
+    );
+    if (!res.ok) {
+      if (res.status === 401) { accessToken = null; tokenClient.requestAccessToken(); return; }
+      const e = await res.json();
+      throw new Error(e.error?.message || res.status);
     }
 
-    const { limit, remaining } = budgetLimit;
-    const spent = limit - remaining;
-    const pct = limit > 0 ? Math.max(0, Math.min(100, (spent / limit) * 100)) : 0;
+    // локальная история (для подсказок в описании)
+    localHistory.unshift({
+      typeKey: currentType, catRu: selectedCat, amount, desc,
+      payment: selectedPayment, date: now.toLocaleDateString('cs-CZ')
+    });
+    if (localHistory.length > 50) localHistory.pop();
+    localStorage.setItem('budget_history', JSON.stringify(localHistory));
+    refreshDescList();
 
-    remainingEl.textContent = `${remaining.toLocaleString('cs-CZ')} Kč`;
-    remainingEl.className = 'limit-remaining ' + (remaining < 0 ? 'over' : 'ok');
-    subEl.textContent = remaining < 0
-      ? `Limit překročen o ${Math.abs(remaining).toLocaleString('cs-CZ')} Kč (z ${limit.toLocaleString('cs-CZ')} Kč)`
-      : `zbývá z ${limit.toLocaleString('cs-CZ')} Kč`;
+    // лимит
+    if (currentType === 'expense' && budgetLimit) {
+      budgetLimit.remaining -= amount;
+      saveLimit(); renderLimit();
+    }
 
-    barEl.style.width = pct + '%';
-    barEl.className = 'limit-bar' + (remaining < 0 ? ' over' : (pct >= 80 ? ' warn' : ''));
-  }
+    // обновить локальный кэш данных
+    if (dataState) {
+      const t = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate(), type: typeRu, cat: selectedCat, desc, pay: selectedPayment, amt: amount };
+      dataState.txs.unshift(t);
+      const k = monthKey(t.y, t.m);
+      if (!dataState.months.has(k)) dataState.months.set(k, { income: 0, expense: 0, byCat: {}, daily: {}, txs: [] });
+      const mo = dataState.months.get(k);
+      if (typeRu === 'Расход') {
+        mo.expense += amount;
+        mo.byCat[t.cat] = (mo.byCat[t.cat] || 0) + amount;
+        mo.daily[t.d] = (mo.daily[t.d] || 0) + amount;
+      } else mo.income += amount;
+      mo.txs.push(t);
+    }
 
-  // ── TOAST ──
-  let toastTimer = null;
-  function showToast(msg, type = '', ms = 2500) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast show ' + type;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { t.className = 'toast'; }, ms);
-  }
+    const planHint = currentType === 'expense' ? planAfterSave(selectedCat, amount) : null;
+    let toastMsg = `✓ ${TYPES[currentType].label} ${fmt0(amount)} Kč`;
+    if (planHint) toastMsg += '\n' + planHint.text;
+    showToast(toastMsg, planHint && planHint.warn ? 'warn' : 'success', planHint ? 4200 : 2400);
 
-  // подсказки для поля «Popis»
-  refreshDescList();
-
-  // категории должны быть видны сразу, даже если AUTH_ENABLED = false
-  if (!AUTH_ENABLED) {
+    amountStr = ''; renderAmount();
+    $('desc').value = '';
+    selectedCat = null;
     renderCategories();
+    renderDash();
+  } catch (e) {
+    showToast('Chyba: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    setType(currentType);
   }
+}
+
+// ── PLAN VIEW ──
+function renderPlan() {
+  const body = $('plan-body');
+  if (!dataState) { body.innerHTML = '<div class="empty">Načítám plán…</div>'; return; }
+  const n = new Date();
+  $('plan-month').innerHTML = 'Plán · ' + CS_MONTHS[n.getMonth()] + ' <span>' + n.getFullYear() + '</span>';
+  const mo = dataState.months.get(monthKey(n.getFullYear(), n.getMonth())) || { income: 0, expense: 0, byCat: {} };
+  const cats = dataState.planCats.map(c => ({ ...c, fact: c.parts.reduce((a, p) => a + (mo.byCat[p] || 0), 0) }));
+  const pt = cats.reduce((a, c) => a + c.plan, 0);
+  if (!pt && !dataState.incomePlan) {
+    body.innerHTML = `<div class="empty">V listu „${PLAN_SHEET}“ zatím nejsou vyplněné částky plánu.<br/>Vyplň žluté buňky v tabulce a klepni na obnovit.</div>`;
+    return;
+  }
+
+  // сводка
+  const free = dataState.incomePlan - pt;
+  let html = `<div class="card">
+    <div class="group-row">
+      <div class="top"><div class="gname">Příjem</div>
+      <div class="gvals"><b>${fmt0(mo.income)}</b> / ${fmt0(dataState.incomePlan)} Kč</div></div>
+      <div class="bar"><i style="width:${dataState.incomePlan ? Math.min(100, mo.income / dataState.incomePlan * 100) : 0}%"></i></div>
+    </div>
+    <div class="group-row">
+      <div class="top"><div class="gname">Celkem utraceno</div>
+      <div class="gvals ${mo.expense > pt && pt > 0 ? 'over' : ''}"><b>${fmt0(mo.expense)}</b> / ${fmt0(pt)} Kč</div></div>
+      <div class="bar"><i class="${mo.expense > pt && pt > 0 ? 'over' : ''}" style="width:${pt ? Math.min(100, mo.expense / pt * 100) : 0}%"></i></div>
+    </div>
+    <div class="group-row">
+      <div class="top"><div class="gname">Nerozděleno z plánu</div>
+      <div class="gvals"><b>${fmt0(free)}</b> Kč</div></div>
+    </div>
+  </div>`;
+
+  // группы
+  const groups = ['Обязательное', 'По желанию', 'Откладывать'];
+  html += '<div class="sec-head"><div class="caps">Skupiny</div></div><div class="card">';
+  groups.forEach(gname => {
+    const gc = cats.filter(c => c.group === gname);
+    const gp = gc.reduce((a, c) => a + c.plan, 0);
+    const gf = gc.reduce((a, c) => a + c.fact, 0);
+    if (!gp && !gf) return;
+    const over = gf > gp && gp > 0;
+    html += `<div class="group-row">
+      <div class="top"><div class="gname">${GROUP_LABELS[gname] || gname}</div>
+      <div class="gvals ${over ? 'over' : ''}"><b>${fmt0(gf)}</b> / ${fmt0(gp)} Kč</div></div>
+      <div class="bar"><i class="${over ? 'over' : ''}" style="width:${gp ? Math.min(100, gf / gp * 100) : (gf ? 100 : 0)}%"></i></div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // категории
+  html += '<div class="sec-head"><div class="caps">Kategorie</div></div><div class="card">';
+  cats.filter(c => c.plan > 0 || c.fact > 0).sort((a, b) => b.fact - a.fact).forEach(c => {
+    const over = c.fact > c.plan && c.plan > 0;
+    const info = findCategory(c.parts[0]);
+    html += `<div class="catrow">
+      <div class="top">
+        <div class="name">${ICONS[info.icon] || ICONS.note}${c.name === MERGED_FOOD.name ? 'Jídlo a pochutiny' : escapeHtml(info.label)}</div>
+        <div class="vals ${over ? 'over' : ''}"><b>${fmt0(c.fact)}</b> / ${fmt0(c.plan)} Kč</div>
+      </div>
+      <div class="bar"><i class="${over ? 'over' : ''}" style="width:${c.plan ? Math.min(100, c.fact / c.plan * 100) : (c.fact ? 100 : 0)}%"></i></div>
+    </div>`;
+  });
+  html += '</div>';
+  body.innerHTML = html;
+}
+
+// ── HISTORY VIEW ──
+function renderHistory() {
+  const body = $('history-body');
+  if (!dataState) { body.innerHTML = '<div class="empty">Načítám…</div>'; return; }
+  const list = dataState.txs.slice(0, 80);
+  $('history-count').textContent = `· ${dataState.txs.length} záznamů`;
+  if (!list.length) { body.innerHTML = '<div class="empty">Zatím žádné záznamy</div>'; return; }
+  body.innerHTML = buildHistoryHtml(list);
+}
+function buildHistoryHtml(list) {
+  const today = new Date();
+  let out = '', lastKey = null;
+  list.forEach(t => {
+    const key = t.y * 372 + t.m * 31 + t.d;
+    if (key !== lastKey) {
+      if (lastKey !== null) out += '</div>';
+      const isToday = t.y === today.getFullYear() && t.m === today.getMonth() && t.d === today.getDate();
+      const dt = new Date(t.y, t.m, t.d);
+      out += `<div class="day-head">${isToday ? 'Dnes' : dt.toLocaleDateString('cs-CZ', { weekday: 'short', day: 'numeric', month: 'long' })}</div><div class="card">`;
+      lastKey = key;
+    }
+    out += txRowHtml(t);
+  });
+  if (lastKey !== null) out += '</div>';
+  return out;
+}
+
+// ── LIMIT ──
+function saveLimit() { localStorage.setItem('budget_limit', JSON.stringify(budgetLimit)); }
+function openLimitSheet() { $('limit-overlay').classList.add('open'); }
+function closeLimitSheet() { $('limit-overlay').classList.remove('open'); }
+function setLimit() {
+  const val = parseFloat($('limit-set-amount').value);
+  if (!val || val <= 0) { showToast('Zadej částku limitu', 'error'); return; }
+  budgetLimit = { limit: val, remaining: val };
+  saveLimit();
+  $('limit-set-amount').value = '';
+  showToast(`✓ Limit nastaven: ${fmt0(val)} Kč`, 'success');
+  renderLimit();
+}
+function adjustLimit(sign) {
+  if (!budgetLimit) { showToast('Nejdřív nastav limit', 'error'); return; }
+  const val = parseFloat($('limit-adjust-amount').value);
+  if (!val || val <= 0) { showToast('Zadej částku', 'error'); return; }
+  budgetLimit.remaining += sign * val;
+  saveLimit();
+  $('limit-adjust-amount').value = '';
+  showToast((sign > 0 ? '+ ' : '− ') + fmt0(val) + ' Kč', 'success');
+  renderLimit();
+}
+function resetLimit() {
+  if (!budgetLimit) { showToast('Nejdřív nastav limit', 'error'); return; }
+  budgetLimit.remaining = budgetLimit.limit;
+  saveLimit();
+  showToast('✓ Zůstatek obnoven', 'success');
+  renderLimit();
+}
+function renderLimit() {
+  const v = $('limit-v'), sub = $('limit-sub'), bar = $('limit-bar');
+  if (!budgetLimit) {
+    v.textContent = '—'; v.className = 'v num';
+    sub.textContent = 'Nastav si limit a hlídej si ho';
+    bar.style.width = '0%'; bar.className = '';
+    return;
+  }
+  const { limit, remaining } = budgetLimit;
+  const spent = limit - remaining;
+  v.textContent = fmt0(remaining) + ' Kč';
+  v.className = 'v num ' + (remaining < 0 ? 'bad' : 'ok');
+  sub.textContent = remaining < 0
+    ? `překročeno o ${fmt0(-remaining)} Kč z ${fmt0(limit)} Kč`
+    : `zbývá z ${fmt0(limit)} Kč`;
+  bar.style.width = Math.max(0, Math.min(100, spent / limit * 100)) + '%';
+  bar.className = remaining < 0 ? 'over' : '';
+}
+
+// ── BOOT ──
+renderPayments(); renderPad(); renderAmount(); renderLimit(); refreshDescList();
+if (!AUTH_ENABLED) {
+  $('auth-screen').style.display = 'none';
+  $('app-screen').style.display = 'flex';
+  renderCategories();
+  showView('dash');
+  refreshData();
+} else {
+  showView('dash');
+}
+window.addEventListener('resize', () => { if (dataState) drawSpark(curMonth()); });
 </script>
 </body>
 </html>
