@@ -967,63 +967,100 @@ function slotSet(el, text) {
     }
   }
 }
+// ── GOOGLE AUTH (Автоматический вход и тихое обновление) ──
+let tokenClient = null;
+let accessToken = localStorage.getItem('google_access_token') || null;
 
-// ── GOOGLE AUTH ──
 function loadGsi() {
   return new Promise(resolve => {
+    if (window.google && window.google.accounts) { resolve(); return; }
     const s = document.createElement('script');
     s.src = 'https://accounts.google.com/gsi/client';
     s.onload = resolve;
     document.head.appendChild(s);
   });
 }
+
+// Запрос с явным окном выбора аккаунта (при первом входе или по кнопке)
 async function signIn() {
   await loadGsi();
   tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID, scope: SCOPES,
+    client_id: CLIENT_ID, 
+    scope: SCOPES,
     callback: resp => {
       if (resp.error) { showAuthError('Chyba přihlášení: ' + resp.error); return; }
       accessToken = resp.access_token;
+      localStorage.setItem('google_access_token', accessToken);
       fetchUserInfo();
     }
   });
-  tokenClient.requestAccessToken();
+  tokenClient.requestAccessToken({ prompt: 'select_account' });
 }
+
+// Функция получения актуального токена с тихим обновлением
 function ensureAccessToken() {
-  if (accessToken) return Promise.resolve(accessToken);
   return loadGsi().then(() => new Promise((resolve, reject) => {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID, scope: SCOPES,
+    // Если токен в памяти есть, пробуем использовать его
+    if (accessToken) {
+      resolve(accessToken);
+      return;
+    }
+
+    // Если токена нет (например, перезагрузили страницу или открыли приложение заново),
+    // запрашиваем его ТИХО (prompt: 'none') без показа всплывающего окна.
+    const silentClient = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID, 
+      scope: SCOPES,
       callback: resp => {
-        if (resp.error) { reject(new Error(resp.error)); return; }
+        if (resp.error) {
+          // Если Google говорит, что сессия умерла — показываем экран входа
+          localStorage.removeItem('google_access_token');
+          $('auth-screen').style.display = 'flex';$('app-screen').style.display = 'none';
+          reject(new Error(resp.error));
+          return;
+        }
         accessToken = resp.access_token;
+        localStorage.setItem('google_access_token', accessToken);
         resolve(accessToken);
       }
     });
-    tokenClient.requestAccessToken();
+    
+    // prompt: 'none' заставляет Google отдать токен молча, если вы уже входили в этот аккаунт в браузере
+    silentClient.requestAccessToken({ prompt: 'none' });
   }));
 }
+
 async function fetchUserInfo() {
-  const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + accessToken } });
-  const u = await r.json();
-  $('auth-screen').style.display = 'none';
-  $('app-screen').style.display = 'flex';
-  const av = $('user-avatar');
-  if (u.picture) av.innerHTML = `<img src="${u.picture}" alt="" />`;
-  else av.textContent = (u.name || 'U')[0].toUpperCase();
-  av.onclick = () => { if (confirm('Odhlásit se z Google účtu?')) signOut(); };
-  renderCategories(); renderPayments(); renderPad();
-  refreshData();
-  if (window.HB) HB.repair();
+  try {
+    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + accessToken } });
+    if (!r.ok) throw new Error('Token invalid');
+    const u = await r.json();
+    
+    $('auth-screen').style.display = 'none';$('app-screen').style.display = 'flex';
+    const av = $('user-avatar');
+    if (u.picture) av.innerHTML = `<img src="${u.picture}" alt="" />`;
+    else av.textContent = (u.name || 'U')[0].toUpperCase();
+    av.onclick = () => { if (confirm('Odhlásit se z Google účtu?')) signOut(); };
+    
+    renderCategories(); renderPayments(); renderPad();
+    refreshData();
+    if (window.HB) HB.repair();
+  } catch (err) {
+    // Если токен протух окончательно, сбрасываем и просим войти
+    localStorage.removeItem('google_access_token');
+    accessToken = null;
+    $('auth-screen').style.display = 'flex';$('app-screen').style.display = 'none';
+  }
 }
+
 function signOut() {
   if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
-  accessToken = null; dataState = null;
+  accessToken = null;
+  localStorage.removeItem('google_access_token');
+  dataState = null;
   location.reload();
 }
 function showAuthError(msg) { const e = $('auth-error'); e.textContent = msg; e.style.display = 'block'; }
-</script>
-<script>
 // ── DATA (Google Sheets) ──
 function parseTxDate(v) {
   if (v == null || v === '') return null;
@@ -2608,6 +2645,7 @@ function renderLimit() {
 
 // ── BOOT ──
 renderPayments(); renderPad(); renderAmount(); renderLimit(); refreshDescList();
+
 if (!AUTH_ENABLED) {
   $('auth-screen').style.display = 'none';
   $('app-screen').style.display = 'flex';
@@ -2615,9 +2653,20 @@ if (!AUTH_ENABLED) {
   showView('dash');
   refreshData();
 } else {
-  showView('dash');
+  // При открытии приложения сразу проверяем, есть ли сохраненный токен
+  if (accessToken) {
+    // Скрываем экран входа и сразу пробуем получить данные (тихо обновив токен при необходимости)
+    $('auth-screen').style.display = 'none';
+    $('app-screen').style.display = 'flex';
+    renderCategories();
+    showView('dash');
+    fetchUserInfo();
+  } else {
+    // Если токена нет вообще — показываем кнопку входа
+    $('auth-screen').style.display = 'flex';
+    $('app-screen').style.display = 'none';
+  }
 }
-window.addEventListener('resize', () => { if (dataState) drawSpark(curMonth()); });
 </script>
 </body>
 </html>
