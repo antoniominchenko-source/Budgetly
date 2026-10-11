@@ -866,45 +866,34 @@ function loadGsi() {
     document.head.appendChild(s);
   });
 }
-// Токен запоминаем в браузере: пока он живой — входим сразу, потом обновляем тихо, без кнопки
-const TOKEN_KEY = 'ub_token', SIGNED_KEY = 'ub_signed';
-function storeToken(resp) {
-  accessToken = resp.access_token;
-  try {
-    localStorage.setItem(TOKEN_KEY, JSON.stringify({ t: accessToken, exp: Date.now() + (Number(resp.expires_in) || 3600) * 1000 }));
-    localStorage.setItem(SIGNED_KEY, '1');
-  } catch (e) {}
+async function signIn() {
+  await loadGsi();
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID, scope: SCOPES,
+    callback: resp => {
+      if (resp.error) { showAuthError('Chyba přihlášení: ' + resp.error); return; }
+      accessToken = resp.access_token;
+      fetchUserInfo();
+    }
+  });
+  tokenClient.requestAccessToken();
 }
-function cachedToken() {
-  try { const o = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null'); if (o && o.t && o.exp > Date.now() + 120000) return o.t; } catch (e) {}
-  return null;
-}
-function clearToken() { accessToken = null; try { localStorage.removeItem(TOKEN_KEY); } catch (e) {} }
-function requestToken(prompt) {
+function ensureAccessToken() {
+  if (accessToken) return Promise.resolve(accessToken);
   return loadGsi().then(() => new Promise((resolve, reject) => {
     tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID, scope: SCOPES, prompt,
-      callback: resp => { if (resp.error) reject(new Error(resp.error)); else { storeToken(resp); resolve(accessToken); } },
-      error_callback: err => reject(new Error((err && err.type) || 'auth'))
+      client_id: CLIENT_ID, scope: SCOPES,
+      callback: resp => {
+        if (resp.error) { reject(new Error(resp.error)); return; }
+        accessToken = resp.access_token;
+        resolve(accessToken);
+      }
     });
     tokenClient.requestAccessToken();
   }));
 }
-let tokenPromise = null;
-function ensureAccessToken() {
-  if (accessToken) return Promise.resolve(accessToken);
-  const c = cachedToken();
-  if (c) { accessToken = c; return Promise.resolve(c); }
-  if (!tokenPromise) tokenPromise = requestToken('none').catch(() => requestToken('')).finally(() => { tokenPromise = null; });
-  return tokenPromise;
-}
-async function signIn() {
-  try { await requestToken(''); await fetchUserInfo(); }
-  catch (e) { showAuthError('Chyba přihlášení: ' + (e.message || e)); }
-}
 async function fetchUserInfo() {
   const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + accessToken } });
-  if (!r.ok) { clearToken(); throw new Error('token'); }
   const u = await r.json();
   $('auth-screen').style.display = 'none';
   $('app-screen').style.display = 'flex';
@@ -916,9 +905,8 @@ async function fetchUserInfo() {
   refreshData();
 }
 function signOut() {
-  try { if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {}); } catch (e) {}
-  clearToken(); try { localStorage.removeItem(SIGNED_KEY); } catch (e) {}
-  dataState = null;
+  if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
+  accessToken = null; dataState = null;
   location.reload();
 }
 function showAuthError(msg) { const e = $('auth-error'); e.textContent = msg; e.style.display = 'block'; }
@@ -953,7 +941,7 @@ async function refreshData(force) {
       { headers: { Authorization: 'Bearer ' + accessToken } }
     );
     if (res.status === 401) {
-      clearToken();
+      accessToken = null;
       await ensureAccessToken();
       res = await fetch(
         `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchGet?${q}&valueRenderOption=UNFORMATTED_VALUE`,
@@ -992,11 +980,8 @@ async function refreshData(force) {
       } else if (type === 'Доход') mo.income += amt;
       mo.txs.push({ ...pd, type, cat, desc, pay, amt });
     });
-    // общий список — от новых к старым (внутри одного дня новее та строка, что ниже в таблице)
-    txs.reverse();
     txs.sort((a, b) => (b.y * 372 + b.m * 31 + b.d) - (a.y * 372 + a.m * 31 + a.d));
-    // записи внутри месяца — от старых к новым (так их ждут renderRecent и добавление новых)
-    months.forEach(mo => mo.txs.sort((a, b) => (a.y * 372 + a.m * 31 + a.d) - (b.y * 372 + b.m * 31 + b.d)));
+    months.forEach(mo => mo.txs.reverse());
 
     dataState = {
       months, txs, planCats,
@@ -1246,7 +1231,6 @@ const $ = id => document.getElementById('hb-' + id);
 const pad = n => String(n).padStart(2, '0');
 const dstr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const parseD = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
-  const dateSerial = ds => Math.round((parseD(ds) - new Date(1899, 11, 30)) / 86400000);
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 const wdMon = d => (d.getDay() + 6) % 7;            // Пн = 0
 function todayStr() { return dstr(new Date()); }
@@ -1289,7 +1273,7 @@ async function api(path, opts = {}) {
   });
   await ensureAccessToken();
   let res = await go();
-  if (res.status === 401) { clearToken(); await ensureAccessToken(); res = await go(); }
+  if (res.status === 401) { accessToken = null; await ensureAccessToken(); res = await go(); }
   if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error?.message || res.status); }
   return res.json();
 }
@@ -1363,7 +1347,7 @@ async function ensureSheets() {
       rule(logId, 3, 1, 'D1FAE5', '047857'),
       rule(logId, 3, 0, 'FEE2E2', 'B91C1C'),
     ]));
-    hdr.push({ range: `'${LOG_SHEET}'!A1:E2`, values: [['🗓 ЖУРНАЛ ОТМЕТОК ПРИВЫЧЕК', '', '', '', ''], ['Дата', 'ID', 'Привычка', 'Выполнено (1/0)', 'Месяц']] });
+    hdr.push({ range: `'${LOG_SHEET}'!A1:E2`, values: [['🗓 ЖУРНАЛ ОТМЕТОК ПРИВЫЧЕК', '', '', '', ''], ['Дата', 'ID', 'Привычка', 'Выполнено (1/0)', 'Месяц (авто)']] });
   }
   await api('/values:batchUpdate', { method: 'POST', body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data: hdr }) });
   await api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: fmt }) });
@@ -1392,15 +1376,11 @@ async function refreshData(force) {
     });
 
     log = new Map();
-    const monthFix = [];
     (lR.values || []).forEach((r, i) => {
       const ds = parseCellDate(r[0]); const id = String(r[1] || '').trim();
       if (!ds || !id) return;
       log.set(ds + '|' + id, { row: FIRST_ROW + i, done: Number(r[3]) === 1 ? 1 : 0 });
-      // колонка «Месяц» — обычный текст; старые строки с ошибкой формулы (#ERROR!) чиним
-      if (String(r[4] == null ? '' : r[4]) !== ds.slice(0, 7)) monthFix.push({ range: `'${LOG_SHEET}'!E${FIRST_ROW + i}`, values: [["'" + ds.slice(0, 7)]] });
     });
-    if (monthFix.length) api('/values:batchUpdate', { method: 'POST', body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data: monthFix }) }).catch(() => {});
     reindex();
     ready = true; loadedAt = Date.now();
     renderAll();
@@ -1662,7 +1642,7 @@ function toggleHabit(id, ds) {
     if (rec.row) await putValues(LOG_SHEET, `D${rec.row}`, [[nv]]);
     else {
       const row = await nextFreeRow(LOG_SHEET);
-      await putValues(LOG_SHEET, `A${row}:E${row}`, [[dateSerial(ds), id, h.name, nv, "'" + ds.slice(0, 7)]]);
+      await putValues(LOG_SHEET, `A${row}:E${row}`, [[ds, id, h.name, nv, `=IF(A${row}="","",TEXT(A${row},"YYYY-MM"))`]]);
       rec.row = row;
     }
   }).catch(e => {
@@ -1886,7 +1866,7 @@ async function submitEntry() {
       { headers: { Authorization: 'Bearer ' + accessToken } }
     );
     if (!colARes.ok) {
-      if (colARes.status === 401) { clearToken(); showToast('Přihlášení vypršelo — zkus to ještě jednou', 'warn'); btn.disabled = false; setType(currentType); return; }
+      if (colARes.status === 401) { accessToken = null; tokenClient.requestAccessToken(); return; }
       const e = await colARes.json();
       throw new Error(e.error?.message || colARes.status);
     }
@@ -1904,7 +1884,7 @@ async function submitEntry() {
       }
     );
     if (!res.ok) {
-      if (res.status === 401) { clearToken(); showToast('Přihlášení vypršelo — zkus to ještě jednou', 'warn'); btn.disabled = false; setType(currentType); return; }
+      if (res.status === 401) { accessToken = null; tokenClient.requestAccessToken(); return; }
       const e = await res.json();
       throw new Error(e.error?.message || res.status);
     }
@@ -2110,18 +2090,6 @@ if (!AUTH_ENABLED) {
   refreshData();
 } else {
   showView('dash');
-  // уже входил раньше — входим сам, без кнопки
-  let signedBefore = false; try { signedBefore = !!(localStorage.getItem(SIGNED_KEY) || cachedToken()); } catch (e) {}
-  if (signedBefore) {
-    (async () => {
-      try {
-        const c = cachedToken();
-        if (c) accessToken = c;
-        else await Promise.race([requestToken('none'), new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 6000))]);
-        await fetchUserInfo();
-      } catch (e) { /* остаётся экран входа */ }
-    })();
-  }
 }
 window.addEventListener('resize', () => { if (dataState) drawSpark(curMonth()); });
 </script>
