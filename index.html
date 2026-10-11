@@ -3107,5 +3107,93 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
   start(); if (lang === 'ru') apply(); else syncLang();
 })();
 </script>
+<script>
+// ═════════ ZAPAMATOVANÉ PŘIHLÁŠENÍ ═════════
+// Přidává se NAD původní přihlášení (signIn / ensureAccessToken zůstávají funkční):
+//  1) token se uloží i s časem vypršení → po znovuotevření do ~1 hodiny se vstoupí rovnou;
+//  2) po vypršení se zkusí tiché obnovení (login_hint = tvůj e-mail), když selže, ukáže se obvyklé tlačítko;
+//  3) vlastní token se nikam neposílá, jen se drží v tomto zařízení (localStorage).
+(function () {
+  const KEY = 'mh-session';
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
+  const write = v => { try { v ? localStorage.setItem(KEY, JSON.stringify(v)) : localStorage.removeItem(KEY); } catch (e) {} };
+  let sess = read();
+
+  function remember(resp, email) {
+    const exp = Date.now() + Math.max(60, (+resp.expires_in || 3600) - 120) * 1000;
+    sess = { token: resp.access_token, exp, email: email || (sess && sess.email) || '' };
+    write(sess);
+  }
+
+  // 1) zapamatuj každý nový token (původní callbacky zůstanou, jen je obalíme)
+  function hook() {
+    if (!(window.google && google.accounts && google.accounts.oauth2) || google.accounts.oauth2.__mh) return;
+    const o = google.accounts.oauth2, init = o.initTokenClient.bind(o);
+    o.initTokenClient = cfg => {
+      const cb = cfg.callback;
+      cfg.callback = resp => { if (resp && resp.access_token) remember(resp); cb && cb(resp); };
+      if (sess && sess.email && !cfg.login_hint) cfg.login_hint = sess.email;
+      return init(cfg);
+    };
+    o.__mh = true;
+  }
+  const _load = window.loadGsi;
+  window.loadGsi = function () { return _load().then(() => { hook(); }); };
+
+  // e-mail po úspěšném přihlášení
+  const _fui = window.fetchUserInfo;
+  window.fetchUserInfo = async function () {
+    await _fui();
+    const u = window.__mhUser;
+    if (u && u.email && sess) { sess.email = u.email; write(sess); }
+    else if (u && u.error) { write(null); }
+  };
+  const _out = window.signOut;
+  window.signOut = function () { write(null); sess = null; _out(); };
+
+  // 2) při startu
+  async function boot() {
+    if (!sess || !sess.token) return;
+    const left = sess.exp - Date.now();
+    if (left > 0) {                       // token ještě platí → rovnou dovnitř
+      accessToken = sess.token;
+      try {
+        const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + accessToken } });
+        if (r.ok) { await window.fetchUserInfo(); return; }
+      } catch (e) {}
+      accessToken = null;
+    }
+    // vypršelo → tiché obnovení (bez okna). Když to prohlížeč nedovolí, zůstane tlačítko.
+    try {
+      await window.loadGsi();
+      const tc = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID, scope: SCOPES, login_hint: sess.email,
+        callback: resp => { if (resp && resp.access_token) { accessToken = resp.access_token; window.fetchUserInfo(); } },
+        error_callback: () => {}
+      });
+      tc.requestAccessToken({ prompt: 'none' });
+    } catch (e) {}
+  }
+  // Tlačítko: ukáž, jako kdo se přihlásí
+  function label() {
+    if (sess && sess.email) { const b = document.querySelector('.google-btn'); if (b) b.lastChild.nodeValue = '\n    Pokračovat jako ' + sess.email + '\n  '; }
+  }
+  label();
+  // obnov token před vypršením během práce (jen když je okno aktivní)
+  setInterval(() => {
+    if (!sess || !window.google || !google.accounts || document.visibilityState !== 'visible' || !accessToken) return;
+    if (sess.exp - Date.now() > 5 * 60 * 1000) return;
+    try {
+      google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID, scope: SCOPES, login_hint: sess.email,
+        callback: resp => { if (resp && resp.access_token) accessToken = resp.access_token; },
+        error_callback: () => {}
+      }).requestAccessToken({ prompt: 'none' });
+    } catch (e) {}
+  }, 60000);
+  window.MHAuth = { forget() { write(null); sess = null; } };
+  boot();
+})();
+</script>
 </body>
 </html>
