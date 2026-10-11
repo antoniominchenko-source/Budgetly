@@ -903,14 +903,16 @@
       <li>Otevři svou tabulku v Google Sheets → <b>Rozšíření → Apps Script</b>. Smaž vše, co tam je.</li>
       <li><button class="pill-btn" onclick="PX.copy()">Zkopírovat kód</button> a vlož ho do editoru → <b>Uložit</b> (ikona diskety).</li>
       <li>Vlevo u <b>Služby (+)</b> vyber <b>Google Sheets API</b> → <b>Přidat</b>.</li>
-      <li>Nahoře <b>Nasadit → Nové nasazení</b> → typ <b>Webová aplikace</b>. „Spustit jako“: <b>Já</b>, „Kdo má přístup“: <b>Kdokoli</b> → <b>Nasadit</b> → povol přístup (Upřesnit → Přejít na projekt).</li>
+      <li>Nahoře vyber funkci <b>authorize</b> → <b>Spustit</b> → povol přístup (Upřesnit → Přejít na projekt → Povolit).</li>
+      <li>Nahoře <b>Nasadit → Nové nasazení</b> → typ <b>Webová aplikace</b>. „Spustit jako“: <b>Já</b>, „Kdo má přístup“: <b>Kdokoli</b> → <b>Nasadit</b>. (Když už nasazení existuje: Spravovat nasazení → tužka → <b>Nová verze</b>.)</li>
       <li>Zkopíruj <b>URL webové aplikace</b> a vlož ho sem:</li>
     </ol>
     <ol class="px-steps l-ru">
       <li>Открой свою таблицу в Google Sheets → <b>Расширения → Apps Script</b>. Удали всё, что там есть.</li>
       <li><button class="pill-btn" onclick="PX.copy()">Скопировать код</button> и вставь в редактор → <b>Сохранить</b> (иконка дискеты).</li>
       <li>Слева у <b>Сервисы (+)</b> выбери <b>Google Sheets API</b> → <b>Добавить</b>.</li>
-      <li>Сверху <b>Развернуть → Новое развёртывание</b> → тип <b>Веб-приложение</b>. «Запуск от имени»: <b>Я</b>, «У кого есть доступ»: <b>Все</b> → <b>Развернуть</b> → разреши доступ (Дополнительно → Перейти в проект).</li>
+      <li>Сверху выбери функцию <b>authorize</b> → <b>Выполнить</b> → разреши доступ (Дополнительно → Перейти в проект → Разрешить).</li>
+      <li>Сверху <b>Развернуть → Новое развёртывание</b> → тип <b>Веб-приложение</b>. «Запуск от имени»: <b>Я</b>, «У кого есть доступ»: <b>Все</b> → <b>Развернуть</b>. (Если развёртывание уже есть: Управление развёртываниями → карандаш → <b>Новая версия</b>.)</li>
       <li>Скопируй <b>URL веб-приложения</b> и вставь сюда:</li>
     </ol>
     <input class="hb-input" id="px-url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" spellcheck="false" />
@@ -959,7 +961,7 @@
     <button class="acct-btn out" id="acct-out" onclick="closeAcct();doSignOut()">Odhlásit se</button>
     <div class="acct-note" id="acct-note"></div>
     <button class="ghost" onclick="closeAcct()">Zavřít</button>
-    <div class="acct-ver">MindHub v2.3</div>
+    <div class="acct-ver">MindHub v2.4</div>
   </div>
 </div>
 
@@ -3255,7 +3257,8 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
   };
 
   const genKey = () => { const a = new Uint8Array(18); crypto.getRandomValues(a); return Array.from(a, b => b.toString(36).padStart(2, '0')).join('').slice(0, 28); };
-  let draftKey = (cfg && cfg.key) || '';
+  let draftKey = (cfg && cfg.key) || ''; try { draftKey = draftKey || localStorage.getItem('mh-px-draft') || ''; } catch (e) {}
+  const newKey = () => { draftKey = genKey(); try { localStorage.setItem('mh-px-draft', draftKey); } catch (e) {} return draftKey; };
   function script(key) {
     return `// MindHub — proxy pro Google Sheets (běží pod tvým účtem)
 const SHEET_ID = '${SHEET_ID}';
@@ -3278,29 +3281,37 @@ function doGet() { return out(200, { ok: true }); }
 function out(status, body) {
   return ContentService.createTextOutput(JSON.stringify({ status: status, body: JSON.stringify(body) })).setMimeType(ContentService.MimeType.JSON);
 }
-function _scopes() { SpreadsheetApp.openById(SHEET_ID); }  // jen aby Google přidělil právo na tabulky
+// Spusť tuto funkci JEDNOU ručně (Spustit) a povol přístup — Google tak přidělí práva na tabulky i na UrlFetchApp.
+function authorize() {
+  SpreadsheetApp.openById(SHEET_ID);
+  UrlFetchApp.fetch('https://sheets.googleapis.com/$discovery/rest?version=v4', { muteHttpExceptions: true });
+}
 `;
   }
   function msg(t, kind) { const m = g('px-msg'); m.className = 'px-msg' + (t ? ' show ' + (kind || '') : ''); m.textContent = t || ''; }
 
   const PX = {
     get on() { return !!cfg; },
-    open() { draftKey = (cfg && cfg.key) || draftKey || genKey(); g('px-code').value = script(draftKey); g('px-url').value = (cfg && cfg.url) || ''; msg(''); g('px-overlay').classList.add('open'); },
+    open() { draftKey = (cfg && cfg.key) || draftKey || newKey(); g('px-code').value = script(draftKey); g('px-url').value = (cfg && cfg.url) || ''; msg(''); g('px-overlay').classList.add('open'); },
     close() { g('px-overlay').classList.remove('open'); },
     async copy() {
-      const ta = g('px-code'); ta.value = script(draftKey || (draftKey = genKey()));
+      const ta = g('px-code'); ta.value = script(draftKey || newKey());
       try { await navigator.clipboard.writeText(ta.value); } catch (e) { ta.style.left = '0'; ta.style.opacity = '1'; ta.select(); document.execCommand('copy'); ta.style.left = '-9999px'; ta.style.opacity = '0'; }
       if (typeof showToast === 'function') showToast('Kód zkopírován', 'success');
     },
     async verify() {
       const url = g('px-url').value.trim();
       if (!/^https:\/\/script\.google\.com\/macros\/s\/[^\s]+\/exec$/.test(url) && !/^https:\/\/script\.googleusercontent\.com\//.test(url)) { msg('Vlož celou URL webové aplikace (končí na /exec).', 'err'); return; }
-      const key = draftKey || genKey(); const c = { url, key };
+      const key = draftKey || newKey(); const c = { url, key };
       g('px-go').disabled = true; msg('Ověřuji…');
       try {
         const j = await viaProxy(c, 'GET', '/v4/spreadsheets/' + SHEET_ID + '?fields=properties.title');
         if (j.status === 403) { let m = ''; try { m = JSON.parse(j.body).error.message; } catch (e) {} msg(m === 'bad key' ? 'Klíč ve skriptu nesouhlasí — zkopíruj kód znovu (tlačítko výše), vlož ho a nasaď NOVOU verzi (Nasadit → Spravovat nasazení → Upravit → Nová verze).' : 'Google odmítl přístup: ' + m, 'err'); return; }
-        if (j.status !== 200) { let m = j.body; try { m = JSON.parse(j.body).error.message; } catch (e) {} msg('Chyba ' + j.status + ': ' + m, 'err'); return; }
+        if (j.status !== 200) {
+          let m = j.body; try { m = JSON.parse(j.body).error.message; } catch (e) {}
+          if (/external_request|UrlFetchApp|permission|разрешени/i.test(m)) m = 'Skript ještě nemá oprávnění. V editoru Apps Script vyber nahoře funkci „authorize“ → Spustit → povol přístup (Upřesnit → Přejít na projekt → Povolit). Potom: Nasadit → Spravovat nasazení → tužka → Verze: Nová verze → Nasadit. A klikni znovu na „Ověřit“.';
+          else if (/Sheets API|has not been used|disabled/i.test(m)) m = 'Zapni v editoru vlevo Služby (+) → Google Sheets API → Přidat, nasaď novou verzi a zkus znovu.';
+          msg(m, 'err'); return; }
         const title = (JSON.parse(j.body).properties || {}).title || '';
         try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {}
         msg('Funguje ✓ Tabulka: ' + title + '. Načítám aplikaci…', 'ok');
