@@ -470,6 +470,62 @@
   .sheet .lbl { margin: 16px 2px 0; }
   .sheet .primary:disabled { opacity: .55; }
   .sheet .ghost.danger { color: var(--red); }
+
+  /* ─── NOTES (Poznámky) ─── */
+  .nt-search { width: 100%; margin-top: 12px; background: var(--s1); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 12px 40px; font-size: 14px; color: var(--t1); font-family: var(--font-ui); outline: none; transition: border-color .2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='M16 16l4.5 4.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 13px center; }
+  .nt-search:focus { border-color: var(--line2); }
+  .nt-search::placeholder { color: var(--t3); }
+  .nt-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 14px 4px 0; font-size: 12.5px; color: var(--t3); }
+  .nt-crumbs span { cursor: pointer; padding: 3px 2px; transition: color .2s; }
+  .nt-crumbs span:active { color: var(--t1); }
+  .nt-crumbs span.cur { color: var(--t1); font-weight: 600; cursor: default; }
+  .nt-crumbs i { font-style: normal; opacity: .5; }
+  #nt-list .card { margin-top: 12px; }
+  .nt-more { width: 32px; height: 32px; border-radius: 10px; border: none; background: none; color: var(--t3); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background .2s, color .2s; }
+  .nt-more:active { background: var(--s2); color: var(--t1); }
+  .nt-more svg { width: 18px; height: 18px; }
+  .nt-sub { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--t3); margin: 18px 4px 0; }
+  .nt-seg { display: flex; background: var(--s1); border: 1px solid var(--line); border-radius: 11px; padding: 3px; position: relative; }
+  .nt-seg button { position: relative; z-index: 1; background: none; border: none; padding: 7px 16px; font-size: 12.5px; font-weight: 600; color: var(--t2); cursor: pointer; border-radius: 8px; transition: color .2s, background .2s; }
+  .nt-seg button.on { background: var(--mint); color: #04120d; }
+  .nt-path { margin: 10px 4px 0; min-height: 12px; }
+  .nt-title { width: 100%; margin-top: 8px; background: none; border: none; outline: none; color: var(--t1); font-family: var(--font-d); font-size: 26px; font-weight: 700; letter-spacing: -.02em; padding: 6px 4px; }
+  .nt-title::placeholder { color: var(--t3); }
+  .nt-body { width: 100%; min-height: 46dvh; background: none; border: none; outline: none; resize: none; color: var(--t1); font-family: var(--font-ui); font-size: 15px; line-height: 1.7; padding: 8px 4px 40px; overflow: hidden; }
+  .nt-body::placeholder { color: var(--t3); }
+  .nt-md { padding: 6px 4px 40px; font-size: 15px; line-height: 1.7; min-height: 46dvh; word-wrap: break-word; }
+  .nt-md .p { min-height: 1.2em; }
+  .nt-md .sp { height: .6em; }
+  .nt-md h1, .nt-md h2, .nt-md h3 { font-family: var(--font-d); letter-spacing: -.01em; margin: 14px 0 4px; line-height: 1.25; }
+  .nt-md h1 { font-size: 22px; } .nt-md h2 { font-size: 18px; } .nt-md h3 { font-size: 15.5px; color: var(--t2); }
+  .nt-md b { font-weight: 700; } .nt-md em { color: var(--t1); }
+  .nt-md s { color: var(--t3); }
+  .nt-md code { font-family: ui-monospace, Menlo, monospace; font-size: 13px; background: var(--s2); border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; }
+  .nt-md pre { background: var(--s1); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin: 8px 0; overflow-x: auto; }
+  .nt-md pre code { background: none; border: none; padding: 0; }
+  .nt-md blockquote { border-left: 2px solid var(--mint); padding: 2px 0 2px 12px; margin: 6px 0; color: var(--t2); }
+  .nt-md hr { border: none; border-top: 1px solid var(--line2); margin: 14px 0; }
+  .nt-md a { color: var(--mint); text-decoration: none; border-bottom: 1px solid rgba(0,217,163,.35); }
+  .nt-md a.wl.miss { color: var(--t3); border-bottom-style: dashed; border-color: var(--t3); }
+  .nt-md .li { display: flex; gap: 9px; align-items: flex-start; }
+  .nt-md .li .bu { width: 14px; flex-shrink: 0; color: var(--mint); text-align: center; }
+  .nt-md .li .cb { width: 18px; height: 18px; border-radius: 6px; border: 1.5px solid var(--line2); margin-top: 3.5px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s, border-color .2s; }
+  .nt-md .li .cb.on { background: var(--mint); border-color: var(--mint); }
+  .nt-md .li .cb svg { width: 12px; height: 12px; color: #04120d; opacity: 0; }
+  .nt-md .li .cb.on svg { opacity: 1; }
+  .nt-md .li.done .lt { color: var(--t3); text-decoration: line-through; }
+  .nt-tools { position: sticky; bottom: 76px; display: flex; gap: 8px; padding: 8px; margin-top: 4px; background: rgba(20,20,20,.9); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--line2); border-radius: 14px; z-index: 5; }
+  .nt-tools button { flex: 1; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--s2); color: var(--t2); font-family: var(--font-d); font-size: 14px; font-weight: 600; cursor: pointer; transition: transform .1s, color .2s; }
+  .nt-tools button:active { transform: scale(.93); color: var(--t1); }
+  .nt-state { position: absolute; right: 20px; top: 18px; }
+  .nt-act { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 4px; background: none; border: none; border-bottom: 1px solid var(--line); color: var(--t1); font-size: 14.5px; font-weight: 500; text-align: left; cursor: pointer; }
+  .nt-act:last-of-type { border-bottom: none; }
+  .nt-act svg { width: 18px; height: 18px; color: var(--t2); flex-shrink: 0; }
+  .nt-act.danger { color: var(--red); } .nt-act.danger svg { color: var(--red); }
+  .nt-act.sel { color: var(--mint); } .nt-act.sel svg { color: var(--mint); }
+  .nt-act:active { opacity: .6; }
+  #nt-list .mrow .c { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 </style>
 </head>
 <body>
@@ -654,6 +710,38 @@
     </div>
   </div>
 
+  <!-- NOTES -->
+  <div class="view" id="view-notes">
+    <div id="nt-list-pane">
+      <div class="month-switch">
+        <div class="month-label" id="nt-head">Poznámky</div>
+        <div class="head-btns">
+          <button class="refresh-ic" onclick="NT.newFolder()" aria-label="Nová složka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10.5v5M9.5 13h5"/></svg></button>
+          <button class="refresh-ic" onclick="NT.newNote()" aria-label="Nová poznámka"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h8M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+        </div>
+      </div>
+      <input class="nt-search" id="nt-search" type="search" placeholder="Hledat v poznámkách…" autocomplete="off" oninput="NT.search(this.value)" />
+      <div class="nt-crumbs" id="nt-crumbs"></div>
+      <div id="nt-list"><div class="card"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div>
+    </div>
+
+    <div id="nt-edit-pane" style="display:none">
+      <div class="month-switch">
+        <button class="chev" onclick="NT.back()" aria-label="Zpět"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <div class="nt-seg" id="nt-seg"><button onclick="NT.mode('edit')">Psát</button><button onclick="NT.mode('view')">Číst</button></div>
+        <button class="chev" onclick="NT.noteMenu()" aria-label="Více"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg></button>
+      </div>
+      <div class="nt-path caps" id="nt-path" style="display:flex;justify-content:space-between;gap:10px"><span id="nt-pathtxt"></span><span id="nt-state"></span></div>
+      <input class="nt-title" id="nt-t" placeholder="Název" maxlength="120" oninput="NT.input()" />
+      <textarea class="nt-body" id="nt-x" placeholder="Piš sem… (Markdown, odkazy [[na jiné poznámky]])" maxlength="45000" oninput="NT.input()"></textarea>
+      <div class="nt-md" id="nt-md" style="display:none"></div>
+      <div class="nt-tools" id="nt-tools">
+        <button onclick="NT.ins('h')">H</button><button onclick="NT.ins('b')">B</button><button onclick="NT.ins('i')">I</button>
+        <button onclick="NT.ins('ul')">•</button><button onclick="NT.ins('todo')">☐</button><button onclick="NT.ins('link')">[[ ]]</button>
+      </div>
+    </div>
+  </div>
+
   <!-- NAV -->
   <nav class="nav">
     <button id="nav-dash" class="on" onclick="showView('dash')">
@@ -675,6 +763,10 @@
     <button id="nav-hab" onclick="showView('hab')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>
       Návyky
+    </button>
+    <button id="nav-notes" onclick="showView('notes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>
+      Poznámky
     </button>
   </nav>
 </div>
@@ -711,6 +803,25 @@
     <button class="primary" id="hb-h-save" onclick="HB.saveHabit()">Uložit</button>
     <button class="ghost danger" id="hb-h-archive" onclick="HB.archiveHabit()" style="display:none">Archivovat</button>
     <button class="ghost" onclick="HB.closeSheet()">Zavřít</button>
+  </div>
+</div>
+
+<!-- ═══ NOTES: sheets ═══ -->
+<div class="overlay" id="nt-name-overlay" onclick="if(event.target===this)NT.closeName()">
+  <div class="sheet">
+    <h3 id="nt-name-title">Nová složka</h3>
+    <div class="hint" id="nt-name-hint">Jak se bude jmenovat?</div>
+    <input class="hb-input" id="nt-name-input" type="text" maxlength="80" autocomplete="off" placeholder="Název" onkeydown="if(event.key==='Enter')NT.okName()" />
+    <button class="primary" onclick="NT.okName()">Uložit</button>
+    <button class="ghost" onclick="NT.closeName()">Zavřít</button>
+  </div>
+</div>
+<div class="overlay" id="nt-act-overlay" onclick="if(event.target===this)NT.closeAct()">
+  <div class="sheet">
+    <h3 id="nt-act-title"></h3>
+    <div class="hint" id="nt-act-hint"></div>
+    <div id="nt-act-body"></div>
+    <button class="ghost" onclick="NT.closeAct()">Zavřít</button>
   </div>
 </div>
 
@@ -1770,19 +1881,371 @@ window.HB = {
   sub, onShow, refresh: refreshData,
   toggleHabit, shiftDay, shiftMonth, goDay,
   openSheet, closeSheet, saveHabit, archiveHabit, restoreHabit, toggleFormDay, repair,
+  util: { api, rng, nextFreeRow, rgb, sheetFormat, enqueue },
   setIcon(k) { formIcon = k; renderForm(); }
 };
 })();
 </script>
 <script>
+// ═════════ POZNÁMKY (NT) ═════════
+// Папки и заметки лежат в одном листе «📝 Заметки»: одна строка = одна папка или заметка.
+(function () {
+  const U = HB.util;
+  const SHEET = '📝 Заметки', FIRST = 3;
+  const $ = id => document.getElementById('nt-' + id);
+  const pad = n => String(n).padStart(2, '0');
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+  const nowStr = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+  const plural = (n, a, b, c) => n === 1 ? a : (n >= 2 && n <= 4 ? b : c);
+  const MAXLEN = 45000;
+
+  const IC = {
+    folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+    note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>',
+    more: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>',
+    chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h8M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+    move: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 13h6M13 10.5l2.5 2.5-2.5 2.5"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>'
+  };
+
+  // ── state ──
+  let items = [], ready = false, loading = false, loadedAt = 0;
+  let cwd = '', openId = null, curMode = 'edit', query = '';
+  let saveTimer = null; const dirty = new Set();
+  let nameCb = null;
+
+  const byId = id => items.find(x => x.id === id);
+  const live = () => items.filter(x => !x.deleted);
+  const folderName = it => it.title || 'Bez názvu';
+  function pathOf(it) {
+    const parts = []; let p = it.parent, g = 0;
+    while (p && g++ < 30) { const f = byId(p); if (!f) break; parts.unshift(folderName(f)); p = f.parent; }
+    return parts;
+  }
+  function descendants(id) {
+    const out = [];
+    live().forEach(x => { if (x.parent === id) { out.push(x); if (x.type === 'folder') out.push(...descendants(x.id)); } });
+    return out;
+  }
+  const noteCount = id => descendants(id).filter(x => x.type === 'note').length;
+  const cmp = (a, b) => folderName(a).localeCompare(folderName(b), 'cs', { sensitivity: 'base', numeric: true });
+
+  // ── Sheets ──
+  const R = a => U.rng(SHEET, a);
+  const putRaw = (a, values) => U.api(`/values/${R(a)}?valueInputOption=RAW`, { method: 'PUT', body: JSON.stringify({ values }) });
+  const rowOf = it => [it.id, it.type === 'folder' ? 'Папка' : 'Заметка', it.parent, it.title, it.text.slice(0, MAXLEN), it.created, it.modified, it.deleted ? 'Удалена' : 'Активна'];
+
+  async function ensureSheet() {
+    const meta = await U.api('?fields=sheets.properties(sheetId,title)');
+    if ((meta.sheets || []).some(s => s.properties.title === SHEET)) return;
+    const created = await U.api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: [{ addSheet: { properties: { title: SHEET, tabColor: U.rgb('00D9A3'), gridProperties: { rowCount: 3000, columnCount: 8, frozenRowCount: 2 } } } }] }) });
+    const sid = created.replies[0].addSheet.properties.sheetId;
+    const t = nowStr();
+    const seed = ['Рецепты', 'Продукты', 'Идеи и хотелки', 'Планы', 'Фильмы и игры'].map((n, i) => [uid('f') + i, 'Папка', '', n, '', t, t, 'Активна']);
+    seed.push([uid('n'), 'Заметка', '', 'Как здесь всё устроено',
+      '# Папки и заметки\n\nСлева вверху — **новая папка** и **новая заметка**. Папки можно класть в папки.\n\n## Что умеет текст\n- списки через дефис\n- [ ] чекбоксы (нажимай в режиме «Číst»)\n- **жирный**, *курсив*, `код`\n- ссылки на другие заметки: [[Название заметки]]\n\n> Всё хранится в листе «📝 Заметки» твоей таблицы.', t, t, 'Активна']);
+    await U.api('/values:batchUpdate', { method: 'POST', body: JSON.stringify({ valueInputOption: 'RAW', data: [
+      { range: `'${SHEET}'!A1:H2`, values: [['📝 ЗАМЕТКИ И ПАПКИ', '', '', '', '', '', '', ''], ['ID', 'Тип', 'Папка (ID)', 'Название', 'Текст', 'Создано', 'Изменено', 'Статус']] },
+      { range: `'${SHEET}'!A${FIRST}:H${FIRST + seed.length - 1}`, values: seed }
+    ] }) });
+    const col = (c0, extra) => ({ repeatCell: { range: { sheetId: sid, startRowIndex: 2, endRowIndex: 3000, startColumnIndex: c0, endColumnIndex: c0 + 1 }, cell: { userEnteredFormat: extra }, fields: Object.keys(extra).map(k => 'userEnteredFormat.' + k).join(',') } });
+    await U.api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: U.sheetFormat(sid, 8, [110, 90, 110, 240, 460, 140, 140, 100], [
+      col(3, { horizontalAlignment: 'LEFT' }), col(4, { horizontalAlignment: 'LEFT', wrapStrategy: 'CLIP' }),
+      { setDataValidation: { range: { sheetId: sid, startRowIndex: 2, endRowIndex: 3000, startColumnIndex: 7, endColumnIndex: 8 }, rule: { condition: { type: 'ONE_OF_LIST', values: [{ userEnteredValue: 'Активна' }, { userEnteredValue: 'Удалена' }] }, showCustomUi: true, strict: false } } }
+    ]) }) });
+  }
+
+  async function load(force) {
+    if (loading) return;
+    loading = true;
+    try {
+      await ensureSheet();
+      const d = await U.api(`/values/${R('A' + FIRST + ':H')}?valueRenderOption=UNFORMATTED_VALUE`);
+      items = (d.values || []).map((r, i) => ({
+        row: FIRST + i, id: String(r[0] || '').trim(), type: r[1] === 'Папка' ? 'folder' : 'note',
+        parent: String(r[2] || '').trim(), title: String(r[3] == null ? '' : r[3]), text: String(r[4] == null ? '' : r[4]),
+        created: String(r[5] || ''), modified: String(r[6] || ''), deleted: String(r[7] || '') === 'Удалена'
+      })).filter(x => x.id);
+      if (cwd && (!byId(cwd) || byId(cwd).deleted)) cwd = '';
+      ready = true; loadedAt = Date.now();
+      render();
+    } catch (e) {
+      if (!ready) $('list').innerHTML = '<div class="card"><div class="empty">Poznámky se nepodařilo načíst:<br/>' + esc(e.message || e) + '</div></div>';
+      else showToast('Obnovení selhalo: ' + (e.message || e), 'error');
+    } finally { loading = false; }
+  }
+
+  // ── saving ──
+  function setState(s) { const el = $('state'); if (el) el.textContent = s === 'saving' ? 'Ukládám…' : s === 'saved' ? 'Uloženo' : s === 'error' ? 'Chyba ukládání' : s === 'dirty' ? '…' : ''; }
+  function touch(it) { it.modified = nowStr(); dirty.add(it.id); setState('dirty'); clearTimeout(saveTimer); saveTimer = setTimeout(flush, 900); }
+  function flush() {
+    clearTimeout(saveTimer);
+    const ids = [...dirty]; dirty.clear();
+    ids.forEach(id => persist(byId(id)));
+  }
+  function persist(it) {
+    if (!it) return;
+    setState('saving');
+    return U.enqueue(async () => {
+      if (it.row) await putRaw(`A${it.row}:H${it.row}`, [rowOf(it)]);
+      else { const r = await U.nextFreeRow(SHEET); await putRaw(`A${r}:H${r}`, [rowOf(it)]); it.row = r; }
+    }).then(() => { if (!dirty.size) setState('saved'); })
+      .catch(e => { dirty.add(it.id); setState('error'); showToast('Uložení se nepodařilo:\n' + (e.message || e), 'error', 3600); });
+  }
+
+  // ── markdown ──
+  function inline(raw) {
+    const parts = String(raw).split(/(`[^`]+`)/g);
+    return parts.map((p, i) => {
+      if (i % 2) return '<code>' + esc(p.slice(1, -1)) + '</code>';
+      let s = esc(p);
+      s = s.replace(/\[\[([^\]\n|]+)(?:\|([^\]\n]+))?\]\]/g, (m, t, alias) => {
+        const tt = t.trim(); const ex = findNote(tt.replace(/&amp;/g, '&').replace(/&quot;/g, '"'));
+        return `<a class="wl${ex ? '' : ' miss'}" data-t="${esc(tt.replace(/&amp;/g, '&').replace(/&quot;/g, '"'))}">${alias || tt}</a>`;
+      });
+      s = s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+      s = s.replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>').replace(/~~([^~\n]+)~~/g, '<s>$1</s>');
+      return s;
+    }).join('');
+  }
+  function md(src) {
+    const lines = String(src).replace(/\r/g, '').split('\n'); let out = '', fence = null;
+    lines.forEach((ln, idx) => {
+      if (/^```/.test(ln)) { if (fence === null) { fence = []; } else { out += '<pre><code>' + esc(fence.join('\n')) + '</code></pre>'; fence = null; } return; }
+      if (fence !== null) { fence.push(ln); return; }
+      let m;
+      if (!ln.trim()) { out += '<div class="sp"></div>'; return; }
+      if ((m = ln.match(/^(#{1,3})\s+(.*)$/))) { out += `<h${m[1].length}>${inline(m[2])}</h${m[1].length}>`; return; }
+      if (/^\s*([-*_])\1{2,}\s*$/.test(ln)) { out += '<hr>'; return; }
+      if ((m = ln.match(/^>\s?(.*)$/))) { out += '<blockquote>' + inline(m[1]) + '</blockquote>'; return; }
+      if ((m = ln.match(/^(\s*)[-*+]\s+\[( |x|X)\]\s+(.*)$/))) {
+        const on = m[2] !== ' ';
+        out += `<div class="li${on ? ' done' : ''}" style="margin-left:${Math.min(m[1].length, 8) * 8}px"><span class="cb${on ? ' on' : ''}" data-ln="${idx}">${IC.check}</span><span class="lt">${inline(m[3])}</span></div>`; return;
+      }
+      if ((m = ln.match(/^(\s*)[-*+]\s+(.*)$/))) { out += `<div class="li" style="margin-left:${Math.min(m[1].length, 8) * 8}px"><span class="bu">•</span><span class="lt">${inline(m[2])}</span></div>`; return; }
+      if ((m = ln.match(/^(\s*)(\d+)[.)]\s+(.*)$/))) { out += `<div class="li" style="margin-left:${Math.min(m[1].length, 8) * 8}px"><span class="bu">${m[2]}.</span><span class="lt">${inline(m[3])}</span></div>`; return; }
+      out += '<div class="p">' + inline(ln) + '</div>';
+    });
+    if (fence !== null) out += '<pre><code>' + esc(fence.join('\n')) + '</code></pre>';
+    return out;
+  }
+  const findNote = t => { const k = t.trim().toLowerCase(); return live().find(x => x.type === 'note' && x.title.trim().toLowerCase() === k); };
+
+  // ── list ──
+  function snippet(it, q) {
+    const t = it.text.replace(/\r/g, '');
+    if (q) {
+      const i = t.toLowerCase().indexOf(q);
+      if (i >= 0) { const s = t.slice(Math.max(0, i - 24), i + 60).replace(/\s+/g, ' '); return (i > 24 ? '…' : '') + s; }
+    }
+    const first = t.split('\n').map(l => l.replace(/^[#>\-*+\s\[\]xX]+/, '').trim()).find(Boolean) || '';
+    return first.slice(0, 70);
+  }
+  const dateLbl = s => { const m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? `${+m[3]}. ${+m[2]}.` : ''; };
+  const noteRow = (it, q) => {
+    const pth = q ? pathOf(it).join(' / ') : '';
+    return `<div class="mrow" onclick="NT.openNote('${it.id}')"><div class="ic">${IC.note}</div><div class="inf"><div class="n">${esc(it.title || 'Bez názvu')}</div><div class="c">${esc((pth ? pth + ' · ' : '') + (snippet(it, q) || 'Prázdná poznámka'))}</div></div><span class="c" style="font-size:11px;color:var(--t3)">${dateLbl(it.modified)}</span></div>`;
+  };
+  const folderRow = it => {
+    const n = noteCount(it.id);
+    return `<div class="mrow" onclick="NT.go('${it.id}')"><div class="ic">${IC.folder}</div><div class="inf"><div class="n">${esc(folderName(it))}</div><div class="c">${n} ${plural(n, 'poznámka', 'poznámky', 'poznámek')}</div></div><button class="nt-more" onclick="event.stopPropagation();NT.folderMenu('${it.id}')" aria-label="Více">${IC.more}</button></div>`;
+  };
+  function renderList() {
+    const q = query.trim().toLowerCase(); const box = $('list');
+    $('crumbs').style.display = q ? 'none' : (cwd ? 'flex' : 'none');
+    if (!q) {
+      const crumbs = []; let p = cwd, g = 0;
+      while (p && g++ < 30) { const f = byId(p); if (!f) break; crumbs.unshift(f); p = f.parent; }
+      $('crumbs').innerHTML = `<span onclick="NT.go('')">Poznámky</span>` + crumbs.map((f, i) => `<i>›</i><span class="${i === crumbs.length - 1 ? 'cur' : ''}" ${i === crumbs.length - 1 ? '' : `onclick="NT.go('${f.id}')"`}>${esc(folderName(f))}</span>`).join('');
+      $('head').textContent = cwd && byId(cwd) ? folderName(byId(cwd)) : 'Poznámky';
+    } else $('head').textContent = 'Hledání';
+    let html = '';
+    if (q) {
+      const res = live().filter(x => x.title.toLowerCase().includes(q) || (x.type === 'note' && x.text.toLowerCase().includes(q)));
+      const fs = res.filter(x => x.type === 'folder').sort(cmp), ns = res.filter(x => x.type === 'note').sort((a, b) => b.modified.localeCompare(a.modified));
+      if (fs.length) html += '<div class="card">' + fs.map(folderRow).join('') + '</div>';
+      if (ns.length) html += '<div class="card">' + ns.map(n => noteRow(n, q)).join('') + '</div>';
+      if (!html) html = '<div class="card"><div class="empty">Nic nenalezeno</div></div>';
+    } else {
+      const here = live().filter(x => x.parent === cwd);
+      const fs = here.filter(x => x.type === 'folder').sort(cmp), ns = here.filter(x => x.type === 'note').sort((a, b) => b.modified.localeCompare(a.modified));
+      if (fs.length) html += '<div class="card">' + fs.map(folderRow).join('') + '</div>';
+      if (ns.length) html += (fs.length ? '<div class="nt-sub">Poznámky</div>' : '') + '<div class="card">' + ns.map(n => noteRow(n, '')).join('') + '</div>';
+      if (!html) html = '<div class="card"><div class="empty">' + (cwd ? 'Tato složka je prázdná.<br/>Přidej poznámku nebo podsložku tlačítky nahoře.' : 'Zatím nic. Začni složkou nebo poznámkou.') + '</div></div>';
+    }
+    box.innerHTML = html;
+  }
+
+  // ── editor ──
+  function showPane(edit) { $('list-pane').style.display = edit ? 'none' : 'block'; $('edit-pane').style.display = edit ? 'block' : 'none'; }
+  function grow() { const x = $('x'); x.style.height = 'auto'; x.style.height = Math.max(x.scrollHeight, window.innerHeight * 0.46) + 'px'; }
+  function setMode(m) {
+    curMode = m;
+    const it = byId(openId); if (!it) return;
+    $('seg').querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', (i === 0) === (m === 'edit')));
+    $('x').style.display = m === 'edit' ? 'block' : 'none';
+    $('tools').style.display = m === 'edit' ? 'flex' : 'none';
+    $('md').style.display = m === 'view' ? 'block' : 'none';
+    if (m === 'view') $('md').innerHTML = it.text.trim() ? md(it.text) : '<div class="p" style="color:var(--t3)">Prázdná poznámka</div>'; else grow();
+  }
+  function openNote(id, startMode) {
+    const it = byId(id); if (!it) return;
+    openId = id; $('t').value = it.title; $('x').value = it.text;
+    $('pathtxt').textContent = ['Poznámky', ...pathOf(it)].join(' / '); setState('');
+    showPane(true); document.getElementById('view-notes').scrollTop = 0;
+    setMode(startMode || (it.text.trim() ? 'view' : 'edit'));
+  }
+  function back() {
+    flush();
+    const it = byId(openId);
+    if (it && !it.row && !it.title.trim() && !it.text.trim()) { items = items.filter(x => x !== it); dirty.delete(it.id); }
+    openId = null; showPane(false); renderList();
+  }
+  function input() {
+    const it = byId(openId); if (!it) return;
+    it.title = $('t').value; it.text = $('x').value; touch(it); grow();
+  }
+  function ins(kind) {
+    const x = $('x'), it = byId(openId); if (!it) return;
+    const s = x.selectionStart, e = x.selectionEnd, v = x.value, sel = v.slice(s, e);
+    let nv, cs, ce;
+    const lineStart = v.lastIndexOf('\n', s - 1) + 1;
+    if (kind === 'b' || kind === 'i' || kind === 'link') {
+      const [a, b] = kind === 'b' ? ['**', '**'] : kind === 'i' ? ['*', '*'] : ['[[', ']]'];
+      nv = v.slice(0, s) + a + sel + b + v.slice(e); cs = s + a.length; ce = cs + sel.length;
+    } else {
+      const pre = kind === 'h' ? '## ' : kind === 'ul' ? '- ' : '- [ ] ';
+      nv = v.slice(0, lineStart) + pre + v.slice(lineStart); cs = s + pre.length; ce = e + pre.length;
+    }
+    x.value = nv; x.focus(); x.setSelectionRange(cs, ce); input();
+  }
+  function openByTitle(t) {
+    const ex = findNote(t);
+    if (ex) { flush(); openNote(ex.id); return; }
+    const cur = byId(openId); const parent = cur ? cur.parent : cwd;
+    flush(); createNote(parent, t.trim());
+  }
+  function toggleCheck(ln) {
+    const it = byId(openId); if (!it) return;
+    const lines = it.text.split('\n');
+    if (/\[ \]/.test(lines[ln])) lines[ln] = lines[ln].replace('[ ]', '[x]'); else lines[ln] = lines[ln].replace(/\[[xX]\]/, '[ ]');
+    it.text = lines.join('\n'); $('x').value = it.text; touch(it); setMode('view');
+  }
+
+  // ── create / rename / move / delete ──
+  function createNote(parent, title) {
+    const t = nowStr();
+    const it = { row: 0, id: uid('n'), type: 'note', parent: parent || '', title: title || '', text: '', created: t, modified: t, deleted: false };
+    items.push(it); openNote(it.id, 'edit');
+    if (title) touch(it);
+    setTimeout(() => (title ? $('x') : $('t')).focus(), 60);
+  }
+  function askName(title, hint, value, cb) {
+    $('name-title').textContent = title; $('name-hint').textContent = hint; $('name-input').value = value || '';
+    nameCb = cb; $('name-overlay').classList.add('open'); setTimeout(() => $('name-input').focus(), 300);
+  }
+  function okName() { const v = $('name-input').value.trim(); if (!v) { showToast('Napiš název', 'error'); return; } const cb = nameCb; closeName(); if (cb) cb(v); }
+  function closeName() { $('name-overlay').classList.remove('open'); nameCb = null; }
+  function actSheet(title, hint, html) { $('act-title').textContent = title; $('act-hint').textContent = hint || ''; $('act-body').innerHTML = html; $('act-overlay').classList.add('open'); }
+  function closeAct() { $('act-overlay').classList.remove('open'); }
+  const actBtn = (icon, label, fn, cls) => `<button class="nt-act ${cls || ''}" onclick="${fn}">${icon}<span>${label}</span></button>`;
+
+  function pickFolder(it, done) {          // выбор папки для переноса
+    const bad = new Set([it.id, ...(it.type === 'folder' ? descendants(it.id).map(x => x.id) : [])]);
+    const rows = [`<button class="nt-act ${it.parent === '' ? 'sel' : ''}" onclick="NT._mv('')">${IC.folder}<span>Poznámky (kořen)</span></button>`];
+    (function walk(pid, depth) {
+      live().filter(x => x.type === 'folder' && x.parent === pid && !bad.has(x.id)).sort(cmp).forEach(f => {
+        rows.push(`<button class="nt-act ${it.parent === f.id ? 'sel' : ''}" style="padding-left:${4 + depth * 18}px" onclick="NT._mv('${f.id}')">${IC.folder}<span>${esc(folderName(f))}</span></button>`);
+        walk(f.id, depth + 1);
+      });
+    })('', 1);
+    pendingMove = { it, done };
+    actSheet('Přesunout do…', it.type === 'folder' ? 'Složka se přesune i se vším uvnitř.' : '', rows.join(''));
+  }
+  let pendingMove = null;
+  function doMove(pid) {
+    if (!pendingMove) return;
+    const { it, done } = pendingMove; pendingMove = null; closeAct();
+    it.parent = pid; touch(it); flush(); done && done();
+  }
+  function removeItem(it) {
+    const all = [it, ...(it.type === 'folder' ? descendants(it.id) : [])];
+    all.forEach(x => { x.deleted = true; x.modified = nowStr(); if (x.row) persist(x); });
+    // заметки, которых ещё нет в таблице, просто выбрасываем
+    items = items.filter(x => !(x.deleted && !x.row));
+  }
+
+  const api = {
+    onShow() {
+      if (!ready) { load(); return; }
+      if (openId) return;
+      render();
+      if (Date.now() - loadedAt > 60000 && !dirty.size) load(true);
+    },
+    flush() { if (dirty.size) flush(); },
+    search(v) { query = v || ''; renderList(); },
+    go(id) { cwd = id; query = ''; $('search').value = ''; renderList(); document.getElementById('view-notes').scrollTop = 0; },
+    openFolder(id) { api.go(id); },
+    openNote(id) { openNote(id); },
+    newNote() { createNote(cwd, ''); },
+    newFolder() { askName('Nová složka', 'Složka ' + (cwd && byId(cwd) ? 'vznikne uvnitř „' + folderName(byId(cwd)) + '“' : 'vznikne v kořeni'), '', v => {
+      const t = nowStr(); const f = { row: 0, id: uid('f'), type: 'folder', parent: cwd, title: v, text: '', created: t, modified: t, deleted: false };
+      items.push(f); persist(f); renderList();
+    }); },
+    folderMenu(id) {
+      const f = byId(id); if (!f) return;
+      actSheet(folderName(f), noteCount(id) + ' ' + plural(noteCount(id), 'poznámka', 'poznámky', 'poznámek'),
+        actBtn(IC.edit, 'Přejmenovat', `NT._rename('${id}')`) + actBtn(IC.plus, 'Nová podsložka', `NT._sub('${id}')`) + actBtn(IC.move, 'Přesunout…', `NT._move('${id}')`) + actBtn(IC.trash, 'Smazat složku', `NT._del('${id}')`, 'danger'));
+    },
+    noteMenu() {
+      const it = byId(openId); if (!it) return;
+      actSheet(it.title || 'Bez názvu', ['Poznámky', ...pathOf(it)].join(' / '),
+        actBtn(IC.move, 'Přesunout do složky…', `NT._move('${it.id}')`) + actBtn(IC.trash, 'Smazat poznámku', `NT._del('${it.id}')`, 'danger'));
+    },
+    _rename(id) { closeAct(); const f = byId(id); askName('Přejmenovat složku', '', f.title, v => { f.title = v; touch(f); flush(); renderList(); }); },
+    _sub(id) { closeAct(); askName('Nová podsložka', 'Uvnitř „' + folderName(byId(id)) + '“', '', v => { const t = nowStr(); const f = { row: 0, id: uid('f'), type: 'folder', parent: id, title: v, text: '', created: t, modified: t, deleted: false }; items.push(f); persist(f); renderList(); }); },
+    _move(id) { const it = byId(id); closeAct(); setTimeout(() => pickFolder(it, () => { if (openId) { $('pathtxt').textContent = ['Poznámky', ...pathOf(byId(openId))].join(' / '); } renderList(); showToast('Přesunuto'); }), 50); },
+    _mv(pid) { doMove(pid); },
+    _del(id) {
+      const it = byId(id); closeAct(); if (!it) return;
+      const extra = it.type === 'folder' ? ' i s ' + descendants(id).length + ' položkami uvnitř' : '';
+      if (!confirm('Smazat „' + (it.title || 'Bez názvu') + '“' + extra + '?\nV tabulce zůstane se stavem „Удалена“.')) return;
+      const wasOpen = openId === id; removeItem(it);
+      if (wasOpen) { openId = null; showPane(false); }
+      renderList(); showToast('Smazáno');
+    },
+    back, input, ins, mode: setMode, closeName, okName, closeAct,
+    _t() { return { items, ready }; }
+  };
+  function render() { if (openId) return; renderList(); }
+
+  // делегирование кликов в режиме чтения
+  document.addEventListener('click', e => {
+    const wl = e.target.closest && e.target.closest('#nt-md .wl'); if (wl) { openByTitle(wl.dataset.t); return; }
+    const cb = e.target.closest && e.target.closest('#nt-md .cb'); if (cb) toggleCheck(+cb.dataset.ln);
+  });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') api.flush(); });
+  window.addEventListener('pagehide', () => api.flush());
+  window.addEventListener('resize', () => { if (openId && curMode === 'edit') grow(); });
+  window.NT = api;
+})();
+</script>
+
+<script>
 // ── NAVIGATION ──
 function showView(name) {
-  ['dash', 'add', 'plan', 'history', 'hab'].forEach(v => {
+  if (window.NT) NT.flush();
+  ['dash', 'add', 'plan', 'history', 'hab', 'notes'].forEach(v => {
     $('view-' + v).classList.toggle('active', v === name);
     $('nav-' + v).classList.toggle('on', v === name);
   });
   if (name === 'dash') renderDash();
   if (name === 'hab') HB.onShow();
+  if (name === 'notes') NT.onShow();
   if (name === 'plan') { if (!dataState) refreshData(); else renderPlan(); }
   if (name === 'history') { if (!dataState) refreshData(); else renderHistory(); }
   if ((name === 'plan' || name === 'history') && dataState && Date.now() - dataState.loadedAt > 60000) refreshData(true);
