@@ -339,6 +339,137 @@
 
   .skel { height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--s2) 25%, var(--s3) 50%, var(--s2) 75%); background-size: 200% 100%; animation: sk 1.2s infinite; }
   @keyframes sk { to { background-position: -200% 0; } }
+/* ─── HABIT ROW ─── */
+  .hrow { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .hrow:last-child { border-bottom: none; }
+  .hrow:first-child { padding-top: 2px; }
+  .hrow:last-child { padding-bottom: 2px; }
+  .hrow .ic { width: 38px; height: 38px; border-radius: 12px; background: var(--s2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .3s; }
+  .hrow .ic svg { width: 18px; height: 18px; color: var(--t2); transition: color .3s; }
+  .hrow.done .ic { background: var(--mint-dim); }
+  .hrow.done .ic svg { color: var(--mint); }
+  .hrow .inf { flex: 1; min-width: 0; }
+  .hrow .n { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .3s; }
+  .hrow.done .n { color: var(--t2); }
+  .hrow .c { font-size: 11.5px; color: var(--t3); margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+  .hrow .c svg { width: 11px; height: 11px; color: var(--mint); }
+  .dots { display: flex; gap: 4px; margin-top: 7px; }
+  .dots i { width: 14px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.09); }
+  .dots i.on { background: var(--mint); }
+  .dots i.off { background: none; border: 1px dashed rgba(255,255,255,.12); }
+  .dots i.cur { box-shadow: 0 0 0 1.5px rgba(255,255,255,.28); }
+  .chk {
+    width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--line2); background: none;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer;
+    transition: background .2s, border-color .2s, transform .12s;
+  }
+  .chk svg { width: 17px; height: 17px; color: #04120d; opacity: 0; transform: scale(.4); transition: all .25s cubic-bezier(.2,.8,.2,1); }
+  .hrow:active .chk { transform: scale(.9); }
+  .hrow.done .chk { background: var(--mint); border-color: var(--mint); }
+  .hrow.done .chk svg { opacity: 1; transform: none; }
+  .hrow.rest { opacity: .55; cursor: default; }
+  .hrow.rest .chk { display: none; }
+  .empty { padding: 34px 20px; text-align: center; font-size: 13px; color: var(--t3); line-height: 1.7; }
+
+  /* ─── HEATMAP ─── */
+  .hm-head, .hm { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+  .hm-head { margin-bottom: 8px; }
+  .hm-head div { text-align: center; }
+  .hm .d {
+    aspect-ratio: 1; border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-d); font-size: 12px; font-weight: 500; color: var(--t2); background: var(--s2); cursor: pointer;
+    transition: transform .1s;
+  }
+  .hm .d:active { transform: scale(.92); }
+  .hm .d.blank { background: none; pointer-events: none; }
+  .hm .d.fut { opacity: .35; }
+  .hm .d.full { color: #04120d; font-weight: 700; }
+  .hm .d.today { outline: 1.5px solid var(--mint); outline-offset: 1px; }
+  .hm-legend { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 12px; font-size: 10.5px; color: var(--t3); }
+  .hm-legend i { width: 12px; height: 12px; border-radius: 4px; display: block; }
+
+  .stat-row { display: flex; gap: 10px; }
+  .stat-row .hero-chip { border-top: none; padding-top: 0; }
+  .stat-row .hero-chip .v { font-size: 22px; }
+
+    #hb-weeks { width: 100%; height: 96px; display: block; }
+  
+  /* ─── HABIT STAT CARD ─── */
+  .hstat { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .hstat:last-child { border-bottom: none; padding-bottom: 2px; }
+  .hstat:first-child { padding-top: 2px; }
+  .hstat .top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .hstat .name { display: flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 500; min-width: 0; }
+  .hstat .name span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hstat .name svg { width: 16px; height: 16px; color: var(--t3); flex-shrink: 0; }
+  .hstat .pc { font-family: var(--font-d); font-size: 15px; font-weight: 600; }
+  .hstat .bar { margin-top: 9px; height: 5px; }
+  .hstat .meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11.5px; color: var(--t3); }
+  .hstat .meta b { color: var(--t2); font-weight: 600; font-family: var(--font-d); }
+
+  /* ─── MANAGE ─── */
+  .mrow { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .mrow:last-child { border-bottom: none; }
+  .mrow:first-child { padding-top: 2px; }
+  .mrow:last-child { padding-bottom: 2px; }
+  .mrow .ic { width: 38px; height: 38px; border-radius: 12px; background: var(--s2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mrow .ic svg { width: 18px; height: 18px; color: var(--t2); }
+  .mrow .inf { flex: 1; min-width: 0; }
+  .mrow .n { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mrow .c { font-size: 11.5px; color: var(--t3); margin-top: 2px; }
+  .mrow > svg { width: 16px; height: 16px; color: var(--t3); flex-shrink: 0; }
+  .mrow.arch { opacity: .6; }
+  .pill-btn { border: 1px solid var(--line2); background: none; color: var(--t2); border-radius: 10px; padding: 8px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: transform .12s; }
+  .pill-btn:active { transform: scale(.94); }
+  .add-big {
+    margin-top: 12px; width: 100%; border: 1px dashed var(--line2); border-radius: 14px; padding: 15px; background: none;
+    color: var(--mint); font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: transform .12s, background .2s;
+  }
+  .add-big:active { transform: scale(.98); background: var(--mint-dim); }
+
+  /* ─── FORM ─── */
+  .hb-input {
+    width: 100%; margin-top: 10px; background: var(--s2); border: 1px solid var(--line); border-radius: 12px;
+    padding: 13px 14px; font-size: 14px; color: var(--t1); font-family: var(--font-ui); outline: none; transition: border-color .2s;
+  }
+  .hb-input:focus { border-color: var(--line2); }
+  .hb-input::placeholder { color: var(--t3); }
+  .icgrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px; }
+  .icb {
+    aspect-ratio: 1.15; background: var(--s2); border: 1px solid var(--line); border-radius: 13px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: transform .1s, border-color .2s, background .2s;
+  }
+  .icb:active { transform: scale(.94); }
+  .icb svg { width: 20px; height: 20px; color: var(--t2); }
+  .icb.sel { border-color: var(--mint); background: var(--mint-dim); }
+  .icb.sel svg { color: var(--mint); }
+  .dchips { display: flex; gap: 6px; margin-top: 8px; }
+  .dchip {
+    flex: 1; text-align: center; padding: 10px 0; border-radius: 11px; font-size: 12.5px; font-weight: 500;
+    background: var(--s2); border: 1px solid var(--line); color: var(--t2); cursor: pointer; transition: all .2s;
+  }
+  .dchip.sel { border-color: var(--mint); color: var(--mint); background: var(--mint-dim); }
+
+  
+  /* ─── HABITS (в составе U-Budget) ─── */
+  .hero.perfect { border-color: rgba(0,217,163,.45); }
+  .hb-seg { display: flex; background: var(--s1); border: 1px solid var(--line); border-radius: 13px; padding: 4px; position: relative; margin-top: 10px; --i: 0; }
+  .hb-seg .thumb { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); border-radius: 10px; background: var(--mint); transform: translateX(calc(var(--i) * 100%)); transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+  .hb-seg button { flex: 1; position: relative; z-index: 1; background: none; border: none; padding: 11px 0; font-size: 13.5px; font-weight: 600; color: var(--t2); cursor: pointer; transition: color .25s; border-radius: 10px; }
+  .hb-seg button.on { color: #04120d; }
+  .hb-sub { display: none; }
+  .hb-sub.active { display: block; }
+  #view-hab .month-switch { gap: 10px; }
+  #view-hab .month-label { flex: 1; text-align: center; }
+  #view-hab .month-switch .month-label:first-child { text-align: left; }
+  #view-hab .skel { margin: 10px 0; }
+  #view-hab .spark-wrap canvas { height: auto; }
+  .head-btns { display: flex; gap: 8px; }
+  .sheet { max-height: 92dvh; overflow-y: auto; }
+  .sheet .lbl { margin: 16px 2px 0; }
+  .sheet .primary:disabled { opacity: .55; }
+  .sheet .ghost.danger { color: var(--red); }
 </style>
 </head>
 <body>
@@ -449,6 +580,80 @@
     <div id="history-body"></div>
   </div>
 
+  <!-- HABITS -->
+  <div class="view" id="view-hab">
+    <div class="hb-seg" id="hb-seg"><div class="thumb"></div>
+      <button class="on" onclick="HB.sub('today')">Dnes</button>
+      <button onclick="HB.sub('over')">Přehled</button>
+      <button onclick="HB.sub('manage')">Návyky</button>
+    </div>
+    <div class="hb-sub active" id="hb-sub-today">
+    <div class="month-switch">
+      <button class="chev" id="hb-d-prev" onclick="HB.shiftDay(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="month-label" id="hb-day-label">—</div>
+      <button class="chev" id="hb-d-next" onclick="HB.shiftDay(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+
+    <div class="card hero" id="hb-hero">
+      <div class="caps" id="hb-hero-label">Splněno dnes</div>
+      <div class="hero-amount">
+        <span class="big slot num" id="hb-hero-amount"></span>
+      </div>
+      <div class="hero-sub" id="hb-hero-sub"></div>
+      <div class="bar"><i id="hb-hero-bar"></i></div>
+      <div class="hero-row">
+        <div class="hero-chip"><div class="caps">Série</div><div class="v mint num" id="hb-chip-streak">—</div></div>
+        <div class="hero-chip"><div class="caps">Týden</div><div class="v num" id="hb-chip-week">—</div></div>
+        <div class="hero-chip"><div class="caps">Měsíc</div><div class="v num" id="hb-chip-month">—</div></div>
+      </div>
+    </div>
+
+    <div class="sec-head"><div class="caps" id="hb-list-head">Návyky</div><div class="link" onclick="HB.sub('manage')">Upravit ›</div></div>
+    <div class="card" id="hb-today-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
+    <div id="hb-today-rest"></div>
+    </div>
+    <div class="hb-sub" id="hb-sub-over">
+    <div class="month-switch">
+      <button class="chev" id="hb-m-prev" onclick="HB.shiftMonth(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="month-label" id="hb-over-month">—</div>
+      <button class="chev" id="hb-m-next" onclick="HB.shiftMonth(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+
+    <div class="card">
+      <div class="hm-head" id="hb-hm-head"></div>
+      <div class="hm" id="hb-hm"></div>
+      <div class="hm-legend"><span>méně</span><i style="background:var(--s2)"></i><i style="background:rgba(0,217,163,.3)"></i><i style="background:rgba(0,217,163,.6)"></i><i style="background:var(--mint)"></i><span>více</span></div>
+    </div>
+
+    <div class="card">
+      <div class="stat-row">
+        <div class="hero-chip"><div class="caps">Úspěšnost</div><div class="v mint num" id="hb-st-pct">—</div></div>
+        <div class="hero-chip"><div class="caps">Splněno</div><div class="v num" id="hb-st-done">—</div></div>
+        <div class="hero-chip"><div class="caps">Dokonalé dny</div><div class="v num" id="hb-st-perfect">—</div></div>
+      </div>
+    </div>
+
+    <div class="sec-head"><div class="caps">Posledních 8 týdnů</div><div class="link" id="hb-week-note"></div></div>
+    <div class="card spark-wrap"><canvas id="hb-weeks"></canvas>
+      <div class="spark-foot"><span class="caps" id="hb-weeks-from"></span><span class="caps" id="hb-weeks-to">teď</span></div>
+    </div>
+
+    <div class="sec-head"><div class="caps">Podle návyků</div></div>
+    <div class="card" id="hb-over-habits"></div>
+    </div>
+    <div class="hb-sub" id="hb-sub-manage">
+    <div class="month-switch">
+      <div class="month-label">Moje návyky</div>
+      <div class="head-btns">
+        <button class="refresh-ic" id="hb-man-refresh" onclick="HB.refresh(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></button>
+      </div>
+    </div>
+    <div class="card" id="hb-man-list"></div>
+    <button class="add-big" onclick="HB.openSheet()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Přidat návyk</button>
+    <div id="hb-man-arch"></div>
+    </div>
+  </div>
+
   <!-- NAV -->
   <nav class="nav">
     <button id="nav-dash" class="on" onclick="showView('dash')">
@@ -466,6 +671,10 @@
     <button id="nav-history" onclick="showView('history')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1" fill="currentColor"/><circle cx="3.5" cy="12" r="1" fill="currentColor"/><circle cx="3.5" cy="18" r="1" fill="currentColor"/></svg>
       Historie
+    </button>
+    <button id="nav-hab" onclick="showView('hab')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>
+      Návyky
     </button>
   </nav>
 </div>
@@ -486,6 +695,22 @@
     </div>
     <button class="primary" onclick="resetLimit()">Obnovit zůstatek na plný limit</button>
     <button class="ghost" onclick="closeLimitSheet()">Zavřít</button>
+  </div>
+</div>
+
+<!-- ═══ HABIT SHEET ═══ -->
+<div class="overlay" id="hb-sheet-overlay" onclick="if(event.target===this)HB.closeSheet()">
+  <div class="sheet">
+    <h3 id="hb-sheet-title">Nový návyk</h3>
+    <div class="hint">Co chceš dělat pravidelně?</div>
+    <input class="hb-input" id="hb-h-name" type="text" maxlength="60" placeholder="Název návyku" autocomplete="off" />
+    <div class="caps lbl">Ikona</div>
+    <div class="icgrid" id="hb-h-icons"></div>
+    <div class="caps lbl">Dny v týdnu</div>
+    <div class="dchips" id="hb-h-days"></div>
+    <button class="primary" id="hb-h-save" onclick="HB.saveHabit()">Uložit</button>
+    <button class="ghost danger" id="hb-h-archive" onclick="HB.archiveHabit()" style="display:none">Archivovat</button>
+    <button class="ghost" onclick="HB.closeSheet()">Zavřít</button>
   </div>
 </div>
 
@@ -954,13 +1179,547 @@ function drawSpark(mo) {
 }
 </script>
 <script>
+// ═════════ ПРИВЫЧКИ (HB) ═════════
+(function () {
+
+
+// Новые листы (создаются автоматически при первом запуске, остальные листы не трогаются)
+const HAB_SHEET = '✅ Привычки';
+const LOG_SHEET = '🗓 Отметки привычек';
+const FIRST_ROW = 3;                         // строка 1 — заголовок, 2 — шапка, данные с 3-й (как в «Транзакциях»)
+
+// В таблице дни хранятся по-русски (как остальной лист), на экране — по-чешски
+const DAYS_RU = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const DAYS_CS = ['Po','Út','St','Čt','Pá','So','Ne'];
+const CS_MONTHS = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+const CS_MONTHS_GEN = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
+const CS_WEEKDAYS = ['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota']; // getDay()
+
+// Стартовые привычки (записываются один раз при создании листа; потом правятся в приложении или в таблице)
+const SEED_HABITS = [
+  { name: 'Чешский 30+ минут',                  icon: 'book' },
+  { name: 'Фрукты',                             icon: 'apple' },
+  { name: 'Без чипсов и сладких напитков',      icon: 'ban' },
+  { name: 'Движение / зарядка',                 icon: 'dumbbell' },
+];
+
+const ICONS = {
+  book:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h14v14H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 0 2 2h14v-4"/></svg>',
+  apple:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8c-2-1.5-6-1-6 4 0 4 2.5 8.5 4.5 8.5.9 0 1-.5 1.5-.5s.6.5 1.5.5c2 0 4.5-4.5 4.5-8.5 0-5-4-5.5-6-4z"/><path d="M12 8c0-2 1-4 3-5"/></svg>',
+  ban:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg>',
+  dumbbell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>',
+  walk:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="M9 21l2.5-6.5L9 12.5l1.5-4.5 3.5 1.5 2.5 3M11.5 14.5l3 2 .5 4.5M10.5 8L8 11"/></svg>',
+  drop:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.2 6 10.5A6 6 0 0 1 6 13.5C6 9.2 12 3 12 3z"/></svg>',
+  moon:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  pen:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>',
+  heart:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.4 5.2 5.2 0 0 1 21.3 11c-1.8 4.4-9.3 9-9.3 9z"/></svg>',
+  sun:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+  leaf:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19C5 10 10 5 20 4c0 10-5 15-14 15z"/><path d="M5 19c3-5 6-8 10-10"/></svg>',
+  clock:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  music:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>',
+  star:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+  coins:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="6"/><path d="M14.5 5.4a6 6 0 1 1-9.1 9.1"/><path d="M7 9h4M9 7v4"/></svg>',
+  flame:    '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c4 0 7-2.8 7-6.8 0-3-2-5-3-6.2-.3 1.6-1.2 2.5-2 2.8.3-3.4-1.4-6.3-4-8-.3 3-1.8 4.7-3.2 6.5C5.6 11.8 5 13.3 5 15.2 5 19.2 8 22 12 22z"/></svg>',
+  check:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>',
+  chevr:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg>'
+};
+const PICKABLE = ['book','apple','ban','dumbbell','walk','drop','moon','pen','heart','sun','leaf','clock','music','star','coins'];
+const icon = k => ICONS[k] || ICONS.star;
+
+// ═════════ HELPERS ═════════
+const $ = id => document.getElementById('hb-' + id);
+const pad = n => String(n).padStart(2, '0');
+const dstr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseD = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const wdMon = d => (d.getDay() + 6) % 7;            // Пн = 0
+function todayStr() { return dstr(new Date()); }
+const pct = x => Math.round(x * 100) + ' %';
+const dnu = n => n === 1 ? 'den' : (n >= 2 && n <= 4 ? 'dny' : 'dní');
+function serialToStr(v) { const d = new Date(Math.round((v - 25569) * 86400000)); return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`; }
+function parseCellDate(v) {
+  if (v == null || v === '') return null;
+  if (typeof v === 'number') return serialToStr(v);
+  const s = String(v).trim();
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if (m) return `${m[1]}-${pad(+m[2])}-${pad(+m[3])}`;
+  m = s.match(/^(\d{1,2})\.\s?(\d{1,2})\.\s?(\d{4})/); if (m) return `${m[3]}-${pad(+m[2])}-${pad(+m[1])}`;
+  return null;
+}
+function daysText(days) {
+  if (days.length === 7) return 'Každý den';
+  if (days.join() === '0,1,2,3,4') return 'Po–Pá';
+  if (days.join() === '5,6') return 'So–Ne';
+  return days.map(i => DAYS_CS[i]).join(', ');
+}
+
+
+// ═════════ STATE ═════════
+let habits = [];              // { id, name, icon, days:[0..6], created:'YYYY-MM-DD', archived, row }
+let log = new Map();          // 'YYYY-MM-DD|id' -> { row, done }
+let byHabit = new Map();      // id -> Map(date -> 0/1)
+let firstLog = new Map();     // id -> earliest date
+let loadedAt = 0, dataLoading = false, ready = false;
+let currentView = 'today';
+let selDate = todayStr();
+let lastToday = todayStr();
+const n0 = new Date();
+let selY = n0.getFullYear(), selM = n0.getMonth();
+let editingId = null, formIcon = 'star', formDays = [0,1,2,3,4,5,6];
+
+// ═════════ SHEETS API ═════════
+async function api(path, opts = {}) {
+  const go = () => fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}${path}`, {
+    ...opts, headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' }
+  });
+  await ensureAccessToken();
+  let res = await go();
+  if (res.status === 401) { accessToken = null; await ensureAccessToken(); res = await go(); }
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error?.message || res.status); }
+  return res.json();
+}
+const rng = (sheet, a) => encodeURIComponent(`'${sheet}'!${a}`);
+const putValues = (sheet, a, values) =>
+  api(`/values/${rng(sheet, a)}?valueInputOption=USER_ENTERED`, { method: 'PUT', body: JSON.stringify({ values }) });
+async function nextFreeRow(sheet) {            // как в U-Budget: первая свободная строка по столбцу A
+  const d = await api(`/values/${rng(sheet, 'A:A')}`);
+  return Math.max((d.values || []).length + 1, FIRST_ROW);
+}
+let writeQueue = Promise.resolve(), pending = 0;
+function enqueue(fn) {
+  pending++; setSync();
+  const p = writeQueue.then(fn);
+  writeQueue = p.catch(() => {}).then(() => { pending--; setSync(); });
+  return p;
+}
+function setSync() {}
+
+// ── создание листов при первом запуске ──
+const rgb = h => ({ red: parseInt(h.slice(0, 2), 16) / 255, green: parseInt(h.slice(2, 4), 16) / 255, blue: parseInt(h.slice(4, 6), 16) / 255 });
+function sheetFormat(id, ncols, widths, extra = []) {
+  const cell = (r0, r1, fmt, fields) => ({ repeatCell: { range: { sheetId: id, startRowIndex: r0, endRowIndex: r1, startColumnIndex: 0, endColumnIndex: ncols }, cell: { userEnteredFormat: fmt }, fields } });
+  const reqs = [
+    { mergeCells: { range: { sheetId: id, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: ncols }, mergeType: 'MERGE_ALL' } },
+    cell(0, 1, { backgroundColor: rgb('0F172A'), horizontalAlignment: 'CENTER', verticalAlignment: 'MIDDLE', textFormat: { fontFamily: 'Arial', fontSize: 16, bold: true, foregroundColor: rgb('FFFFFF') } }, 'userEnteredFormat(backgroundColor,horizontalAlignment,verticalAlignment,textFormat)'),
+    cell(1, 2, { backgroundColor: rgb('334155'), horizontalAlignment: 'CENTER', verticalAlignment: 'MIDDLE', textFormat: { fontFamily: 'Arial', bold: true, foregroundColor: rgb('FFFFFF') } }, 'userEnteredFormat(backgroundColor,horizontalAlignment,verticalAlignment,textFormat)'),
+    cell(2, 2000, { horizontalAlignment: 'CENTER', verticalAlignment: 'MIDDLE', textFormat: { fontFamily: 'Arial', foregroundColor: rgb('0F172A') } }, 'userEnteredFormat(horizontalAlignment,verticalAlignment,textFormat)'),
+    { updateDimensionProperties: { range: { sheetId: id, dimension: 'ROWS', startIndex: 0, endIndex: 1 }, properties: { pixelSize: 40 }, fields: 'pixelSize' } },
+    { updateDimensionProperties: { range: { sheetId: id, dimension: 'ROWS', startIndex: 1, endIndex: 2 }, properties: { pixelSize: 30 }, fields: 'pixelSize' } },
+  ];
+  widths.forEach((w, i) => reqs.push({ updateDimensionProperties: { range: { sheetId: id, dimension: 'COLUMNS', startIndex: i, endIndex: i + 1 }, properties: { pixelSize: w }, fields: 'pixelSize' } }));
+  return reqs.concat(extra);
+}
+async function ensureSheets() {
+  const meta = await api('?fields=sheets.properties(sheetId,title)');
+  const have = new Map((meta.sheets || []).map(s => [s.properties.title, s.properties.sheetId]));
+  const needHab = !have.has(HAB_SHEET), needLog = !have.has(LOG_SHEET);
+  if (!needHab && !needLog) return;
+
+  const add = [];
+  const mk = (title, color) => ({ addSheet: { properties: { title, tabColor: rgb(color), gridProperties: { rowCount: 2000, columnCount: 8, frozenRowCount: 2 } } } });
+  if (needHab) add.push(mk(HAB_SHEET, '00D9A3'));
+  if (needLog) add.push(mk(LOG_SHEET, '00D9A3'));
+  const created = await api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: add }) });
+  let k = 0;
+  const habId = needHab ? created.replies[k++].addSheet.properties.sheetId : have.get(HAB_SHEET);
+  const logId = needLog ? created.replies[k++].addSheet.properties.sheetId : have.get(LOG_SHEET);
+
+  const dateFmt = (id, col) => ({ repeatCell: { range: { sheetId: id, startRowIndex: 2, endRowIndex: 2000, startColumnIndex: col, endColumnIndex: col + 1 }, cell: { userEnteredFormat: { numberFormat: { type: 'DATE', pattern: 'dd.mm.yyyy' } } }, fields: 'userEnteredFormat.numberFormat' } });
+  const rule = (id, col, val, bg, fg) => ({ addConditionalFormatRule: { index: 0, rule: { ranges: [{ sheetId: id, startRowIndex: 2, endRowIndex: 2000, startColumnIndex: col, endColumnIndex: col + 1 }], booleanRule: { condition: { type: 'NUMBER_EQ', values: [{ userEnteredValue: String(val) }] }, format: { backgroundColor: rgb(bg), textFormat: { bold: true, foregroundColor: rgb(fg) } } } } } });
+  const textRule = (id, col, val, bg, fg) => ({ addConditionalFormatRule: { index: 0, rule: { ranges: [{ sheetId: id, startRowIndex: 2, endRowIndex: 2000, startColumnIndex: col, endColumnIndex: col + 1 }], booleanRule: { condition: { type: 'TEXT_EQ', values: [{ userEnteredValue: val }] }, format: { backgroundColor: rgb(bg), textFormat: { bold: true, foregroundColor: rgb(fg) } } } } } });
+
+  const fmt = [];
+  const hdr = [];
+  if (needHab) {
+    fmt.push(...sheetFormat(habId, 6, [110, 280, 100, 230, 110, 100], [
+      dateFmt(habId, 4),
+      { setDataValidation: { range: { sheetId: habId, startRowIndex: 2, endRowIndex: 2000, startColumnIndex: 5, endColumnIndex: 6 }, rule: { condition: { type: 'ONE_OF_LIST', values: [{ userEnteredValue: 'Активна' }, { userEnteredValue: 'Архив' }] }, showCustomUi: true, strict: false } } },
+      textRule(habId, 5, 'Активна', 'D1FAE5', '047857'),
+      textRule(habId, 5, 'Архив', 'F1F5F9', '64748B'),
+    ]));
+    const today = todayStr();
+    const seed = SEED_HABITS.map((h, i) => ['h' + Date.now().toString(36) + i, h.name, h.icon, DAYS_RU.join(','), today, 'Активна']);
+    hdr.push({ range: `'${HAB_SHEET}'!A1:F2`, values: [['🌱 МОИ ПРИВЫЧКИ — СПИСОК', '', '', '', '', ''], ['ID', 'Привычка', 'Иконка', 'Дни недели', 'Создана', 'Статус']] });
+    hdr.push({ range: `'${HAB_SHEET}'!A${FIRST_ROW}:F${FIRST_ROW + seed.length - 1}`, values: seed });
+  }
+  if (needLog) {
+    fmt.push(...sheetFormat(logId, 5, [110, 110, 280, 130, 110], [
+      dateFmt(logId, 0),
+      rule(logId, 3, 1, 'D1FAE5', '047857'),
+      rule(logId, 3, 0, 'FEE2E2', 'B91C1C'),
+    ]));
+    hdr.push({ range: `'${LOG_SHEET}'!A1:E2`, values: [['🗓 ЖУРНАЛ ОТМЕТОК ПРИВЫЧЕК', '', '', '', ''], ['Дата', 'ID', 'Привычка', 'Выполнено (1/0)', 'Месяц (авто)']] });
+  }
+  await api('/values:batchUpdate', { method: 'POST', body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data: hdr }) });
+  await api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: fmt }) });
+}
+
+// ═════════ LOAD ═════════
+async function refreshData(force) {
+  if (dataLoading) return;
+  if (ready && !force && Date.now() - loadedAt < 30000) { renderAll(); return; }
+  dataLoading = true; setSpin(true);
+  try {
+    await ensureAccessToken();
+    await ensureSheets();
+    const q = [`'${HAB_SHEET}'!A${FIRST_ROW}:F`, `'${LOG_SHEET}'!A${FIRST_ROW}:E`].map(r => 'ranges=' + encodeURIComponent(r)).join('&');
+    const data = await api(`/values:batchGet?${q}&valueRenderOption=UNFORMATTED_VALUE`);
+    const [hR, lR] = data.valueRanges;
+
+    habits = [];
+    (hR.values || []).forEach((r, i) => {
+      const id = String(r[0] || '').trim(); const name = String(r[1] || '').trim();
+      if (!id || !name) return;
+      let days = String(r[3] || '').split(/[\s,;]+/).map(x => DAYS_RU.indexOf(x)).filter(x => x >= 0);
+      if (!days.length) days = [0, 1, 2, 3, 4, 5, 6];
+      days = [...new Set(days)].sort();
+      habits.push({ id, name, icon: ICONS[r[2]] ? r[2] : 'star', days, created: parseCellDate(r[4]) || todayStr(), archived: String(r[5] || '').trim() === 'Архив', row: FIRST_ROW + i });
+    });
+
+    log = new Map();
+    (lR.values || []).forEach((r, i) => {
+      const ds = parseCellDate(r[0]); const id = String(r[1] || '').trim();
+      if (!ds || !id) return;
+      log.set(ds + '|' + id, { row: FIRST_ROW + i, done: Number(r[3]) === 1 ? 1 : 0 });
+    });
+    reindex();
+    ready = true; loadedAt = Date.now();
+    renderAll();
+  } catch (e) {
+    if (!ready) $('today-list').innerHTML = '<div class="empty">Data se nepodařilo načíst:<br/>' + escapeHtml(e.message || e) + '</div>';
+    else showToast('Obnovení selhalo: ' + (e.message || e), 'error');
+  } finally { dataLoading = false; setSpin(false); }
+}
+function setSpin(on) { const b = $('man-refresh'); if (b) b.classList.toggle('spin', on); }
+function reindex() {
+  byHabit = new Map(); firstLog = new Map();
+  log.forEach((rec, key) => {
+    const [ds, id] = key.split('|');
+    if (!byHabit.has(id)) byHabit.set(id, new Map());
+    byHabit.get(id).set(ds, rec.done);
+    if (rec.done && (!firstLog.has(id) || ds < firstLog.get(id))) firstLog.set(id, ds);
+  });
+}
+
+// ═════════ STATS ═════════
+const active = () => habits.filter(h => !h.archived);
+const isDone = (h, ds) => byHabit.get(h.id)?.get(ds) === 1;
+function startOf(h) { let s = h.created; const f = firstLog.get(h.id); if (f && f < s) s = f; return s; }
+const scheduled = (h, d) => h.days.includes(wdMon(d));
+
+function rate(h, fromDs, toDs) {
+  const t = todayStr(), st = startOf(h);
+  const lo = fromDs > st ? fromDs : st, hi = toDs < t ? toDs : t;
+  let sch = 0, dn = 0;
+  for (let d = parseD(lo), s = lo; s <= hi; d = addDays(d, 1), s = dstr(d)) {
+    if (scheduled(h, d)) { sch++; if (isDone(h, s)) dn++; }
+  }
+  return { sch, dn };
+}
+function streak(h) {
+  const t = todayStr(), st = startOf(h); let n = 0, d = parseD(t);
+  for (let i = 0; i < 4000; i++) {
+    const s = dstr(d); if (s < st) break;
+    if (scheduled(h, d)) { if (isDone(h, s)) n++; else if (s !== t) break; }
+    else if (isDone(h, s)) n++;
+    d = addDays(d, -1);
+  }
+  return n;
+}
+function bestStreak(h) {
+  const t = todayStr(); let run = 0, best = 0;
+  for (let d = parseD(startOf(h)), s = dstr(d); s <= t; d = addDays(d, 1), s = dstr(d)) {
+    if (scheduled(h, d)) { if (isDone(h, s)) { run++; best = Math.max(best, run); } else if (s !== t) run = 0; }
+    else if (isDone(h, s)) { run++; best = Math.max(best, run); }
+  }
+  return best;
+}
+// habits, которые «в игре» в конкретный день
+function dayHabits(ds) { const d = parseD(ds); return active().filter(h => scheduled(h, d) && ds >= startOf(h)); }
+function dayStat(ds) { const hs = dayHabits(ds); return { total: hs.length, done: hs.filter(h => isDone(h, ds)).length }; }
+function perfectStreak() {
+  const t = todayStr(); const hs = active(); if (!hs.length) return 0;
+  const lo = hs.map(startOf).sort()[0]; let n = 0, d = parseD(t);
+  for (let i = 0; i < 4000; i++) {
+    const s = dstr(d); if (s < lo) break;
+    const st = dayStat(s);
+    if (st.total) { if (st.done === st.total) n++; else if (s !== t) break; }
+    d = addDays(d, -1);
+  }
+  return n;
+}
+function rangeStat(fromDs, toDs) {
+  const t = todayStr(); const hi = toDs < t ? toDs : t; let sch = 0, dn = 0, perfect = 0;
+  for (let d = parseD(fromDs), s = fromDs; s <= hi; d = addDays(d, 1), s = dstr(d)) {
+    const st = dayStat(s); sch += st.total; dn += st.done; if (st.total && st.done === st.total) perfect++;
+  }
+  return { sch, dn, perfect };
+}
+const monthStart = (y, m) => `${y}-${pad(m + 1)}-01`;
+const monthEnd = (y, m) => `${y}-${pad(m + 1)}-${pad(new Date(y, m + 1, 0).getDate())}`;
+const weekStart = d => dstr(addDays(d, -wdMon(d)));
+
+// ═════════ NAV ═════════
+function sub(name) {
+  currentView = name;
+  const names = ['today', 'over', 'manage'];
+  names.forEach(v => $('sub-' + v).classList.toggle('active', v === name));
+  const seg = $('seg'); seg.style.setProperty('--i', names.indexOf(name));
+  seg.querySelectorAll('button').forEach((bt, i) => bt.classList.toggle('on', i === names.indexOf(name)));
+  if (ready) renderAll();
+}
+function onShow() {
+  if (!ready) { refreshData(true); return; }
+  renderAll();
+  if (Date.now() - loadedAt > 60000) refreshData(true);
+}
+function shiftDay(delta) {
+  const nd = dstr(addDays(parseD(selDate), delta));
+  if (nd > todayStr()) return;
+  selDate = nd; renderToday();
+}
+function shiftMonth(delta) {
+  let m = selM + delta, y = selY;
+  if (m < 0) { m = 11; y--; } else if (m > 11) { m = 0; y++; }
+  if (monthKey(y, m) > monthKey(n0.getFullYear(), new Date().getMonth())) return;
+  selY = y; selM = m; renderOver();
+}
+const monthKey = (y, m) => y * 12 + m;
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || !ready || !$('sub-today').offsetParent) return;
+  const t = todayStr();
+  if (t !== lastToday) { if (selDate === lastToday) selDate = t; lastToday = t; const nn = new Date(); selY = nn.getFullYear(); selM = nn.getMonth(); }
+  if (Date.now() - loadedAt > 60000) refreshData(true); else renderAll();
+});
+
+// ═════════ RENDER ═════════
+function renderAll() { renderToday(); renderOver(); renderManage(); }
+
+function dotsFor(h, endDs) {
+  let out = '';
+  for (let i = 6; i >= 0; i--) {
+    const d = addDays(parseD(endDs), -i), s = dstr(d);
+    const cls = !scheduled(h, d) ? (isDone(h, s) ? 'on' : 'off') : (isDone(h, s) ? 'on' : '');
+    out += `<i class="${cls}${i === 0 ? ' cur' : ''}"></i>`;
+  }
+  return `<div class="dots">${out}</div>`;
+}
+
+function renderToday() {
+  if (!ready) return;
+  const t = todayStr(), isToday = selDate === t;
+  const d = parseD(selDate);
+  const dayName = isToday ? 'Dnes' : (selDate === dstr(addDays(new Date(), -1)) ? 'Včera' : CS_WEEKDAYS[d.getDay()]);
+  $('day-label').innerHTML = `${dayName} <span>· ${isToday || dayName === 'Včera' ? CS_WEEKDAYS[d.getDay()] + ' ' : ''}${d.getDate()}. ${CS_MONTHS_GEN[d.getMonth()]}</span>`;
+  $('d-next').classList.toggle('off', isToday);
+  $('hero-label').textContent = isToday ? 'Splněno dnes' : 'Splněno ' + d.getDate() + '. ' + CS_MONTHS_GEN[d.getMonth()];
+
+  const todays = dayHabits(selDate), rest = active().filter(h => !todays.includes(h));
+  const done = todays.filter(h => isDone(h, selDate)).length, total = todays.length;
+  slotSet($('hero-amount'), `${done}/${total}`);
+  const p = total ? done / total : 0;
+  $('hero-bar').style.width = (p * 100) + '%';
+  $('hero').classList.toggle('perfect', total > 0 && done === total);
+  $('hero-sub').innerHTML = !total ? 'Na tento den nemáš žádné návyky'
+    : done === total ? '<b>Všechno splněno</b> — skvělá práce'
+    : `Zbývá ještě <b>${total - done}</b> z ${total}`;
+
+  const ps = perfectStreak();
+  $('chip-streak').textContent = ps + ' ' + dnu(ps);
+  const wk = rangeStat(weekStart(d), dstr(addDays(parseD(weekStart(d)), 6)));
+  $('chip-week').textContent = wk.sch ? pct(wk.dn / wk.sch) : '—';
+  const mo = rangeStat(monthStart(d.getFullYear(), d.getMonth()), monthEnd(d.getFullYear(), d.getMonth()));
+  $('chip-month').textContent = mo.sch ? pct(mo.dn / mo.sch) : '—';
+
+  const list = $('today-list');
+  if (!active().length) {
+    list.innerHTML = '<div class="empty">Zatím žádné návyky.<br/>Přidej první v záložce Návyky.</div>';
+  } else if (!todays.length) {
+    list.innerHTML = '<div class="empty">Na tento den nemáš naplánované žádné návyky.</div>';
+  } else {
+    list.innerHTML = todays.map(h => {
+      const dn = isDone(h, selDate), st = streak(h);
+      return `<div class="hrow${dn ? ' done' : ''}" onclick="HB.toggleHabit('${h.id}','${selDate}')">
+        <div class="ic">${icon(h.icon)}</div>
+        <div class="inf"><div class="n">${escapeHtml(h.name)}</div>
+          <div class="c">${st > 0 ? ICONS.flame + `<span>${st} ${dnu(st)} v řadě</span>` : '<span>Začni sérii</span>'}</div>
+          ${dotsFor(h, selDate)}</div>
+        <button class="chk" aria-label="Splněno">${ICONS.check}</button>
+      </div>`;
+    }).join('');
+  }
+  $('today-rest').innerHTML = rest.length ? `<div class="sec-head"><div class="caps">Dnes volno</div></div><div class="card">` +
+    rest.map(h => `<div class="hrow rest"><div class="ic">${icon(h.icon)}</div><div class="inf"><div class="n">${escapeHtml(h.name)}</div><div class="c"><span>${daysText(h.days)}</span></div></div></div>`).join('') + '</div>' : '';
+}
+
+function renderOver() {
+  if (!ready) return;
+  const nn = new Date();
+  $('over-month').innerHTML = `${CS_MONTHS[selM]} <span>${selY}</span>`;
+  $('m-next').classList.toggle('off', monthKey(selY, selM) >= monthKey(nn.getFullYear(), nn.getMonth()));
+
+  $('hm-head').innerHTML = DAYS_CS.map(x => `<div class="caps">${x}</div>`).join('');
+  const t = todayStr(), first = new Date(selY, selM, 1), dim = new Date(selY, selM + 1, 0).getDate();
+  let cells = '';
+  for (let i = 0; i < wdMon(first); i++) cells += '<div class="d blank"></div>';
+  for (let day = 1; day <= dim; day++) {
+    const ds = `${selY}-${pad(selM + 1)}-${pad(day)}`, st = dayStat(ds), fut = ds > t;
+    const f = st.total ? st.done / st.total : 0;
+    const style = f > 0 ? `background:rgba(0,217,163,${(0.18 + 0.82 * f).toFixed(2)})` : '';
+    cells += `<div class="d${fut ? ' fut' : ''}${f >= 1 ? ' full' : (f >= .6 ? ' full' : '')}${ds === t ? ' today' : ''}" style="${style}" onclick="HB.goDay('${ds}')">${day}</div>`;
+  }
+  $('hm').innerHTML = cells;
+
+  const ms = rangeStat(monthStart(selY, selM), monthEnd(selY, selM));
+  $('st-pct').textContent = ms.sch ? pct(ms.dn / ms.sch) : '—';
+  $('st-done').textContent = ms.sch ? `${ms.dn}/${ms.sch}` : '—';
+  $('st-perfect').textContent = ms.perfect;
+
+  const hl = $('over-habits');
+  const hs = active();
+  hl.innerHTML = hs.length ? hs.map(h => {
+    const r = rate(h, monthStart(selY, selM), monthEnd(selY, selM)), p = r.sch ? r.dn / r.sch : 0;
+    const st = streak(h), best = bestStreak(h);
+    return `<div class="hstat">
+      <div class="top"><div class="name">${icon(h.icon)}<span>${escapeHtml(h.name)}</span></div><div class="pc">${r.sch ? pct(p) : '—'}</div></div>
+      <div class="bar"><i style="width:${p * 100}%"></i></div>
+      <div class="meta"><span>${r.dn} z ${r.sch} dní</span><span>Série <b>${st}</b> · Rekord <b>${best}</b></span></div>
+    </div>`;
+  }).join('') : '<div class="empty">Zatím žádné návyky.</div>';
+
+  drawWeeks();
+}
+function goDay(ds) { if (ds > todayStr()) return; selDate = ds; sub('today'); }
+
+function weeklyData() {
+  const out = []; const thisMon = parseD(weekStart(new Date()));
+  for (let i = 7; i >= 0; i--) {
+    const ws = addDays(thisMon, -7 * i);
+    const r = rangeStat(dstr(ws), dstr(addDays(ws, 6)));
+    out.push({ ws, p: r.sch ? r.dn / r.sch : 0, sch: r.sch });
+  }
+  return out;
+}
+function drawWeeks() {
+  const cv = $('weeks'); if (!cv || currentView !== 'over' || !cv.clientWidth) return;
+  const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight; if (!W) return;
+  cv.width = W * dpr; cv.height = H * dpr;
+  const c = cv.getContext('2d'); c.scale(dpr, dpr); c.clearRect(0, 0, W, H);
+  const data = weeklyData(), n = data.length, gap = 8, bw = (W - gap * (n - 1)) / n, top = 16, bh = H - top;
+  data.forEach((w, i) => {
+    const x = i * (bw + gap), last = i === n - 1;
+    c.fillStyle = 'rgba(255,255,255,.06)'; roundRect(c, x, top, bw, bh, 6); c.fill();
+    if (w.sch && w.p > 0) {
+      const h = Math.max(6, bh * w.p);
+      c.fillStyle = last ? '#00d9a3' : 'rgba(0,217,163,.5)'; roundRect(c, x, top + bh - h, bw, h, 6); c.fill();
+    }
+    if (w.sch) { c.fillStyle = last ? '#fff' : '#6b7280'; c.font = '600 10px "Space Grotesk", sans-serif'; c.textAlign = 'center'; c.fillText(Math.round(w.p * 100), x + bw / 2, 11); }
+  });
+  const f = data[0].ws; $('weeks-from').textContent = f.getDate() + '. ' + (f.getMonth() + 1) + '.';
+  const cur = data[n - 1]; $('week-note').textContent = cur.sch ? 'tento týden ' + pct(cur.p) : '';
+}
+function roundRect(c, x, y, w, h, r) { r = Math.min(r, h / 2, w / 2); c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+window.addEventListener('resize', drawWeeks);
+
+function renderManage() {
+  if (!ready) return;
+  const hs = active(), ar = habits.filter(h => h.archived);
+  $('man-list').innerHTML = hs.length ? hs.map(h => `<div class="mrow" onclick="HB.openSheet('${h.id}')">
+      <div class="ic">${icon(h.icon)}</div><div class="inf"><div class="n">${escapeHtml(h.name)}</div><div class="c">${daysText(h.days)}</div></div>${ICONS.chevr}</div>`).join('')
+    : '<div class="empty">Zatím žádné návyky.<br/>Přidej první tlačítkem níže.</div>';
+  $('man-arch').innerHTML = ar.length ? `<div class="sec-head"><div class="caps">Archiv</div></div><div class="card">` +
+    ar.map(h => `<div class="mrow arch"><div class="ic">${icon(h.icon)}</div><div class="inf"><div class="n">${escapeHtml(h.name)}</div><div class="c">${daysText(h.days)}</div></div><button class="pill-btn" onclick="HB.restoreHabit('${h.id}')">Obnovit</button></div>`).join('') + '</div>' : '';
+}
+
+// ═════════ ACTIONS ═════════
+function toggleHabit(id, ds) {
+  const h = habits.find(x => x.id === id); if (!h) return;
+  const key = ds + '|' + id;
+  let rec = log.get(key); const prev = rec ? rec.done : 0, nv = prev ? 0 : 1;
+  if (!rec) { rec = { row: 0, done: 0 }; log.set(key, rec); }
+  rec.done = nv; reindex(); renderAll();
+  if (navigator.vibrate) navigator.vibrate(nv ? 12 : 6);
+  enqueue(async () => {
+    if (rec.row) await putValues(LOG_SHEET, `D${rec.row}`, [[nv]]);
+    else {
+      const row = await nextFreeRow(LOG_SHEET);
+      await putValues(LOG_SHEET, `A${row}:E${row}`, [[ds, id, h.name, nv, `=IF(A${row}="","",TEXT(A${row},"YYYY-MM"))`]]);
+      rec.row = row;
+    }
+  }).catch(e => {
+    rec.done = prev; reindex(); renderAll();
+    showToast('Uložení se nepodařilo:\n' + (e.message || e), 'error', 3600);
+  });
+}
+
+// ── форма привычки ──
+function openSheet(id) {
+  editingId = id || null;
+  const h = id ? habits.find(x => x.id === id) : null;
+  $('sheet-title').textContent = h ? 'Upravit návyk' : 'Nový návyk';
+  $('h-name').value = h ? h.name : '';
+  formIcon = h ? h.icon : 'star';
+  formDays = h ? [...h.days] : [0, 1, 2, 3, 4, 5, 6];
+  $('h-archive').style.display = h ? 'block' : 'none';
+  $('h-save').disabled = false; $('h-save').textContent = 'Uložit';
+  renderForm();
+  $('sheet-overlay').classList.add('open');
+  if (!h) setTimeout(() => $('h-name').focus(), 350);
+}
+function closeSheet() { $('sheet-overlay').classList.remove('open'); }
+function renderForm() {
+  $('h-icons').innerHTML = PICKABLE.map(k => `<div class="icb${formIcon === k ? ' sel' : ''}" onclick="HB.setIcon('${k}')">${ICONS[k]}</div>`).join('');
+  $('h-days').innerHTML = DAYS_CS.map((x, i) => `<div class="dchip${formDays.includes(i) ? ' sel' : ''}" onclick="HB.toggleFormDay(${i})">${x}</div>`).join('');
+}
+function toggleFormDay(i) { formDays = formDays.includes(i) ? formDays.filter(x => x !== i) : [...formDays, i].sort(); renderForm(); }
+
+async function saveHabit() {
+  const name = $('h-name').value.trim();
+  if (!name) { showToast('Napiš název návyku', 'error'); return; }
+  if (!formDays.length) { showToast('Vyber alespoň jeden den', 'error'); return; }
+  const btn = $('h-save'); btn.disabled = true; btn.textContent = 'Ukládám…';
+  const dayTxt = formDays.map(i => DAYS_RU[i]).join(',');
+  try {
+    if (editingId) {
+      const h = habits.find(x => x.id === editingId);
+      await enqueue(() => putValues(HAB_SHEET, `A${h.row}:F${h.row}`, [[h.id, name, formIcon, dayTxt, h.created, h.archived ? 'Архив' : 'Активна']]));
+      h.name = name; h.icon = formIcon; h.days = [...formDays];
+    } else {
+      const id = 'h' + Date.now().toString(36), created = todayStr();
+      const row = await enqueue(async () => { const r = await nextFreeRow(HAB_SHEET); await putValues(HAB_SHEET, `A${r}:F${r}`, [[id, name, formIcon, dayTxt, created, 'Активна']]); return r; });
+      habits.push({ id, name, icon: formIcon, days: [...formDays], created, archived: false, row });
+    }
+    closeSheet(); renderAll(); showToast('Uloženo');
+  } catch (e) { btn.disabled = false; btn.textContent = 'Uložit'; showToast('Uložení se nepodařilo:\n' + (e.message || e), 'error', 3600); }
+}
+async function archiveHabit() {
+  const h = habits.find(x => x.id === editingId); if (!h) return;
+  if (!confirm('Archivovat „' + h.name + '“? Historie zůstane v tabulce.')) return;
+  try { await enqueue(() => putValues(HAB_SHEET, `F${h.row}`, [['Архив']])); h.archived = true; closeSheet(); renderAll(); showToast('Archivováno'); }
+  catch (e) { showToast('Chyba: ' + (e.message || e), 'error', 3600); }
+}
+async function restoreHabit(id) {
+  const h = habits.find(x => x.id === id); if (!h) return;
+  try { await enqueue(() => putValues(HAB_SHEET, `F${h.row}`, [['Активна']])); h.archived = false; renderAll(); showToast('Obnoveno'); }
+  catch (e) { showToast('Chyba: ' + (e.message || e), 'error', 3600); }
+}
+
+window.HB = {
+  sub, onShow, refresh: refreshData,
+  toggleHabit, shiftDay, shiftMonth, goDay,
+  openSheet, closeSheet, saveHabit, archiveHabit, restoreHabit, toggleFormDay,
+  setIcon(k) { formIcon = k; renderForm(); }
+};
+})();
+</script>
+<script>
 // ── NAVIGATION ──
 function showView(name) {
-  ['dash', 'add', 'plan', 'history'].forEach(v => {
+  ['dash', 'add', 'plan', 'history', 'hab'].forEach(v => {
     $('view-' + v).classList.toggle('active', v === name);
     $('nav-' + v).classList.toggle('on', v === name);
   });
   if (name === 'dash') renderDash();
+  if (name === 'hab') HB.onShow();
   if (name === 'plan') { if (!dataState) refreshData(); else renderPlan(); }
   if (name === 'history') { if (!dataState) refreshData(); else renderHistory(); }
   if ((name === 'plan' || name === 'history') && dataState && Date.now() - dataState.loadedAt > 60000) refreshData(true);
