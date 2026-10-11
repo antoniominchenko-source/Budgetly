@@ -903,6 +903,7 @@ async function fetchUserInfo() {
   av.onclick = () => { if (confirm('Odhlásit se z Google účtu?')) signOut(); };
   renderCategories(); renderPayments(); renderPad();
   refreshData();
+  if (window.HB) HB.repair();
 }
 function signOut() {
   if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
@@ -980,8 +981,11 @@ async function refreshData(force) {
       } else if (type === 'Доход') mo.income += amt;
       mo.txs.push({ ...pd, type, cat, desc, pay, amt });
     });
+    // общий список — от новых к старым (в один день новее та строка, что ниже в таблице)
+    txs.reverse();
     txs.sort((a, b) => (b.y * 372 + b.m * 31 + b.d) - (a.y * 372 + a.m * 31 + a.d));
-    months.forEach(mo => mo.txs.reverse());
+    // внутри месяца — от старых к новым (так их ждут renderRecent и добавление новых записей)
+    months.forEach(mo => mo.txs.sort((a, b) => (a.y * 372 + a.m * 31 + a.d) - (b.y * 372 + b.m * 31 + b.d)));
 
     dataState = {
       months, txs, planCats,
@@ -1231,6 +1235,7 @@ const $ = id => document.getElementById('hb-' + id);
 const pad = n => String(n).padStart(2, '0');
 const dstr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const parseD = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+  const dateSerial = ds => Math.round((parseD(ds) - new Date(1899, 11, 30)) / 86400000);
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 const wdMon = d => (d.getDay() + 6) % 7;            // Пн = 0
 function todayStr() { return dstr(new Date()); }
@@ -1347,10 +1352,67 @@ async function ensureSheets() {
       rule(logId, 3, 1, 'D1FAE5', '047857'),
       rule(logId, 3, 0, 'FEE2E2', 'B91C1C'),
     ]));
-    hdr.push({ range: `'${LOG_SHEET}'!A1:E2`, values: [['🗓 ЖУРНАЛ ОТМЕТОК ПРИВЫЧЕК', '', '', '', ''], ['Дата', 'ID', 'Привычка', 'Выполнено (1/0)', 'Месяц (авто)']] });
+    hdr.push({ range: `'${LOG_SHEET}'!A1:E2`, values: [['🗓 ЖУРНАЛ ОТМЕТОК ПРИВЫЧЕК', '', '', '', ''], ['Дата', 'ID', 'Привычка', 'Выполнено (1/0)', 'Месяц']] });
   }
   await api('/values:batchUpdate', { method: 'POST', body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data: hdr }) });
   await api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: fmt }) });
+}
+
+// ═════════ РЕМОНТ ТАБЛИЦЫ (один раз, тихо) ═════════
+// колонка «Месяц» в журнале привычек — обычный текст (формула давала #ERROR!)
+function fixMonths(rows) {
+  const data = [];
+  rows.forEach((r, i) => {
+    const ds = parseCellDate(r[0]); if (!ds || !String(r[1] || '').trim()) return;
+    if (String(r[4] == null ? '' : r[4]) !== ds.slice(0, 7)) data.push({ range: `'${LOG_SHEET}'!E${FIRST_ROW + i}`, values: [["'" + ds.slice(0, 7)]] });
+  });
+  if (data.length) api('/values:batchUpdate', { method: 'POST', body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data }) }).catch(() => {});
+}
+const RU_MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+// 24 месяца подряд с сентября 2026 — ровно как столбцы B:Y листа «Отчёт по месяцам»
+const REPORT_MONTHS = Array.from({ length: 24 }, (_, i) => `${2026 + Math.floor((8 + i) / 12)} \u00b7 ${RU_MONTHS[(8 + i) % 12]}`);
+async function repair() {
+  try {
+    const meta = await api('?fields=sheets.properties(sheetId,title)');
+    const ids = new Map((meta.sheets || []).map(s => [s.properties.title, s.properties.sheetId]));
+    const PLAN = '🎯 План', CH = '📈 Графики';
+    // 1) журнал привычек
+    if (ids.has(LOG_SHEET)) {
+      const lg = await api(`/values/${rng(LOG_SHEET, 'A' + FIRST_ROW + ':E')}?valueRenderOption=UNFORMATTED_VALUE`);
+      fixMonths(lg.values || []);
+    }
+    // 2) «План» и «Графики»: списки месяцев с сентября 2026
+    if (!ids.has(PLAN) || !ids.has(CH)) return;
+    const q = [`'${PLAN}'!J2`, `'${CH}'!B43`, `'${CH}'!C72`].map(r => 'ranges=' + encodeURIComponent(r)).join('&');
+    const chk = await api(`/values:batchGet?${q}&valueRenderOption=FORMULA`);
+    const v = chk.valueRanges.map(r => (r.values && r.values[0] && r.values[0][0]) || '');
+    if (v[0] === REPORT_MONTHS[0] && v[1] === REPORT_MONTHS[0] && String(v[2]).includes('-8')) return;   // уже исправлено
+    const str = t => ({ userEnteredValue: { stringValue: t } });
+    const fml = t => ({ userEnteredValue: { formulaValue: t } });     // формулы в этом поле — всегда английские, без привязки к языку таблицы
+    const col = (sheetId, r0, c0, cells) => ({ updateCells: { start: { sheetId, rowIndex: r0, columnIndex: c0 }, rows: cells.map(c => ({ values: [c] })), fields: 'userEnteredValue' } });
+    const grid = (sheetId, r0, c0, rows) => ({ updateCells: { start: { sheetId, rowIndex: r0, columnIndex: c0 }, rows: rows.map(r => ({ values: r })), fields: 'userEnteredValue' } });
+    const reqs = [];
+    // «План»: J2:J25
+    reqs.push(col(ids.get(PLAN), 1, 9, REPORT_MONTHS.map(str)));
+    // «Графики»: B43:B66 — список месяцев
+    reqs.push(col(ids.get(CH), 42, 1, REPORT_MONTHS.map(str)));
+    // «Графики»: годовой блок (строки 72–83): месяц n календарного года → номер столбца отчёта (сентябрь 2026 = 1)
+    const yr = [];
+    for (let n = 1; n <= 12; n++) {
+      const r = 71 + n;
+      yr.push([
+        fml(`=($C$3-2026)*12+${n}-8`),
+        fml(`=IF(OR($C${r}<1,$C${r}>24),0,INDEX($E$43:$E$66,$C${r}))`),
+        fml(`=IF(OR($C${r}<1,$C${r}>24),0,INDEX($F$43:$F$66,$C${r}))`),
+        fml(`=IF(OR($C${r}<1,$C${r}>24),0,INDEX($G$43:$G$66,$C${r}))`),
+        fml(`=IF(OR($C${r}<1,$C${r}>24,$C${r}>$C$67),"",INDEX($I$43:$I$66,$C${r}))`)
+      ]);
+    }
+    reqs.push(grid(ids.get(CH), 71, 2, yr));
+    // выбор года: 2026, 2027, 2028
+    reqs.push({ setDataValidation: { range: { sheetId: ids.get(CH), startRowIndex: 2, endRowIndex: 3, startColumnIndex: 2, endColumnIndex: 3 }, rule: { condition: { type: 'ONE_OF_LIST', values: ['2026', '2027', '2028'].map(x => ({ userEnteredValue: x })) }, showCustomUi: true, strict: false } } });
+    await api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: reqs }) });
+  } catch (e) { /* ремонт необязателен — приложение работает и без него */ }
 }
 
 // ═════════ LOAD ═════════
@@ -1376,6 +1438,7 @@ async function refreshData(force) {
     });
 
     log = new Map();
+    fixMonths(lR.values || []);
     (lR.values || []).forEach((r, i) => {
       const ds = parseCellDate(r[0]); const id = String(r[1] || '').trim();
       if (!ds || !id) return;
@@ -1642,7 +1705,7 @@ function toggleHabit(id, ds) {
     if (rec.row) await putValues(LOG_SHEET, `D${rec.row}`, [[nv]]);
     else {
       const row = await nextFreeRow(LOG_SHEET);
-      await putValues(LOG_SHEET, `A${row}:E${row}`, [[ds, id, h.name, nv, `=IF(A${row}="","",TEXT(A${row},"YYYY-MM"))`]]);
+      await putValues(LOG_SHEET, `A${row}:E${row}`, [[dateSerial(ds), id, h.name, nv, "'" + ds.slice(0, 7)]]);
       rec.row = row;
     }
   }).catch(e => {
@@ -1706,7 +1769,7 @@ async function restoreHabit(id) {
 window.HB = {
   sub, onShow, refresh: refreshData,
   toggleHabit, shiftDay, shiftMonth, goDay,
-  openSheet, closeSheet, saveHabit, archiveHabit, restoreHabit, toggleFormDay,
+  openSheet, closeSheet, saveHabit, archiveHabit, restoreHabit, toggleFormDay, repair,
   setIcon(k) { formIcon = k; renderForm(); }
 };
 })();
