@@ -510,6 +510,20 @@
   .acct-btn.out { color: var(--red); border-color: rgba(255,111,145,.35); background: rgba(255,111,145,.07); justify-content: center; margin-top: 10px; }
   .acct-ver { text-align: center; font-size: 11px; color: var(--t3); margin-top: 12px; }
 
+  .l-ru { display: none; }
+  html[lang="ru"] .l-ru { display: block; }
+  html[lang="ru"] .l-cs { display: none; }
+  html[lang="ru"] span.l-ru { display: inline; }
+  .px-steps { margin: 4px 0 4px 20px; font-size: 13.5px; line-height: 1.6; color: var(--t2); }
+  .px-steps li { margin-top: 8px; }
+  .px-steps b { color: var(--t1); }
+  .px-steps .pill-btn { padding: 5px 12px; margin-right: 4px; color: var(--acc); border-color: rgba(var(--acc-rgb), .5); }
+  .px-msg { font-size: 12.5px; line-height: 1.5; margin-top: 10px; display: none; color: var(--t2); }
+  .px-msg.show { display: block; } .px-msg.err { color: var(--red); } .px-msg.ok { color: var(--green); }
+  .auth-links { display: flex; justify-content: center; gap: 18px; margin-top: 18px; flex-wrap: wrap; }
+  .auth-links a { font-size: 12.5px; color: var(--t3); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .acct-note { font-size: 12px; color: var(--t3); text-align: center; margin-top: 10px; line-height: 1.5; }
+
   /* ═══════════ DESKTOP ═══════════ */
   @media (min-width: 960px) {
     body { max-width: none; }
@@ -610,6 +624,7 @@
     Pokračovat přes Google
   </button>
   <div id="auth-error"></div>
+  <div class="auth-links"><a onclick="PX.open()">Režim bez přihlášení</a><a onclick="MHAuth.forget();showToast('Zapomenuto')">Zapomenout přihlášení</a></div>
 </div>
 
 <!-- ═══ APP ═══ -->
@@ -879,6 +894,33 @@
   </div>
 </div>
 
+<div class="overlay" id="px-overlay" onclick="if(event.target===this)PX.close()">
+  <div class="sheet px-sheet">
+    <h3 class="l-cs">Režim bez přihlášení</h3><h3 class="l-ru">Режим без входа</h3>
+    <div class="hint l-cs">Žádné další přihlašování přes Google. Malý skript ve tvé tabulce se o přístup postará sám. Nastavení trvá asi 3 minuty a stačí ho udělat jednou.</div>
+    <div class="hint l-ru">Больше никакого входа через Google. Небольшой скрипт в твоей таблице сам занимается доступом. Настройка занимает около 3 минут и делается один раз.</div>
+    <ol class="px-steps l-cs">
+      <li>Otevři svou tabulku v Google Sheets → <b>Rozšíření → Apps Script</b>. Smaž vše, co tam je.</li>
+      <li><button class="pill-btn" onclick="PX.copy()">Zkopírovat kód</button> a vlož ho do editoru → <b>Uložit</b> (ikona diskety).</li>
+      <li>Vlevo u <b>Služby (+)</b> vyber <b>Google Sheets API</b> → <b>Přidat</b>.</li>
+      <li>Nahoře <b>Nasadit → Nové nasazení</b> → typ <b>Webová aplikace</b>. „Spustit jako“: <b>Já</b>, „Kdo má přístup“: <b>Kdokoli</b> → <b>Nasadit</b> → povol přístup (Upřesnit → Přejít na projekt).</li>
+      <li>Zkopíruj <b>URL webové aplikace</b> a vlož ho sem:</li>
+    </ol>
+    <ol class="px-steps l-ru">
+      <li>Открой свою таблицу в Google Sheets → <b>Расширения → Apps Script</b>. Удали всё, что там есть.</li>
+      <li><button class="pill-btn" onclick="PX.copy()">Скопировать код</button> и вставь в редактор → <b>Сохранить</b> (иконка дискеты).</li>
+      <li>Слева у <b>Сервисы (+)</b> выбери <b>Google Sheets API</b> → <b>Добавить</b>.</li>
+      <li>Сверху <b>Развернуть → Новое развёртывание</b> → тип <b>Веб-приложение</b>. «Запуск от имени»: <b>Я</b>, «У кого есть доступ»: <b>Все</b> → <b>Развернуть</b> → разреши доступ (Дополнительно → Перейти в проект).</li>
+      <li>Скопируй <b>URL веб-приложения</b> и вставь сюда:</li>
+    </ol>
+    <input class="hb-input" id="px-url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off" spellcheck="false" />
+    <div class="px-msg" id="px-msg"></div>
+    <button class="primary" id="px-go" onclick="PX.verify()"><span class="l-cs">Ověřit a zapnout</span><span class="l-ru">Проверить и включить</span></button>
+    <button class="ghost" onclick="PX.close()">Zavřít</button>
+    <textarea id="px-code" readonly style="position:absolute;left:-9999px;top:0;opacity:0"></textarea>
+  </div>
+</div>
+
 <div class="overlay" id="nf-overlay" onclick="if(event.target===this)NF.close()">
   <div class="sheet nf-sheet">
     <h3>Připomínky</h3>
@@ -913,9 +955,11 @@
     <button class="acct-btn" onclick="closeAcct();NF.open()"><span>Připomínky</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
     <div class="caps" style="margin-top:16px">Jazyk</div>
     <div class="lang-row"><button id="lang-cs" onclick="MH.setLang('cs')">Čeština</button><button id="lang-ru" onclick="MH.setLang('ru')">Русский</button></div>
-    <button class="acct-btn out" onclick="closeAcct();doSignOut()">Odhlásit se</button>
+    <button class="acct-btn" id="acct-px" onclick="closeAcct();PX.open()"><span>Režim bez přihlášení</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button class="acct-btn out" id="acct-out" onclick="closeAcct();doSignOut()">Odhlásit se</button>
+    <div class="acct-note" id="acct-note"></div>
     <button class="ghost" onclick="closeAcct()">Zavřít</button>
-    <div class="acct-ver">MindHub v2.2</div>
+    <div class="acct-ver">MindHub v2.3</div>
   </div>
 </div>
 
@@ -1169,11 +1213,16 @@ function openAcct() {
   av.innerHTML = u.picture ? `<img src="${u.picture}" alt="" />` : '';
   if (!u.picture) av.textContent = (u.name || 'U')[0].toUpperCase();
   document.getElementById('acct-name').textContent = u.name || 'MindHub';
+  const px = !!(window.MHProxy && MHProxy.on), note = document.getElementById('acct-note');
+  document.getElementById('acct-out').firstChild.nodeValue = px ? 'Vypnout režim bez přihlášení' : 'Odhlásit se';
+  document.getElementById('acct-px').style.display = px ? 'none' : '';
+  let ex = null; try { ex = JSON.parse(localStorage.getItem('mh-session') || 'null'); } catch (e) {}
+  note.textContent = px ? 'Režim bez přihlášení je zapnutý — aplikace se nikdy neptá na Google účet.' : (ex && ex.exp > Date.now() ? 'Přihlášení je zapamatováno do ' + new Date(ex.exp).toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }) + ' (Google dovoluje jen 1 hodinu).' : 'Google drží přihlášení jen 1 hodinu. Nechceš se přihlašovat vůbec? Zapni „Režim bez přihlášení“.');
   if (window.MH) MH.syncLang();
   document.getElementById('acct-overlay').classList.add('open');
 }
 function closeAcct() { document.getElementById('acct-overlay').classList.remove('open'); }
-function doSignOut() { signOut(); }
+function doSignOut() { if (window.MHProxy && MHProxy.on) { MHProxy.off(); return; } signOut(); }
 function signOut() {
   if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
   accessToken = null; dataState = null;
@@ -3053,6 +3102,9 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     'Co připomínat': 'О чём напоминать', 'Ranní plán návyků': 'Утренний план привычек', 'Co tě dnes čeká': 'Что ждёт тебя сегодня', 'Večerní kontrola návyků': 'Вечерняя проверка привычек', 'Jen když něco zbývá': 'Только если что-то осталось', 'Zapsat výdaje': 'Записать траты', 'Jen když dnes nic nezapsáno': 'Только если сегодня ничего не записано', 'Týdenní shrnutí': 'Итог недели', 'Každou neděli': 'Каждое воскресенье',
     'Charakter zpráv': 'Характер сообщений', 'Vibrace': 'Вибрация', 'Doručení': 'Доставка', 'Spolehlivě přes Kalendář Google': 'Надёжно через Google Календарь', 'Upozornění přijdou i se zavřenou aplikací. Vytvoří se kalendář „MindHub“.': 'Уведомления придут и при закрытом приложении. Будет создан календарь «MindHub».', 'Poslat zkušební upozornění': 'Отправить тестовое уведомление',
     'Jemný': 'Мягкий', 'Motivační': 'Мотивирующий', 'Přísný': 'Строгий', 'Stručný': 'Кратко', 
+    'Režim bez přihlášení': 'Режим без входа', 'Vypnout režim bez přihlášení': 'Отключить режим без входа', 'Zapomenout přihlášení': 'Забыть вход', 'Zapomenuto': 'Забыто', 'Kód zkopírován': 'Код скопирован',
+    'Režim bez přihlášení je zapnutý — aplikace se nikdy neptá na Google účet.': 'Режим без входа включён — приложение больше не спрашивает аккаунт Google.', 'Google drží přihlášení jen 1 hodinu. Nechceš se přihlašovat vůbec? Zapni „Režim bez přihlášení“.': 'Google держит вход только 1 час. Не хочешь входить вообще? Включи «Режим без входа».',
+    'Přihlášení je zapamatováno do': 'Вход запомнен до', '(Google dovoluje jen 1 hodinu)': '(Google разрешает только 1 час)',
     'Klávesové zkratky': 'Горячие клавиши', 'Na telefonu se nic nemění — jen na počítači.': 'На телефоне ничего не меняется — только на компьютере.', 'Všude': 'Везде', 'Finance / Návyky / Poznámky': 'Финансы / Привычки / Заметки', 'Podzáložky': 'Подвкладки', 'Tato nápověda': 'Эта подсказка', 'Zavřít / zrušit': 'Закрыть / отмена',
     'Přidat záznam': 'Добавить запись', 'Příjem / výdaj': 'Доход / расход', 'Uložit záznam': 'Сохранить запись', 'Splnit návyk': 'Отметить привычку', 'Den zpět / vpřed': 'День назад / вперёд', 'Nová poznámka / složka': 'Новая заметка / папка', 'nebo': 'или', 'Uložit hned': 'Сохранить сейчас', 'Psát / číst': 'Писать / читать',
     'Tučně / kurzíva / [[odkaz]]': 'Жирный / курсив / [[ссылка]]', 'Odsadit (Shift = zpět)': 'Отступ (Shift = назад)', 'Piš číslice ·': 'Вводи цифры ·', 'kategorie ·': 'категория ·', 'typ ·': 'тип ·', 'poznámka ·': 'заметка ·', 'přidat': 'добавить', 'Měsíc zpět': 'Месяц назад', 'Částka': 'Сумма',
@@ -3173,6 +3225,107 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
 })();
 </script>
 <script>
+// ═════════ REŽIM BEZ PŘIHLÁŠENÍ (Apps Script proxy) ═════════
+// Volání Google Sheets API jdou přes malý skript ve tvé tabulce (běží pod tvým účtem) → v aplikaci se nepřihlašuješ vůbec.
+(function () {
+  const KEY = 'mh-proxy';
+  const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
+  let cfg = read(); if (cfg && !(cfg.url && cfg.key)) cfg = null;
+  const g = id => document.getElementById(id);
+  const realFetch = window.fetch.bind(window);
+
+  async function viaProxy(c, method, path, body) {
+    const r = await realFetch(c.url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow',
+      body: JSON.stringify({ key: c.key, method: method, path: path, body: body == null ? null : (typeof body === 'string' ? body : String(body)) }) });
+    const txt = await r.text(); let j;
+    try { j = JSON.parse(txt); } catch (e) { throw new Error('Skript nevrátil data (zkontroluj nasazení: „Kdokoli“ a „Spustit jako: Já“).'); }
+    if (typeof j.status !== 'number') throw new Error('Neočekávaná odpověď skriptu');
+    return j;
+  }
+  window.fetch = async function (input, init) {
+    const url = typeof input === 'string' ? input : (input && input.url) || '';
+    if (cfg && url.indexOf('https://sheets.googleapis.com/') === 0) {
+      const u = new URL(url), method = ((init && init.method) || 'GET').toUpperCase();
+      const j = await viaProxy(cfg, method, u.pathname + u.search, init && init.body);
+      const nb = (j.status === 204 || j.status === 205) ? null : (j.body == null ? '' : j.body);
+      return new Response(nb, { status: j.status, headers: { 'Content-Type': 'application/json' } });
+    }
+    if (cfg && url.indexOf('https://www.googleapis.com/oauth2/v3/userinfo') === 0) return new Response(JSON.stringify({ name: 'MindHub' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    return realFetch(input, init);
+  };
+
+  const genKey = () => { const a = new Uint8Array(18); crypto.getRandomValues(a); return Array.from(a, b => b.toString(36).padStart(2, '0')).join('').slice(0, 28); };
+  let draftKey = (cfg && cfg.key) || '';
+  function script(key) {
+    return `// MindHub — proxy pro Google Sheets (běží pod tvým účtem)
+const SHEET_ID = '${SHEET_ID}';
+const KEY = '${key}';
+
+function doPost(e) {
+  try {
+    const req = JSON.parse(e.postData.contents);
+    if (req.key !== KEY) return out(403, { error: { message: 'bad key' } });
+    const prefix = '/v4/spreadsheets/' + SHEET_ID;
+    if (typeof req.path !== 'string' || req.path.indexOf(prefix) !== 0) return out(403, { error: { message: 'path not allowed' } });
+    const opt = { method: String(req.method || 'GET').toLowerCase(), muteHttpExceptions: true,
+      headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() }, contentType: 'application/json' };
+    if (req.body) opt.payload = req.body;
+    const r = UrlFetchApp.fetch('https://sheets.googleapis.com' + req.path, opt);
+    return ContentService.createTextOutput(JSON.stringify({ status: r.getResponseCode(), body: r.getContentText() })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) { return out(500, { error: { message: String(err) } }); }
+}
+function doGet() { return out(200, { ok: true }); }
+function out(status, body) {
+  return ContentService.createTextOutput(JSON.stringify({ status: status, body: JSON.stringify(body) })).setMimeType(ContentService.MimeType.JSON);
+}
+function _scopes() { SpreadsheetApp.openById(SHEET_ID); }  // jen aby Google přidělil právo na tabulky
+`;
+  }
+  function msg(t, kind) { const m = g('px-msg'); m.className = 'px-msg' + (t ? ' show ' + (kind || '') : ''); m.textContent = t || ''; }
+
+  const PX = {
+    get on() { return !!cfg; },
+    open() { draftKey = (cfg && cfg.key) || draftKey || genKey(); g('px-code').value = script(draftKey); g('px-url').value = (cfg && cfg.url) || ''; msg(''); g('px-overlay').classList.add('open'); },
+    close() { g('px-overlay').classList.remove('open'); },
+    async copy() {
+      const ta = g('px-code'); ta.value = script(draftKey || (draftKey = genKey()));
+      try { await navigator.clipboard.writeText(ta.value); } catch (e) { ta.style.left = '0'; ta.style.opacity = '1'; ta.select(); document.execCommand('copy'); ta.style.left = '-9999px'; ta.style.opacity = '0'; }
+      if (typeof showToast === 'function') showToast('Kód zkopírován', 'success');
+    },
+    async verify() {
+      const url = g('px-url').value.trim();
+      if (!/^https:\/\/script\.google\.com\/macros\/s\/[^\s]+\/exec$/.test(url) && !/^https:\/\/script\.googleusercontent\.com\//.test(url)) { msg('Vlož celou URL webové aplikace (končí na /exec).', 'err'); return; }
+      const key = draftKey || genKey(); const c = { url, key };
+      g('px-go').disabled = true; msg('Ověřuji…');
+      try {
+        const j = await viaProxy(c, 'GET', '/v4/spreadsheets/' + SHEET_ID + '?fields=properties.title');
+        if (j.status === 403) { let m = ''; try { m = JSON.parse(j.body).error.message; } catch (e) {} msg(m === 'bad key' ? 'Klíč ve skriptu nesouhlasí — zkopíruj kód znovu (tlačítko výše), vlož ho a nasaď NOVOU verzi (Nasadit → Spravovat nasazení → Upravit → Nová verze).' : 'Google odmítl přístup: ' + m, 'err'); return; }
+        if (j.status !== 200) { let m = j.body; try { m = JSON.parse(j.body).error.message; } catch (e) {} msg('Chyba ' + j.status + ': ' + m, 'err'); return; }
+        const title = (JSON.parse(j.body).properties || {}).title || '';
+        try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {}
+        msg('Funguje ✓ Tabulka: ' + title + '. Načítám aplikaci…', 'ok');
+        setTimeout(() => location.reload(), 900);
+      } catch (e) { msg(String(e.message || e), 'err'); }
+      finally { g('px-go').disabled = false; }
+    },
+    off() {
+      if (!confirm('Vypnout režim bez přihlášení? Příště se zase přihlásíš přes Google.')) return;
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      location.reload();
+    }
+  };
+  window.PX = PX;
+  window.MHProxy = PX;
+
+  // start: rovnou dovnitř
+  if (cfg) {
+    accessToken = 'proxy';
+    document.getElementById('auth-screen').style.display = 'none';
+    fetchUserInfo();
+  }
+})();
+</script>
+<script>
 // ═════════ ZAPAMATOVANÉ PŘIHLÁŠENÍ ═════════
 // Přidává se NAD původní přihlášení (signIn / ensureAccessToken zůstávají funkční):
 //  1) token se uloží i s časem vypršení → po znovuotevření do ~1 hodiny se vstoupí rovnou;
@@ -3219,6 +3372,7 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
 
   // 2) při startu
   async function boot() {
+    if (window.MHProxy && MHProxy.on) return;
     if (!sess || !sess.token) return;
     const left = sess.exp - Date.now();
     if (left > 0) {                       // token ještě platí → rovnou dovnitř
@@ -3315,9 +3469,11 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     return { title: 'MindHub · ' + TITLE[kind][ru() ? 1 : 0], body: fmt(t[L], vars) };
   }
   const SAMPLE = { n: 2, nw: '', names: '', sum: '1 250' };
-  function sampleVars(kind) {
-    const names = ru() ? 'Чешский, Фрукты' : 'Čeština, Ovoce';
-    return { n: 2, nw: plural(2), names, sum: '1 250' };
+  function sampleVars(kind) {   // náhled: skutečné nesplněné návyky, jinak obecný text
+    let names = '';
+    try { const h = window.HB && HB.todayInfo ? HB.todayInfo() : null; if (h && h.ready) { const l = (h.left.length ? h.left : h.all).slice(0, 3); names = l.join(', '); } } catch (e) {}
+    const n = names ? names.split(', ').length : 2;
+    return { n, nw: plural(n), names: names || (ru() ? 'твои привычки' : 'tvé návyky'), sum: '1 250' };
   }
 
   // ── stav pro dynamické zprávy ──
