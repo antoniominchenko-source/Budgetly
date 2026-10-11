@@ -481,6 +481,35 @@
   .kb-grid > div > span { color: var(--t1); white-space: nowrap; }
   .kb-grid > .kb-h { display: block; border: none; margin-top: 14px; padding-bottom: 2px; font-size: 12px; font-weight: 800; color: var(--acc); }
 
+  /* ─── PŘIPOMÍNKY ─── */
+  .sw { width: 50px; height: 30px; border-radius: 99px; border: 1px solid var(--line2); background: rgba(255,255,255,.08); position: relative; cursor: pointer; flex-shrink: 0; transition: background .25s, border-color .25s; padding: 0; }
+  .sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: var(--t2); transition: transform .25s cubic-bezier(.2,.8,.2,1), background .25s; }
+  .sw.on { background: rgba(var(--acc-rgb), .35); border-color: rgba(var(--acc-rgb), .7); }
+  .sw.on::after { transform: translateX(20px); background: var(--acc); }
+  .nf-sheet .nf-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .nf-sheet .nf-row > div { flex: 1; min-width: 0; }
+  .nf-sheet .nf-row b { display: block; font-size: 14px; font-weight: 700; }
+  .nf-sheet .nf-row small { display: block; font-size: 12px; color: var(--t3); margin-top: 2px; line-height: 1.4; }
+  .nf-sheet input[type=time] { background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 12px; color: var(--t1); font-family: var(--font-d); font-size: 14px; padding: 8px 10px; outline: none; color-scheme: dark; }
+  .nf-sheet input[type=time]:focus { border-color: rgba(var(--acc-rgb), .6); }
+  .nf-sheet .nf-row.off input[type=time] { opacity: .35; }
+  .nf-cap { margin: 18px 2px 4px; }
+  .nf-tones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .nf-tones button { padding: 12px 8px; border-radius: 16px; border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--t2); font-size: 13px; font-weight: 700; cursor: pointer; text-align: left; line-height: 1.3; }
+  .nf-tones button small { display: block; font-weight: 500; color: var(--t3); font-size: 11px; margin-top: 2px; }
+  .nf-tones button.on { border-color: rgba(var(--acc-rgb), .7); background: rgba(var(--acc-rgb), .14); color: var(--acc); }
+  .nf-prev { margin-top: 10px; padding: 12px 14px; border-radius: 16px; background: rgba(255,255,255,.05); border: 1px solid var(--line); font-size: 13px; line-height: 1.5; color: var(--t1); }
+  .nf-prev::before { content: 'MindHub'; display: block; font-size: 11px; font-weight: 700; color: var(--t3); margin-bottom: 2px; }
+  .nf-msg { font-size: 12.5px; line-height: 1.5; color: var(--t2); margin-top: 8px; display: none; }
+  .nf-msg.show { display: block; }
+  .nf-msg.err { color: var(--red); }
+  .nf-msg a { color: var(--acc); }
+  #nf-body.dis { opacity: .4; pointer-events: none; }
+  .acct-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 12px; padding: 14px 16px; border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,.045); color: var(--t1); font-size: 14.5px; font-weight: 700; cursor: pointer; }
+  .acct-btn svg { width: 18px; height: 18px; color: var(--t3); }
+  .acct-btn.out { color: var(--red); border-color: rgba(255,111,145,.35); background: rgba(255,111,145,.07); justify-content: center; margin-top: 10px; }
+  .acct-ver { text-align: center; font-size: 11px; color: var(--t3); margin-top: 12px; }
+
   /* ═══════════ DESKTOP ═══════════ */
   @media (min-width: 960px) {
     body { max-width: none; }
@@ -850,13 +879,43 @@
   </div>
 </div>
 
+<div class="overlay" id="nf-overlay" onclick="if(event.target===this)NF.close()">
+  <div class="sheet nf-sheet">
+    <h3>Připomínky</h3>
+    <div class="hint">Kdy a jak ti má MindHub připomínat návyky, výdaje a týdenní shrnutí.</div>
+
+    <div class="nf-row nf-master"><div><b>Zapnout připomínky</b><small id="nf-perm"></small></div><button class="sw" id="nf-on" onclick="NF.toggleMaster()" aria-label="Zapnout"></button></div>
+
+    <div id="nf-body">
+      <div class="caps nf-cap">Co připomínat</div>
+      <div class="nf-row" data-k="hab_morn"><div><b>Ranní plán návyků</b><small>Co tě dnes čeká</small></div><input type="time" id="nf-t-hab_morn" onchange="NF.setTime('hab_morn',this.value)"><button class="sw" id="nf-s-hab_morn" onclick="NF.toggleItem('hab_morn')"></button></div>
+      <div class="nf-row" data-k="hab_eve"><div><b>Večerní kontrola návyků</b><small>Jen když něco zbývá</small></div><input type="time" id="nf-t-hab_eve" onchange="NF.setTime('hab_eve',this.value)"><button class="sw" id="nf-s-hab_eve" onclick="NF.toggleItem('hab_eve')"></button></div>
+      <div class="nf-row" data-k="exp"><div><b>Zapsat výdaje</b><small>Jen když dnes nic nezapsáno</small></div><input type="time" id="nf-t-exp" onchange="NF.setTime('exp',this.value)"><button class="sw" id="nf-s-exp" onclick="NF.toggleItem('exp')"></button></div>
+      <div class="nf-row" data-k="week"><div><b>Týdenní shrnutí</b><small>Každou neděli</small></div><input type="time" id="nf-t-week" onchange="NF.setTime('week',this.value)"><button class="sw" id="nf-s-week" onclick="NF.toggleItem('week')"></button></div>
+
+      <div class="caps nf-cap">Charakter zpráv</div>
+      <div class="nf-tones" id="nf-tones"></div>
+      <div class="nf-prev" id="nf-prev"></div>
+      <div class="nf-row nf-vib"><div><b>Vibrace</b></div><button class="sw" id="nf-vib" onclick="NF.toggleVib()"></button></div>
+
+      <div class="caps nf-cap">Doručení</div>
+      <div class="nf-row"><div><b>Spolehlivě přes Kalendář Google</b><small id="nf-cal-note">Upozornění přijdou i se zavřenou aplikací. Vytvoří se kalendář „MindHub“.</small></div><button class="sw" id="nf-cal" onclick="NF.toggleCal()"></button></div>
+      <div class="nf-msg" id="nf-msg"></div>
+      <button class="ghost" onclick="NF.test()" style="margin-top:6px">Poslat zkušební upozornění</button>
+    </div>
+    <button class="primary" onclick="NF.close()">Hotovo</button>
+  </div>
+</div>
+
 <div class="overlay" id="acct-overlay" onclick="if(event.target===this)closeAcct()">
   <div class="sheet">
     <div class="acct"><div class="avatar" id="acct-av">U</div><div><b id="acct-name">—</b><small>MindHub</small></div></div>
-    <div class="caps" style="margin-top:14px">Jazyk</div>
+    <button class="acct-btn" onclick="closeAcct();NF.open()"><span>Připomínky</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="caps" style="margin-top:16px">Jazyk</div>
     <div class="lang-row"><button id="lang-cs" onclick="MH.setLang('cs')">Čeština</button><button id="lang-ru" onclick="MH.setLang('ru')">Русский</button></div>
-    <button class="primary" onclick="closeAcct()">Hotovo</button>
-    <button class="ghost danger" onclick="closeAcct();doSignOut()">Odhlásit se</button>
+    <button class="acct-btn out" onclick="closeAcct();doSignOut()">Odhlásit se</button>
+    <button class="ghost" onclick="closeAcct()">Zavřít</button>
+    <div class="acct-ver">MindHub v2.2</div>
   </div>
 </div>
 
@@ -2013,6 +2072,7 @@ window.HB = {
   sub, onShow, refresh: refreshData,
   toggleHabit, shiftDay, shiftMonth, goDay,
   rerender() { renderAll(); },
+  todayInfo() { if (!ready) return { ready: false }; const t = todayStr(), hs = dayHabits(t); return { ready: true, all: hs.map(h => h.name), left: hs.filter(h => !isDone(h, t)).map(h => h.name), total: hs.length }; },
   curSub() { return currentView; }, subIdx(d) { const n = ['today', 'over', 'manage']; sub(n[Math.max(0, Math.min(2, n.indexOf(currentView) + d))]); },
   toggleNth(i) { const r = document.querySelectorAll('#hb-today-list .hrow')[i]; if (r) r.click(); },
   goToday() { goDay(todayStr()); },
@@ -2988,6 +3048,11 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     'Zatím nic. Začni složkou nebo poznámkou.': 'Пока пусто. Начни с папки или заметки.', 'Tato složka je prázdná.': 'Эта папка пуста.', 'Přidej poznámku nebo podsložku tlačítky nahoře.': 'Добавь заметку или подпапку кнопками сверху.', 'Složka se přesune i se vším uvnitř.': 'Папка переместится вместе со всем содержимым.',
     'Vyber poznámku vlevo': 'Выбери заметку слева', 'nebo stiskni': 'или нажми', 'pro novou': 'для новой', 'Piš sem… (Markdown, odkazy [[na jiné poznámky]])': 'Пиши здесь… (Markdown, ссылки [[на другие заметки]])', 'Uložení se nepodařilo:': 'Не удалось сохранить:', 'Uvnitř „': 'Внутри «', 'vznikne uvnitř „': 'появится внутри «', 'vznikne v kořeni': 'появится в корне', 'Složka ': 'Папка ', 'Složka': 'Папка',
     // — sheets / kb
+    'Připomínky': 'Напоминания', 'Kdy a jak ti má MindHub připomínat návyky, výdaje a týdenní shrnutí.': 'Когда и как MindHub будет напоминать о привычках, тратах и итоге недели.', 'Zapnout připomínky': 'Включить напоминания', 'Zapnout': 'Включить',
+    'Oznámení povolena': 'Уведомления разрешены', 'Oznámení jsou v prohlížeči zablokována — povol je v nastavení webu': 'Уведомления заблокированы в браузере — разреши их в настройках сайта', 'Tento prohlížeč oznámení nepodporuje': 'Этот браузер не поддерживает уведомления', 'Při zapnutí se zeptáme na povolení': 'При включении спросим разрешение',
+    'Co připomínat': 'О чём напоминать', 'Ranní plán návyků': 'Утренний план привычек', 'Co tě dnes čeká': 'Что ждёт тебя сегодня', 'Večerní kontrola návyků': 'Вечерняя проверка привычек', 'Jen když něco zbývá': 'Только если что-то осталось', 'Zapsat výdaje': 'Записать траты', 'Jen když dnes nic nezapsáno': 'Только если сегодня ничего не записано', 'Týdenní shrnutí': 'Итог недели', 'Každou neděli': 'Каждое воскресенье',
+    'Charakter zpráv': 'Характер сообщений', 'Vibrace': 'Вибрация', 'Doručení': 'Доставка', 'Spolehlivě přes Kalendář Google': 'Надёжно через Google Календарь', 'Upozornění přijdou i se zavřenou aplikací. Vytvoří se kalendář „MindHub“.': 'Уведомления придут и при закрытом приложении. Будет создан календарь «MindHub».', 'Poslat zkušební upozornění': 'Отправить тестовое уведомление',
+    'Jemný': 'Мягкий', 'Motivační': 'Мотивирующий', 'Přísný': 'Строгий', 'Stručný': 'Кратко', 
     'Klávesové zkratky': 'Горячие клавиши', 'Na telefonu se nic nemění — jen na počítači.': 'На телефоне ничего не меняется — только на компьютере.', 'Všude': 'Везде', 'Finance / Návyky / Poznámky': 'Финансы / Привычки / Заметки', 'Podzáložky': 'Подвкладки', 'Tato nápověda': 'Эта подсказка', 'Zavřít / zrušit': 'Закрыть / отмена',
     'Přidat záznam': 'Добавить запись', 'Příjem / výdaj': 'Доход / расход', 'Uložit záznam': 'Сохранить запись', 'Splnit návyk': 'Отметить привычку', 'Den zpět / vpřed': 'День назад / вперёд', 'Nová poznámka / složka': 'Новая заметка / папка', 'nebo': 'или', 'Uložit hned': 'Сохранить сейчас', 'Psát / číst': 'Писать / читать',
     'Tučně / kurzíva / [[odkaz]]': 'Жирный / курсив / [[ссылка]]', 'Odsadit (Shift = zpět)': 'Отступ (Shift = назад)', 'Piš číslice ·': 'Вводи цифры ·', 'kategorie ·': 'категория ·', 'typ ·': 'тип ·', 'poznámka ·': 'заметка ·', 'přidat': 'добавить', 'Měsíc zpět': 'Месяц назад', 'Částka': 'Сумма',
@@ -3131,8 +3196,9 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     const o = google.accounts.oauth2, init = o.initTokenClient.bind(o);
     o.initTokenClient = cfg => {
       const cb = cfg.callback;
-      cfg.callback = resp => { if (resp && resp.access_token) remember(resp); cb && cb(resp); };
-      if (sess && sess.email && !cfg.login_hint) cfg.login_hint = sess.email;
+      const mine = cfg.scope === SCOPES;
+      cfg.callback = resp => { if (mine && resp && resp.access_token) remember(resp); cb && cb(resp); };
+      if (mine && sess && sess.email && !cfg.login_hint) cfg.login_hint = sess.email;
       return init(cfg);
     };
     o.__mh = true;
@@ -3193,6 +3259,269 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
   }, 60000);
   window.MHAuth = { forget() { write(null); sess = null; } };
   boot();
+})();
+</script>
+<script>
+// ═════════ PŘIPOMÍNKY (NF) ═════════
+// Dvě vrstvy: (1) upozornění přímo v aplikaci/telefonu (service worker) — když je aplikace otevřená nebo se k ní vrátíš;
+// (2) volitelně opakované události v kalendáři Google „MindHub“ — ty přijdou přesně na čas i se zavřenou aplikací.
+(function () {
+  const KEY = 'mh-notif', CALKEY = 'mh-cal-id', FIRED = 'mh-notif-fired';
+  const CAL_SCOPE = 'https://www.googleapis.com/auth/calendar.app.created';
+  const DEF = { on: false, tone: 'gentle', vibrate: true, cal: false,
+    items: { hab_morn: { on: false, time: '08:00' }, hab_eve: { on: true, time: '20:00' }, exp: { on: true, time: '21:00' }, week: { on: false, time: '18:00' } } };
+  const g = id => document.getElementById(id);
+  const ru = () => window.MH && MH.lang === 'ru';
+  const clone = o => JSON.parse(JSON.stringify(o));
+  let S = clone(DEF);
+  try { const r = JSON.parse(localStorage.getItem(KEY) || 'null'); if (r) { S = Object.assign(clone(DEF), r); S.items = Object.assign(clone(DEF.items), r.items || {}); } } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+
+  // ── texty podle charakteru ──
+  const TONES = {
+    gentle:  { cs: ['Jemný', 'klidně a mile'], ru: ['Мягкий', 'спокойно и по-доброму'] },
+    motiv:   { cs: ['Motivační', 'nakopne tě'], ru: ['Мотивирующий', 'подбодрит'] },
+    strict:  { cs: ['Přísný', 'bez výmluv'], ru: ['Строгий', 'без отговорок'] },
+    brief:   { cs: ['Stručný', 'jen fakta'], ru: ['Кратко', 'только факты'] },
+  };
+  const TXT = {
+    hab_morn: {
+      gentle: { cs: 'Dobré ráno 🌿 Dnes tě čeká {n} {nw}: {names}.', ru: 'Доброе утро 🌿 Сегодня тебя ждёт {n} {nw}: {names}.' },
+      motiv:  { cs: 'Nový den, nové série! 💪 Dnes: {names}.', ru: 'Новый день — новые серии! 💪 Сегодня: {names}.' },
+      strict: { cs: 'Dnešní návyky: {names}. Splnit všechny.', ru: 'Привычки на сегодня: {names}. Выполнить все.' },
+      brief:  { cs: 'Dnes: {names}', ru: 'Сегодня: {names}' } },
+    hab_eve: {
+      gentle: { cs: 'Máš chvilku? Zbývá {n} {nw}: {names} 🌙', ru: 'Есть минутка? Осталось {n} {nw}: {names} 🌙' },
+      motiv:  { cs: 'Ještě {n} {nw} a dnešek je tvůj! 🔥 {names}', ru: 'Ещё {n} {nw} — и день твой! 🔥 {names}' },
+      strict: { cs: 'Nesplněno: {names}. Dokonči to ještě dnes.', ru: 'Не выполнено: {names}. Закончи сегодня.' },
+      brief:  { cs: 'Zbývá: {names}', ru: 'Осталось: {names}' } },
+    exp: {
+      gentle: { cs: 'Nezapomněl/a jsi dnes zapsat výdaje? 🧾', ru: 'Не забыл записать сегодняшние траты? 🧾' },
+      motiv:  { cs: 'Chvilka na přehled peněz — zapiš dnešní výdaje! 💰', ru: 'Минутка на финансы — запиши сегодняшние траты! 💰' },
+      strict: { cs: 'Dnes nezapsán žádný výdaj. Zapiš je.', ru: 'Сегодня не записано ни одной траты. Запиши.' },
+      brief:  { cs: 'Zapiš dnešní výdaje', ru: 'Запиши траты за сегодня' } },
+    week: {
+      gentle: { cs: 'Týdenní shrnutí je hotové 📊 Utraceno {sum} Kč.', ru: 'Итог недели готов 📊 Потрачено {sum} Kč.' },
+      motiv:  { cs: 'Týden za námi! 🎯 Utraceno {sum} Kč — mrkni na detaily.', ru: 'Неделя позади! 🎯 Потрачено {sum} Kč — загляни в детали.' },
+      strict: { cs: 'Týden uzavřen. Utraceno {sum} Kč. Zkontroluj plán.', ru: 'Неделя закрыта. Потрачено {sum} Kč. Проверь план.' },
+      brief:  { cs: 'Týden: {sum} Kč', ru: 'Неделя: {sum} Kč' } },
+  };
+  const TITLE = { hab_morn: ['Návyky', 'Привычки'], hab_eve: ['Návyky', 'Привычки'], exp: ['Výdaje', 'Траты'], week: ['Týdenní shrnutí', 'Итог недели'] };
+  const plural = (n) => ru() ? (n % 10 === 1 && n % 100 !== 11 ? 'привычка' : (n % 10 > 1 && n % 10 < 5 && (n % 100 < 10 || n % 100 > 20) ? 'привычки' : 'привычек'))
+                              : (n === 1 ? 'návyk' : (n >= 2 && n <= 4 ? 'návyky' : 'návyků'));
+  function fmt(tpl, v) { return tpl.replace(/\{(\w+)\}/g, (m, k) => v[k] != null ? v[k] : ''); }
+  function compose(kind, vars) {
+    const t = TXT[kind][S.tone] || TXT[kind].gentle; const L = ru() ? 'ru' : 'cs';
+    return { title: 'MindHub · ' + TITLE[kind][ru() ? 1 : 0], body: fmt(t[L], vars) };
+  }
+  const SAMPLE = { n: 2, nw: '', names: '', sum: '1 250' };
+  function sampleVars(kind) {
+    const names = ru() ? 'Чешский, Фрукты' : 'Čeština, Ovoce';
+    return { n: 2, nw: plural(2), names, sum: '1 250' };
+  }
+
+  // ── stav pro dynamické zprávy ──
+  const fmtN = n => Math.round(n).toLocaleString('cs-CZ').replace(/\u00a0/g, ' ');
+  function ctx() {
+    const hb = window.HB && HB.todayInfo ? HB.todayInfo() : { ready: false };
+    const fin = (typeof dataState !== 'undefined' && dataState) ? dataState : null;
+    return { hb, fin };
+  }
+  function expToday(fin) {
+    const d = new Date(); return fin.txs.some(t => t.type === 'Расход' && t.y === d.getFullYear() && t.m === d.getMonth() && t.d === d.getDate());
+  }
+  function weekSum(fin) {
+    const d = new Date(), wd = (d.getDay() + 6) % 7, u = x => Math.round(Date.UTC(x.y, x.m, x.d) / 864e5);
+    const today = Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5), mon = today - wd;
+    return fin.txs.filter(t => t.type === 'Расход' && u(t) >= mon && u(t) <= today).reduce((a, t) => a + t.amt, 0);
+  }
+  function build(kind) {   // → {title, body} | null (nic neposílat) | 'wait' (data nejsou načtená)
+    const { hb, fin } = ctx();
+    if (kind === 'hab_morn' || kind === 'hab_eve') {
+      if (!hb.ready) return 'wait';
+      const list = kind === 'hab_morn' ? hb.all : hb.left;
+      if (!list.length) return null;
+      return compose(kind, { n: list.length, nw: plural(list.length), names: list.slice(0, 4).join(', ') + (list.length > 4 ? '…' : '') });
+    }
+    if (!fin) return 'wait';
+    if (kind === 'exp') return expToday(fin) ? null : compose('exp', {});
+    if (kind === 'week') return compose('week', { sum: fmtN(weekSum(fin)) });
+    return null;
+  }
+
+  // ── zobrazení upozornění ──
+  let swReg = null;
+  async function regSW() {
+    if (!('serviceWorker' in navigator)) return null;
+    try { swReg = await navigator.serviceWorker.register('sw.js'); } catch (e) { swReg = null; }
+    return swReg;
+  }
+  async function show(title, body, tag, view) {
+    const opts = { body, icon: 'icon-192.png', badge: 'icon-192.png', tag: tag || 'mh', data: { view: view || '' }, renotify: true };
+    if (S.vibrate) opts.vibrate = [120, 60, 120];
+    try {
+      const reg = swReg || await navigator.serviceWorker.ready;
+      await reg.showNotification(title, opts); return true;
+    } catch (e) {
+      try { new Notification(title, opts); return true; } catch (x) { return false; }
+    }
+  }
+  const perm = () => ('Notification' in window) ? Notification.permission : 'unsupported';
+
+  // ── plánovač (když je aplikace otevřená) ──
+  const dstr = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  let fired = {}; try { fired = JSON.parse(localStorage.getItem(FIRED) || '{}'); } catch (e) {}
+  const markFired = k => { fired[k] = 1; const keep = {}; const t = dstr(new Date()); Object.keys(fired).forEach(x => { if (x.startsWith(t)) keep[x] = 1; }); fired = keep; try { localStorage.setItem(FIRED, JSON.stringify(fired)); } catch (e) {} };
+  const VIEW = { hab_morn: 'hab', hab_eve: 'hab', exp: 'add', week: 'dash' };
+  let warmAt = 0;
+  function warm() {   // data návyků se načítají až při otevření záložky → načti je na pozadí
+    if (Date.now() - warmAt < 120000) return; warmAt = Date.now();
+    try { if (window.HB && !(HB.todayInfo().ready)) HB.refresh(true); } catch (e) {}
+  }
+  function tick() {
+    if (!S.on || perm() !== 'granted') return;
+    if (document.getElementById('app-screen').style.display === 'none') return;
+    const now = new Date(), today = dstr(now);
+    Object.keys(S.items).forEach(k => {
+      const it = S.items[k]; if (!it.on) return;
+      if (k === 'week' && now.getDay() !== 0) return;
+      const key = today + '|' + k; if (fired[key]) return;
+      const [h, m] = it.time.split(':').map(Number);
+      const T = new Date(now); T.setHours(h, m, 0, 0);
+      const late = now - T; if (late < 0 || late > 4 * 3600e3) return;
+      const msg = build(k);
+      if (msg === 'wait') { warm(); return; }
+      markFired(key);
+      if (msg) show(msg.title, msg.body, 'mh-' + k, VIEW[k]);
+    });
+  }
+  setInterval(tick, 30000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') setTimeout(tick, 1500); });
+  window.addEventListener('focus', () => setTimeout(tick, 1500));
+  setTimeout(tick, 6000);
+  if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data && e.data.type === 'mh-open') { const v = e.data.view; if (v && typeof showView === 'function') showView(v === 'hab' ? 'hab' : v === 'add' ? 'add' : 'dash'); }
+  });
+
+  // ── UI ──
+  const SW = (id, on) => { const b = g(id); if (b) b.classList.toggle('on', !!on); };
+  function msg(text, err, html) { const m = g('nf-msg'); if (!m) return; m.className = 'nf-msg' + (text ? ' show' : '') + (err ? ' err' : ''); if (html) m.innerHTML = text; else m.textContent = text || ''; }
+  function permNote() {
+    const p = perm(), el = g('nf-perm'); if (!el) return;
+    el.textContent = p === 'granted' ? 'Oznámení povolena' : p === 'denied' ? 'Oznámení jsou v prohlížeči zablokována — povol je v nastavení webu' : p === 'unsupported' ? 'Tento prohlížeč oznámení nepodporuje' : 'Při zapnutí se zeptáme na povolení';
+  }
+  function paint() {
+    SW('nf-on', S.on); g('nf-body').classList.toggle('dis', !S.on);
+    Object.keys(S.items).forEach(k => { SW('nf-s-' + k, S.items[k].on); g('nf-t-' + k).value = S.items[k].time; g('nf-s-' + k).closest('.nf-row').classList.toggle('off', !S.items[k].on); });
+    SW('nf-vib', S.vibrate); SW('nf-cal', S.cal);
+    const L = ru() ? 'ru' : 'cs';
+    g('nf-tones').innerHTML = Object.keys(TONES).map(k => `<button class="${S.tone === k ? 'on' : ''}" onclick="NF.setTone('${k}')">${TONES[k][L][0]}<small>${TONES[k][L][1]}</small></button>`).join('');
+    const p = compose('hab_eve', sampleVars('hab_eve')); g('nf-prev').textContent = p.body;
+    permNote();
+  }
+  async function ensurePerm() {
+    if (perm() === 'granted') return true;
+    if (perm() === 'unsupported') { msg('Tento prohlížeč oznámení nepodporuje.', true); return false; }
+    if (perm() === 'denied') { msg('Oznámení jsou zablokována. Povol je v nastavení prohlížeče / webu a zkus to znovu.', true); return false; }
+    let r = 'default'; try { r = await Notification.requestPermission(); } catch (e) {}
+    permNote(); return r === 'granted';
+  }
+
+  // ── Kalendář Google ──
+  function calToken() {
+    return new Promise((resolve, reject) => {
+      const go = () => {
+        const tc = google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID, scope: CAL_SCOPE,
+          callback: r => r && r.access_token ? resolve(r.access_token) : reject(new Error((r && r.error) || 'denied')),
+          error_callback: e => reject(new Error((e && e.type) || 'popup'))
+        });
+        tc.requestAccessToken({ prompt: '' });
+      };
+      if (window.google && google.accounts && google.accounts.oauth2) go(); else loadGsi().then(go);
+    });
+  }
+  async function cal(tok, path, opt) {
+    const r = await fetch('https://www.googleapis.com/calendar/v3' + path, Object.assign({ headers: { Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json' } }, opt || {}));
+    if (r.status === 204) return {};
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) { const e = new Error((j.error && j.error.message) || r.status); e.status = r.status; e.reason = j.error && j.error.errors && j.error.errors[0] && j.error.errors[0].reason; throw e; }
+    return j;
+  }
+  const tz = () => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Prague'; } catch (e) { return 'Europe/Prague'; } };
+  const pad = n => String(n).padStart(2, '0');
+  function startFor(k, time) {
+    const now = new Date(), [h, m] = time.split(':').map(Number);
+    let d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m);
+    if (k === 'week') { while (d.getDay() !== 0 || d <= now) d.setDate(d.getDate() + 1); }
+    else if (d <= now) d.setDate(d.getDate() + 1);
+    const e = new Date(d.getTime() + 10 * 60000);
+    const f = x => `${x.getFullYear()}-${pad(x.getMonth() + 1)}-${pad(x.getDate())}T${pad(x.getHours())}:${pad(x.getMinutes())}:00`;
+    return { start: { dateTime: f(d), timeZone: tz() }, end: { dateTime: f(e), timeZone: tz() } };
+  }
+  const CALT = {
+    hab_morn: { gentle: ['Dobré ráno 🌿 Podívej se na dnešní návyky', 'Доброе утро 🌿 Загляни в привычки на сегодня'], motiv: ['Nový den, nové série! 💪', 'Новый день — новые серии! 💪'], strict: ['Dnešní návyky: splnit všechny.', 'Привычки на сегодня: выполнить все.'], brief: ['Návyky na dnes', 'Привычки на сегодня'] },
+    hab_eve: { gentle: ['Máš chvilku? Zkontroluj návyky 🌙', 'Есть минутка? Проверь привычки 🌙'], motiv: ['Dotáhni dnešek do konce! 🔥', 'Дожми этот день! 🔥'], strict: ['Zkontroluj nesplněné návyky.', 'Проверь невыполненные привычки.'], brief: ['Zkontroluj návyky', 'Проверь привычки'] },
+    exp: { gentle: ['Nezapomněl/a jsi zapsat výdaje? 🧾', 'Не забыл записать траты? 🧾'], motiv: ['Zapiš dnešní výdaje! 💰', 'Запиши сегодняшние траты! 💰'], strict: ['Zapiš dnešní výdaje.', 'Запиши траты за сегодня.'], brief: ['Zapiš výdaje', 'Запиши траты'] },
+    week: { gentle: ['Týdenní shrnutí je hotové 📊', 'Итог недели готов 📊'], motiv: ['Týden za námi! 🎯 Mrkni na shrnutí', 'Неделя позади! 🎯 Загляни в итог'], strict: ['Týden uzavřen. Zkontroluj plán.', 'Неделя закрыта. Проверь план.'], brief: ['Týdenní shrnutí', 'Итог недели'] },
+  };
+  function calText(k) { return 'MindHub · ' + CALT[k][S.tone][ru() ? 1 : 0]; }
+  async function syncCal() {
+    msg('Připojuji Kalendář Google…');
+    let tok;
+    try { tok = await calToken(); } catch (e) { msg('Přístup ke kalendáři nebyl povolen (' + e.message + ').', true); return false; }
+    try {
+      let id = ''; try { id = localStorage.getItem(CALKEY) || ''; } catch (e) {}
+      if (id) { try { await cal(tok, '/calendars/' + encodeURIComponent(id)); } catch (e) { if (e.status === 404 || e.status === 403) id = ''; else throw e; } }
+      if (!id) { const c = await cal(tok, '/calendars', { method: 'POST', body: JSON.stringify({ summary: 'MindHub', description: 'Připomínky z aplikace MindHub', timeZone: tz() }) }); id = c.id; try { localStorage.setItem(CALKEY, id); } catch (e) {} }
+      // smaž staré události
+      const old = await cal(tok, '/calendars/' + encodeURIComponent(id) + '/events?maxResults=100&singleEvents=false');
+      for (const ev of (old.items || [])) { try { await cal(tok, '/calendars/' + encodeURIComponent(id) + '/events/' + ev.id, { method: 'DELETE' }); } catch (e) {} }
+      if (S.on && S.cal) {
+        for (const k of Object.keys(S.items)) {
+          const it = S.items[k]; if (!it.on) continue;
+          const t = startFor(k, it.time);
+          await cal(tok, '/calendars/' + encodeURIComponent(id) + '/events', { method: 'POST', body: JSON.stringify({
+            summary: calText(k), start: t.start, end: t.end,
+            recurrence: [k === 'week' ? 'RRULE:FREQ=WEEKLY;BYDAY=SU' : 'RRULE:FREQ=DAILY'],
+            reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 0 }] }, transparency: 'transparent' }) });
+        }
+        msg('Hotovo — v kalendáři „MindHub“ jsou opakované události s upozorněním. Jestli ti nechodí, otevři aplikaci Kalendář Google → Nastavení → MindHub → zapni oznámení.');
+      } else msg('Události z kalendáře odstraněny.');
+      return true;
+    } catch (e) {
+      if (e.status === 403 && /not been used|disabled|accessNotConfigured/i.test(e.message + (e.reason || ''))) {
+        msg('Je potřeba jednorázově zapnout „Google Calendar API“ v tvém Google Cloud projektu: <a href="https://console.cloud.google.com/apis/library/calendar-json.googleapis.com?project=330349583357" target="_blank" rel="noopener">otevřít a kliknout Enable</a>, pak to zkus znovu.', true, true);
+      } else msg('Kalendář se nepodařilo nastavit: ' + e.message, true);
+      return false;
+    }
+  }
+  let syncT = null;
+  const resync = () => { if (!S.cal) return; clearTimeout(syncT); syncT = setTimeout(() => { syncCal(); }, 1200); };
+
+  // ── veřejné API ──
+  const NF = {
+    open() { regSW(); paint(); msg(''); g('nf-overlay').classList.add('open'); if (window.MH) MH.syncLang(); },
+    close() { g('nf-overlay').classList.remove('open'); },
+    async toggleMaster() {
+      if (!S.on) { if (!(await ensurePerm())) { S.on = false; save(); paint(); return; } S.on = true; regSW(); } else S.on = false;
+      save(); paint(); if (S.cal) syncCal();
+    },
+    toggleItem(k) { S.items[k].on = !S.items[k].on; save(); paint(); resync(); },
+    setTime(k, v) { if (!/^\d\d:\d\d$/.test(v)) return; S.items[k].time = v; save(); resync(); },
+    setTone(t) { S.tone = t; save(); paint(); resync(); },
+    toggleVib() { S.vibrate = !S.vibrate; save(); paint(); },
+    async toggleCal() { if (!S.cal) { S.cal = true; save(); paint(); const ok = await syncCal(); if (!ok) { S.cal = false; save(); paint(); } } else { S.cal = false; save(); paint(); syncCal(); } },
+    async test() {
+      if (!(await ensurePerm())) return;
+      await regSW();
+      const p = compose('hab_eve', sampleVars('hab_eve')); const ok = await show(p.title, p.body, 'mh-test', '');
+      msg(ok ? 'Zkušební upozornění odesláno.' : 'Upozornění se nepodařilo zobrazit.', !ok);
+    },
+    get settings() { return S; }, _tick: tick, _build: build
+  };
+  window.NF = NF;
+  if (S.on) regSW();
 })();
 </script>
 </body>
