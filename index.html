@@ -606,7 +606,263 @@
     .kb-sheet { max-width: 540px; }
     #toast { bottom: 36px; }
   }
+
+
+  /* ══════════════════════════════════════════════════════════════
+     MINDHUB v3 — FRESH AURORA REDESIGN (override layer)
+     Не меняет разметку и JS — только визуал. Позже оригинала = выше приоритет.
+     ══════════════════════════════════════════════════════════════ */
+
+  /* ── 1. Новая палитра ── */
+  :root {
+    --bg: #08070f;
+    --s1: #100f1d;
+    --s2: #171628;
+    --s3: #211f36;
+    --line: rgba(255,255,255,.065);
+    --line2: rgba(255,255,255,.14);
+    --t1: #f6f5ff;
+    --t2: #b3b1cf;
+    --t3: #767491;
+    --red: #ff7a93;
+    --red-dim: rgba(255,122,147,.12);
+    --green: #43e6b4;
+    --radius: 26px;
+  }
+  body[data-sec="fin"] { --acc: #8b7dff; --acc-rgb: 139,125,255; }
+  body[data-sec="hab"] { --acc: #3fe0b2; --acc-rgb: 63,224,178; }
+  body[data-sec="nt"]  { --acc: #ffab5e; --acc-rgb: 255,171,94; }
+  body[data-sec="fin"] { --green: #43e6b4; }
+
+  ::selection { background: rgba(var(--acc-rgb), .35); color: #fff; }
+
+  /* ── 2. Aurora-фон: мягкие дрейфующие свечения ── */
+  body::before {
+    background:
+      radial-gradient(55% 42% at 8% -6%, rgba(var(--acc-rgb), .26), transparent 68%),
+      radial-gradient(48% 38% at 104% 4%, rgba(var(--acc-rgb), .13), transparent 70%),
+      radial-gradient(55% 42% at 50% 112%, rgba(var(--acc-rgb), .12), transparent 70%);
+  }
+  body::after {
+    content: ''; position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(38% 30% at 22% 30%, rgba(var(--acc-rgb), .10), transparent 70%),
+      radial-gradient(30% 26% at 78% 68%, rgba(67,230,180,.06), transparent 70%);
+    animation: aurora 26s ease-in-out infinite alternate;
+    filter: blur(10px);
+  }
+  @keyframes aurora {
+    0%   { transform: translate3d(-3%, -2%, 0) rotate(-2deg) scale(1); }
+    50%  { transform: translate3d(3%, 2%, 0) rotate(1.5deg) scale(1.06); }
+    100% { transform: translate3d(-2%, 3%, 0) rotate(-1deg) scale(1.03); }
+  }
+
+  /* ── 3. Карточки: стекло + объём + подсветка сверху ── */
+  .card {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.022) 55%, rgba(255,255,255,.012));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 14px 34px -18px rgba(0,0,0,.6);
+    position: relative;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 18px; right: 18px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+    pointer-events: none;
+  }
+
+  /* ── 4. Hero: градиентная заливка + свечение границы ── */
+  .hero {
+    border-color: rgba(var(--acc-rgb), .32);
+    background:
+      radial-gradient(140% 130% at -5% -10%, rgba(var(--acc-rgb), .38), transparent 60%),
+      radial-gradient(90% 80% at 110% 120%, rgba(var(--acc-rgb), .14), transparent 65%),
+      linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+    box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 18px 44px -20px rgba(var(--acc-rgb), .35);
+    overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.05) 45%, transparent 60%);
+    transform: translateX(-120%);
+    animation: sheen 7s ease-in-out infinite;
+  }
+  @keyframes sheen { 0%, 55% { transform: translateX(-120%); } 85%, 100% { transform: translateX(120%); } }
+  .hero.perfect {
+    border-color: rgba(var(--acc-rgb), .85);
+    box-shadow: 0 0 0 1px rgba(var(--acc-rgb), .35), 0 0 52px rgba(var(--acc-rgb), .28), 0 18px 44px -20px rgba(var(--acc-rgb), .4);
+  }
+  .hero-amount .big { text-shadow: 0 4px 30px rgba(var(--acc-rgb), .35); }
+
+  /* ── 5. Чипы hero ── */
+  .hero-chip {
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 18px;
+  }
+
+  /* ── 6. Панели: лимит, инсайт ── */
+  .limit-card { border-radius: 22px; }
+  .insight {
+    border-color: rgba(var(--acc-rgb), .28);
+    background:
+      radial-gradient(120% 140% at 0% 0%, rgba(var(--acc-rgb), .17), transparent 62%),
+      linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.018));
+  }
+  .insight .iv { text-shadow: 0 3px 24px rgba(var(--acc-rgb), .3); }
+  .wk-bars i { border-radius: 7px; }
+  .wk-bars i.today { box-shadow: 0 0 14px rgba(var(--acc-rgb), .55); }
+
+  /* ── 7. Сегменты-переключатели ── */
+  .seg, .hb-seg, .lg-seg, .nt-seg {
+    background: rgba(255,255,255,.045);
+    border: 1px solid var(--line);
+  }
+  .seg .thumb { box-shadow: 0 6px 18px -6px rgba(255,111,145,.55); }
+  .seg.inc .thumb { box-shadow: 0 6px 18px -6px rgba(67,230,180,.55); }
+  .hb-seg .thumb { box-shadow: 0 6px 18px -6px rgba(var(--acc-rgb), .6); }
+  .lg-seg button.on, .chip.sel, .dchip.sel {
+    background: rgba(var(--acc-rgb), .2);
+    box-shadow: 0 0 0 1px rgba(var(--acc-rgb), .35), 0 6px 16px -8px rgba(var(--acc-rgb), .5);
+  }
+
+  /* ── 8. Категории и клавиатура ── */
+  .cat, .pad button, .icb {
+    background: rgba(255,255,255,.045);
+    border: 1px solid var(--line);
+  }
+  .cat { border-radius: 20px; }
+  .cat.sel {
+    border-color: rgba(var(--acc-rgb), .9);
+    background: rgba(var(--acc-rgb), .18);
+    box-shadow: 0 0 0 1px rgba(var(--acc-rgb), .3), 0 10px 26px -10px rgba(var(--acc-rgb), .55);
+  }
+  .seg.inc ~ .grid .cat.sel {
+    border-color: rgba(67,230,180,.9);
+    background: rgba(67,230,180,.15);
+    box-shadow: 0 0 0 1px rgba(67,230,180,.3), 0 10px 26px -10px rgba(67,230,180,.5);
+  }
+  .pad button { border-radius: 20px; }
+  .amount-box .val { text-shadow: 0 4px 26px rgba(255,255,255,.12); }
+
+  /* ── 9. Кнопки действий ── */
+  .submit {
+    border-radius: 22px;
+    background: linear-gradient(135deg, #ff97ab, #ff6f91 55%, #f9527c);
+    box-shadow: 0 12px 32px -8px rgba(255,111,145,.5), 0 1px 0 rgba(255,255,255,.25) inset;
+  }
+  .submit.inc {
+    background: linear-gradient(135deg, #7df2cb, #43e6b4 55%, #22c795);
+    box-shadow: 0 12px 32px -8px rgba(67,230,180,.45), 0 1px 0 rgba(255,255,255,.25) inset;
+  }
+  .google-btn {
+    background: linear-gradient(135deg, #b3a8ff, #8b7dff 60%, #6f5ef5);
+    box-shadow: 0 12px 34px -8px rgba(139,125,255,.55), 0 1px 0 rgba(255,255,255,.3) inset;
+    border-radius: 20px;
+  }
+  .sheet .primary {
+    background: linear-gradient(135deg, rgba(var(--acc-rgb),1), rgba(var(--acc-rgb),.82));
+    box-shadow: 0 10px 26px -10px rgba(var(--acc-rgb), .6);
+  }
+  .add-big {
+    border-radius: 24px;
+    background: rgba(var(--acc-rgb), .08);
+    box-shadow: 0 1px 0 rgba(255,255,255,.05) inset;
+  }
+
+  /* ── 10. Нижний док ── */
+  .nav {
+    background: rgba(18,17,32,.82);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 32px;
+    box-shadow: 0 20px 50px -12px rgba(0,0,0,.7), 0 1px 0 rgba(255,255,255,.07) inset;
+  }
+  .nav button.on {
+    background: rgba(var(--acc-rgb), .22);
+    box-shadow: 0 0 0 1px rgba(var(--acc-rgb), .35), 0 8px 20px -8px rgba(var(--acc-rgb), .6);
+  }
+
+  /* ── 11. Привычки: строки и календарь ── */
+  .hrow .ic, .mrow .ic {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.05);
+  }
+  .hrow.done .ic { background: rgba(var(--acc-rgb), .22); box-shadow: 0 0 16px -4px rgba(var(--acc-rgb), .5); }
+  .chk { border-radius: 16px; }
+  .hrow.done .chk { box-shadow: 0 6px 16px -6px rgba(var(--acc-rgb), .7); }
+  .hm .d { border-radius: 14px; background: rgba(255,255,255,.05); }
+  .hm .d.full { box-shadow: 0 4px 14px -4px rgba(var(--acc-rgb), .55); }
+
+  /* ── 12. Заметки ── */
+  .nt-search { border-radius: 999px; }
+  .nt-tools { border-radius: 24px; }
+  .mrow.sel { background: rgba(var(--acc-rgb), .1); }
+
+  /* ── 13. Транзакции и списки ── */
+  .tx .ic {
+    background: rgba(var(--acc-rgb), .13);
+    border: 1px solid rgba(var(--acc-rgb), .18);
+    border-radius: 15px;
+  }
+  .tx .a.inc, .hero-chip .v.mint { text-shadow: 0 2px 16px rgba(67,230,180,.4); }
+  .bar { background: rgba(255,255,255,.07); }
+
+  /* ── 14. Модалки и тост ── */
+  .sheet {
+    background: rgba(20,19,36,.96);
+    border: 1px solid rgba(255,255,255,.13);
+    box-shadow: 0 -20px 60px rgba(0,0,0,.55);
+  }
+  #toast {
+    background: rgba(26,25,44,.95);
+    border: 1px solid var(--line2);
+    border-radius: 22px;
+    box-shadow: 0 16px 40px -10px rgba(0,0,0,.6);
+  }
+  #toast.success { border-color: rgba(67,230,180,.55); box-shadow: 0 16px 40px -12px rgba(67,230,180,.35); }
+  #toast.error, #toast.warn { border-color: rgba(255,122,147,.6); box-shadow: 0 16px 40px -12px rgba(255,122,147,.35); }
+
+  /* ── 15. Скелетоны и переключатели ── */
+  .sw.on { box-shadow: 0 0 14px rgba(var(--acc-rgb), .45); }
+  .sw.on::after { box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+
+  /* ── 16. Экран входа ── */
+  #auth-screen .auth-tick div {
+    background: rgba(255,255,255,.045);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+  .auth-word em { filter: drop-shadow(0 4px 22px rgba(139,125,255,.35)); }
+
+  /* ── 17. Топбар (desktop) ── */
+  .topbar { background: rgba(8,7,15,.7); border-bottom: 1px solid var(--line); }
+  .sec-tabs { background: rgba(255,255,255,.045); }
+  .sec-tabs button.on {
+    background: rgba(var(--acc-rgb), .2);
+    box-shadow: 0 0 0 1px rgba(var(--acc-rgb), .3);
+  }
+
+  /* ── 18. Десктоп: hover-подъём карточек и строк ── */
+  @media (min-width: 960px) {
+    .card { transition: transform .25s cubic-bezier(.2,.8,.2,1), border-color .25s, box-shadow .25s; }
+    .card:hover {
+      border-color: rgba(255,255,255,.13);
+      box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 22px 48px -20px rgba(0,0,0,.75);
+    }
+    .limit-card:hover, .mrow:hover, .hrow:hover { transform: translateY(-1px); }
+    .tx { transition: background .2s; border-radius: 14px; margin: 0 -8px; padding-left: 8px; padding-right: 8px; }
+    .tx:hover { background: rgba(255,255,255,.035); }
+    .cat:hover, .pad button:hover, .chip:hover, .dchip:hover, .icb:hover, .pill-btn:hover, .chev:hover, .refresh-ic:hover {
+      background: rgba(255,255,255,.085);
+      border-color: rgba(255,255,255,.16);
+    }
+    .submit:hover, .google-btn:hover, .sheet .primary:hover { filter: brightness(1.07) saturate(1.05); }
+    .add-big:hover { background: rgba(var(--acc-rgb), .14); }
+  }
+
 </style>
+<base target="_blank">
 </head>
 <body>
 <!-- ═══ AUTH ═══ -->
