@@ -606,6 +606,30 @@
     .kb-sheet { max-width: 540px; }
     #toast { bottom: 36px; }
   }
+
+  /* ═══ Čeština ═══ */
+  body[data-sec="cz"] { --acc: #5fc8ff; --acc-rgb: 95,200,255; }
+  #cz-seg .thumb { width: calc((100% - 8px) / 4); }
+  .cz-card { margin-top: 14px; text-align: center; padding: 32px 18px; min-height: 200px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+  .cz-q { font-family: var(--font-d); font-size: 30px; font-weight: 700; letter-spacing: -.03em; word-break: break-word; }
+  .cz-a { font-size: 22px; font-weight: 600; color: var(--acc); border-top: 1px solid var(--line); padding-top: 14px; word-break: break-word; }
+  .cz-ex { font-size: 13px; color: var(--t2); font-style: italic; }
+  .cz-dir { font-size: 11px; color: var(--t3); letter-spacing: .08em; font-weight: 700; }
+  .cz-cnt { display: flex; gap: 18px; justify-content: center; font-size: 13px; font-weight: 800; margin-top: 14px; }
+  .cz-ok { color: var(--green); } .cz-bad { color: var(--red); }
+  .cz-rate { display: flex; gap: 8px; margin-top: 14px; }
+  .cz-rate button { flex: 1; border: 1px solid var(--line2); background: var(--s2); color: var(--t1); border-radius: 16px; padding: 11px 2px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit; }
+  .cz-rate button:active { transform: scale(.96); }
+  .cz-rate small { display: block; font-size: 11px; color: var(--t3); font-weight: 600; margin-top: 3px; }
+  .cz-rate .r1 { border-color: rgba(255,111,145,.55); } .cz-rate .r4 { border-color: rgba(79,227,178,.55); }
+  .cz-tools { display: flex; gap: 8px; justify-content: center; margin-top: 14px; }
+  .cz-chips { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .pill-btn.on { background: rgba(var(--acc-rgb), .18); color: var(--acc); border-color: var(--acc); }
+  .cz-set { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .cz-set:last-child { border-bottom: none; }
+  .cz-bars { display: flex; align-items: flex-end; gap: 4px; height: 90px; }
+  .cz-bars i { flex: 1; background: rgba(var(--acc-rgb), .6); border-radius: 4px 4px 0 0; }
+  #cz-ov textarea { resize: vertical; }
 </style>
 </head>
 <body>
@@ -635,6 +659,7 @@
       <button id="tab-fin" data-k="Alt+1" class="on" onclick="goSec('fin')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="3.5"/><path d="M3 10.5h18M16 15h2"/><path d="M7 6l8-2.5"/></svg>Finance</button>
       <button id="tab-hab" data-k="Alt+2" onclick="goSec('hab')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>Návyky</button>
       <button id="tab-nt" data-k="Alt+3" onclick="goSec('nt')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>Poznámky</button>
+      <button id="tab-cz" data-k="Alt+4" onclick="goSec('cz')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H10l-4 4v-4H4z"/><path d="M8 9.5h8M8 12.5h5"/></svg>Čeština</button>
     </div>
     <div class="avatar" id="user-avatar" onclick="openAcct()">U</div>
   </div>
@@ -847,11 +872,23 @@
     </div>
   </div>
 
+  <!-- ČEŠTINA -->
+  <div class="view" id="view-cz">
+    <div class="hb-seg" id="cz-seg"><div class="thumb"></div>
+      <button class="on" onclick="CZ.sub('learn')">Učit</button><button onclick="CZ.sub('cards')">Karty</button><button onclick="CZ.sub('stats')">Statistika</button><button onclick="CZ.sub('set')">Nastavení</button>
+    </div>
+    <div class="hb-sub active" id="cz-sub-learn"></div>
+    <div class="hb-sub" id="cz-sub-cards"></div>
+    <div class="hb-sub" id="cz-sub-stats"></div>
+    <div class="hb-sub" id="cz-sub-set"></div>
+  </div>
+
   <!-- NAV -->
   <nav class="nav">
     <button id="nav-fin" class="on" onclick="goSec('fin')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="3.5"/><path d="M3 10.5h18M16 15h2"/><path d="M7 6l8-2.5"/></svg><span>Finance</span></button>
     <button id="nav-hab" onclick="goSec('hab')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><span>Návyky</span></button>
     <button id="nav-nt" onclick="goSec('nt')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg><span>Poznámky</span></button>
+    <button id="nav-cz" onclick="goSec('cz')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H10l-4 4v-4H4z"/><path d="M8 9.5h8M8 12.5h5"/></svg><span>Čeština</span></button>
   </nav>
 </div>
 
@@ -863,7 +900,7 @@
     <div class="hint">Na telefonu se nic nemění — jen na počítači.</div>
     <div class="kb-grid">
       <div class="kb-h">Všude</div>
-      <div><span><kbd>Alt</kbd>+<kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></span>Finance / Návyky / Poznámky</div>
+      <div><span><kbd>Alt</kbd>+<kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></span>Finance / Návyky / Poznámky / Čeština</div>
       <div><span><kbd>Shift</kbd>+<kbd>←</kbd><kbd>→</kbd></span>Podzáložky</div>
       <div><span><kbd>?</kbd></span>Tato nápověda</div>
       <div><span><kbd>Esc</kbd></span>Zavřít / zrušit</div>
@@ -882,6 +919,9 @@
       <div><span><kbd>←</kbd> <kbd>→</kbd></span>Den zpět / vpřed</div>
       <div><span><kbd>T</kbd></span>Dnes</div>
       <div><span><kbd>N</kbd></span>Nový návyk</div>
+      <div class="kb-h">Čeština</div>
+      <div><span><kbd>Space</kbd></span>Ukázat odpověď</div>
+      <div><span><kbd>1</kbd>–<kbd>4</kbd></span>Hodnocení</div>
       <div class="kb-h">Poznámky</div>
       <div><span><kbd>N</kbd> / <kbd>F</kbd></span>Nová poznámka / složka</div>
       <div><span><kbd>/</kbd> nebo <kbd>Ctrl</kbd>+<kbd>K</kbd></span>Hledat</div>
@@ -1017,6 +1057,8 @@
     <button class="ghost" onclick="NT.closeAct()">Zavřít</button>
   </div>
 </div>
+
+<div class="overlay" id="cz-ov" onclick="if(event.target===this)CZ.close()"></div>
 
 <div id="toast"></div>
 <script>
@@ -2523,11 +2565,300 @@ window.HB = {
 </script>
 
 <script>
+// ═════════ ČEŠTINA (CZ) — карточки как в Anki; всё хранится в таблице ═════════
+(function () {
+const U = HB.util, SH = '🎓 Чешский карточки', LG = '🎓 Чешский журнал', ST = '🎓 Чешский настройки', F = 3;
+const $ = id => document.getElementById('cz-' + id);
+const T = (c, r) => window.MH && MH.lang === 'ru' ? r : c;
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const pad = n => String(n).padStart(2, '0');
+const put = (sh, a, v) => U.api(`/values/${U.rng(sh, a)}?valueInputOption=RAW`, { method: 'PUT', body: JSON.stringify({ values: v }) });
+const LAB = { new: ['Nové první', 'Сначала новые'], mix: ['Promíchat', 'Вперемешку'], rev: ['Opakování první', 'Сначала повторения'], 'ru-cz': ['RU → CZ', 'RU → CZ'], 'cz-ru': ['CZ → RU', 'CZ → RU'], rand: ['Náhodně', 'Случайно'] };
+const DEF = [
+ ['newPerDay', 10, 'num', 'Nových karet za den', 'Новых карточек в день'],
+ ['revPerDay', 100, 'num', 'Max. opakování za den', 'Макс. повторений в день'],
+ ['steps', '1 10', 'txt', 'Kroky učení (minuty)', 'Шаги изучения (минуты)'],
+ ['lapseSteps', '10', 'txt', 'Kroky po chybě (minuty)', 'Шаги после ошибки (минуты)'],
+ ['gradIvl', 1, 'num', 'První interval (dny)', 'Первый интервал (дни)'],
+ ['easyIvl', 4, 'num', 'Interval „Snadné“ (dny)', 'Интервал «Легко» (дни)'],
+ ['ease', 250, 'num', 'Počáteční snadnost (%)', 'Начальная лёгкость (%)'],
+ ['easyBonus', 130, 'num', 'Bonus „Snadné“ (%)', 'Бонус «Легко» (%)'],
+ ['hardMult', 120, 'num', 'Násobek „Těžké“ (%)', 'Множитель «Трудно» (%)'],
+ ['ivlMod', 100, 'num', 'Modifikátor intervalů (%)', 'Модификатор интервалов (%)'],
+ ['maxIvl', 365, 'num', 'Max. interval (dny)', 'Макс. интервал (дни)'],
+ ['lapseMult', 0, 'num', 'Interval po chybě (% původního)', 'Интервал после ошибки (% от прежнего)'],
+ ['leech', 8, 'num', 'Pijavice: pozastavit po chybách (0 = vyp.)', '«Пиявка»: пауза после ошибок (0 = выкл.)'],
+ ['dayStart', 4, 'num', 'Začátek dne (hodina)', 'Начало дня (час)'],
+ ['order', 'mix', 'sel:new|mix|rev', 'Pořadí karet', 'Порядок карточек'],
+ ['dir', 'ru-cz', 'sel:ru-cz|cz-ru|rand', 'Směr karet', 'Направление карточек'],
+ ['rev', 0, 'bool', 'Ukázat podruhé obráceně v jedné relaci', 'Показать ещё раз наоборот в той же сессии'],
+ ['revGap', 5, 'num', 'Min. karet před obráceným zobrazením', 'Мин. карточек до обратного показа'],
+ ['type', 0, 'bool', 'Psát odpověď ručně', 'Вводить ответ вручную'],
+ ['diac', 0, 'bool', 'Přísná diakritika při psaní', 'Строгие диакритики при вводе'],
+ ['ex', 1, 'bool', 'Ukazovat příklad', 'Показывать пример'],
+ ['tts', 0, 'bool', 'Automaticky přečíst česky', 'Автоозвучка чешского']
+];
+let cards = [], S = {}, logs = [], ready = false, loading = false, subName = 'learn', deckF = '', qs = '';
+let Q = [], cur = null, shown = false, pend = {}, sess = null, buf = [], typed = null, tShow = 0, editing = null, seq = 0;
+DEF.forEach(d => S[d[0]] = d[1]);
+
+const dk = ts => { const d = new Date(ts - (S.dayStart || 0) * 36e5); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+const today = () => dk(Date.now()), dayPlus = n => dk(Date.now() + n * 864e5);
+const normD = v => { if (v === '' || v == null) return ''; if (typeof v === 'number') { const d = new Date(Math.round((v - 25569) * 864e5)); return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()); } return String(v).trim(); };
+const tsOf = s => { const m = String(s).match(/^(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d)$/); return m ? new Date(+m[1], m[2] - 1, +m[3], +m[4], +m[5]).getTime() : 0; };
+const fmtDT = ts => { const d = new Date(ts); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const isNew = c => !c.reps && c.step === '' && !c.due, isLrn = c => c.step !== '', isRev = c => !isNew(c) && !isLrn(c);
+const live = () => cards.filter(c => c.status !== 'Удалена');
+const actv = () => live().filter(c => c.status === 'Активна' && (!deckF || c.deck === deckF));
+const todayCnt = () => { const t = today(); let nw = 0, rev = 0; logs.forEach(l => { if (l.d === t) { if (l.k === 'Нов') nw++; else if (l.k === 'Повтор' || l.k === 'Ошибка') rev++; } }); return { nw, rev }; };
+const shuf = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const dirOf = () => S.dir === 'rand' ? (Math.random() < .5 ? 'ru-cz' : 'cz-ru') : S.dir;
+const stp = s => String(s).trim().split(/\s+/).map(Number).filter(x => x > 0);
+const mk = (ru, cz, ex, deck) => ({ row: 0, id: 'c' + Date.now().toString(36) + (seq++).toString(36), ru, cz, ex: ex || '', deck: deck || '', status: 'Активна', created: today(), ivl: 0, ease: S.ease, reps: 0, lapses: 0, due: '', step: '', last: '' });
+const rowOf = c => [c.id, c.ru, c.cz, c.ex, c.deck, c.status, c.created, c.ivl, c.ease, c.reps, c.lapses, c.due, c.step, c.last];
+
+// ── SRS (SM-2 как в Anki) ──
+function sched(c, g) {
+  const n = { ...c }, now = Date.now(), isN = isNew(c), lrn = isLrn(c);
+  n.reps++; n.last = today();
+  if (isN || lrn) {
+    const re = c.ivl > 0, arr = stp(re ? S.lapseSteps : S.steps), i = isN ? 0 : c.step;
+    const grad = d => { n.step = ''; n.ivl = Math.min(S.maxIvl, Math.max(1, Math.round(d))); n.due = dayPlus(n.ivl); if (isN) n.ease = S.ease; };
+    const wait = k => { n.step = k; n.due = fmtDT(now + arr[k] * 6e4); };
+    if (!arr.length) grad(g === 4 ? S.easyIvl : re ? c.ivl : S.gradIvl);
+    else if (g === 1) wait(0);
+    else if (g === 2) wait(Math.min(i, arr.length - 1));
+    else if (g === 3) { if (i + 1 < arr.length) wait(i + 1); else grad(re ? c.ivl : S.gradIvl); }
+    else grad(re ? Math.max(c.ivl, S.easyIvl) : S.easyIvl);
+  } else if (g === 1) {
+    n.lapses++; n.ease = Math.max(130, c.ease - 20); n.ivl = Math.max(1, Math.round(c.ivl * S.lapseMult / 100));
+    const a = stp(S.lapseSteps); if (a.length) { n.step = 0; n.due = fmtDT(now + a[0] * 6e4); } else n.due = dayPlus(n.ivl);
+  } else {
+    let f; if (g === 2) { f = S.hardMult / 100; n.ease = Math.max(130, c.ease - 15); } else if (g === 3) f = c.ease / 100; else { f = c.ease / 100 * S.easyBonus / 100; n.ease = c.ease + 15; }
+    n.ivl = Math.min(S.maxIvl, Math.max(c.ivl + 1, Math.round(c.ivl * f * S.ivlMod / 100))); n.due = dayPlus(n.ivl);
+  }
+  return n;
+}
+const lab = (c, g) => { const n = sched(c, g); if (n.step !== '') return Math.max(1, Math.round((tsOf(n.due) - Date.now()) / 6e4)) + ' ' + T('min', 'мин'); const d = n.ivl; return d < 30 ? d + ' ' + T('d', 'д') : d < 365 ? Math.round(d / 30) + ' ' + T('měs', 'мес') : (d / 365).toFixed(1) + ' ' + T('r', 'г'); };
+
+// ── таблица ──
+async function ensure() {
+  const meta = await U.api('?fields=sheets.properties(sheetId,title)');
+  const have = new Set((meta.sheets || []).map(s => s.properties.title));
+  const need = [SH, LG, ST].filter(t => !have.has(t)); if (!need.length) return;
+  const cr = await U.api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: need.map(title => ({ addSheet: { properties: { title, tabColor: U.rgb('5FC8FF'), gridProperties: { rowCount: title === LG ? 20000 : 3000, columnCount: 14, frozenRowCount: 2 } } } })) }) });
+  const ids = {}; need.forEach((t, i) => ids[t] = cr.replies[i].addSheet.properties.sheetId);
+  const blank = n => Array(n).fill(''), hdr = [], fmt = [];
+  if (ids[SH]) {
+    hdr.push({ range: `'${SH}'!A1:N2`, values: [['🎓 ЧЕШСКИЙ — КАРТОЧКИ', ...blank(13)], ['ID', 'Русский', 'Чешский', 'Пример', 'Колода', 'Статус', 'Создана', 'Интервал (дн)', 'Лёгкость (%)', 'Повторов', 'Ошибок', 'Следующий повтор', 'Шаг', 'Последний повтор']] });
+    fmt.push(...U.sheetFormat(ids[SH], 14, [90, 200, 200, 260, 110, 90, 100, 100, 100, 80, 80, 150, 60, 110], [{ setDataValidation: { range: { sheetId: ids[SH], startRowIndex: 2, endRowIndex: 3000, startColumnIndex: 5, endColumnIndex: 6 }, rule: { condition: { type: 'ONE_OF_LIST', values: ['Активна', 'Пауза', 'Удалена'].map(v => ({ userEnteredValue: v })) }, showCustomUi: true, strict: false } } }]));
+  }
+  if (ids[LG]) {
+    hdr.push({ range: `'${LG}'!A1:G2`, values: [['🎓 ЧЕШСКИЙ — ЖУРНАЛ ПОВТОРЕНИЙ', ...blank(6)], ['Дата', 'Время', 'ID', 'Направление', 'Оценка (1-4)', 'Тип', 'Сек.']] });
+    fmt.push(...U.sheetFormat(ids[LG], 7, [110, 80, 110, 110, 100, 90, 70]));
+  }
+  if (ids[ST]) {
+    hdr.push({ range: `'${ST}'!A1:C2`, values: [['⚙ ЧЕШСКИЙ — НАСТРОЙКИ', '', ''], ['Параметр', 'Значение', 'Описание']] });
+    hdr.push({ range: `'${ST}'!A${F}:C${F + DEF.length - 1}`, values: DEF.map(d => [d[0], d[1], d[4]]) });
+    fmt.push(...U.sheetFormat(ids[ST], 3, [160, 120, 380]));
+  }
+  await U.api('/values:batchUpdate', { method: 'POST', body: JSON.stringify({ valueInputOption: 'RAW', data: hdr }) });
+  await U.api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: fmt }) });
+}
+async function load() {
+  if (loading) return; loading = true;
+  try {
+    await ensure();
+    const q = [`'${SH}'!A${F}:N`, `'${ST}'!A${F}:B`, `'${LG}'!A${F}:G`].map(r => 'ranges=' + encodeURIComponent(r)).join('&');
+    const d = await U.api(`/values:batchGet?${q}&valueRenderOption=UNFORMATTED_VALUE`);
+    const m = new Map((d.valueRanges[1].values || []).map(r => [String(r[0]), r[1]]));
+    DEF.forEach(([k, v, t]) => {
+      let x = m.has(k) && m.get(k) !== '' ? m.get(k) : v;
+      if (t === 'num') { x = Number(x); if (!isFinite(x)) x = v; }
+      else if (t === 'bool') x = (x === true || x == 1 || String(x).toUpperCase() === 'TRUE') ? 1 : 0;
+      else { x = String(x); if (t.startsWith('sel') && !LAB[x]) x = v; }
+      S[k] = x;
+    });
+    cards = (d.valueRanges[0].values || []).map((r, i) => ({ row: F + i, id: String(r[0] || '').trim(), ru: String(r[1] == null ? '' : r[1]), cz: String(r[2] == null ? '' : r[2]), ex: String(r[3] == null ? '' : r[3]), deck: String(r[4] == null ? '' : r[4]), status: String(r[5] || 'Активна'), created: normD(r[6]), ivl: +r[7] || 0, ease: +r[8] || S.ease, reps: +r[9] || 0, lapses: +r[10] || 0, due: normD(r[11]), step: (r[12] === '' || r[12] == null) ? '' : +r[12], last: normD(r[13]) })).filter(c => c.id);
+    logs = (d.valueRanges[2].values || []).map(r => ({ d: normD(r[0]), id: String(r[2] || ''), g: +r[4] || 0, k: String(r[5] || '') })).filter(x => x.d);
+    ready = true; render();
+  } catch (e) { if (!ready) $('sub-learn').innerHTML = '<div class="card"><div class="empty">' + T('Data se nepodařilo načíst:', 'Не удалось загрузить данные:') + '<br/>' + esc(e.message || e) + '</div></div>'; else showToast(T('Obnovení selhalo: ', 'Не удалось обновить: ') + (e.message || e), 'error'); }
+  finally { loading = false; }
+}
+function save(c) {
+  return U.enqueue(async () => { if (c.row) await put(SH, `A${c.row}:N${c.row}`, [rowOf(c)]); else { const r = await U.nextFreeRow(SH); await put(SH, `A${r}:N${r}`, [rowOf(c)]); c.row = r; } })
+    .catch(e => showToast(T('Uložení se nepodařilo: ', 'Не удалось сохранить: ') + (e.message || e), 'error', 3600));
+}
+function flush() {
+  if (!buf.length) return; const rows = buf.splice(0);
+  return U.enqueue(async () => { const r = await U.nextFreeRow(LG); await put(LG, `A${r}:G${r + rows.length - 1}`, rows); }).catch(() => buf.unshift(...rows));
+}
+function logRow(c, d, g, k, sec) {
+  const now = new Date(); buf.push([today(), pad(now.getHours()) + ':' + pad(now.getMinutes()), c.id, d, g, k, sec]);
+  logs.push({ d: today(), id: c.id, g, k }); if (buf.length >= 10) flush();
+}
+
+// ── сессия ──
+function start() {
+  const t = today(), now = Date.now(), act = actv(), tc = todayCnt();
+  const lrn = act.filter(c => isLrn(c) && tsOf(c.due) <= now + 20 * 6e4);
+  const rv = shuf(act.filter(c => isRev(c) && c.due <= t)).slice(0, Math.max(0, S.revPerDay - tc.rev));
+  const nw = act.filter(isNew).slice(0, Math.max(0, S.newPerDay - tc.nw));
+  const a = S.order === 'new' ? [...nw, ...rv] : S.order === 'rev' ? [...rv, ...nw] : shuf([...nw, ...rv]);
+  Q = [...lrn, ...a].map(c => ({ c, d: dirOf(), t: isLrn(c) ? tsOf(c.due) : 0 }));
+  if (!Q.length) { showToast(T('Dnes není co opakovat', 'На сегодня повторять нечего')); return; }
+  pend = {}; sess = { n: 0, ok: 0 }; next();
+}
+function next() {
+  if (!Q.length) { done(); return; }
+  const now = Date.now(); let i = Q.findIndex(x => x.t <= now);
+  if (i < 0) { i = 0; Q.forEach((x, k) => { if (x.t < Q[i].t) i = k; }); }
+  cur = Q.splice(i, 1)[0]; shown = false; typed = null; tShow = Date.now(); renderLearn();
+  if (S.tts && cur.d === 'cz-ru') speak();
+}
+function reveal() { if (!cur || shown) return; shown = true; renderLearn(); if (S.tts && cur.d === 'ru-cz') speak(); }
+const norm = s => { s = String(s).trim().toLowerCase(); return S.diac ? s : s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); };
+function check(v) { if (!cur || shown) return; const tg = cur.d === 'ru-cz' ? cur.c.cz : cur.c.ru; typed = { ok: tg.split(/[;\/]/).some(x => norm(x) === norm(v)), val: v }; reveal(); }
+function apply(c, g) {
+  Object.assign(c, sched(c, g));
+  if (g === 1 && S.leech > 0 && c.lapses >= S.leech) { c.status = 'Пауза'; showToast(T('Pijavice — pozastaveno: ', 'Пиявка — на паузе: ') + c.cz); }
+  save(c);
+  if (c.status === 'Активна' && c.step !== '' && tsOf(c.due) - Date.now() < 60 * 6e4) Q.push({ c, d: dirOf(), t: tsOf(c.due) });
+}
+function answer(g) {
+  if (!cur || !shown) return; const it = cur, c = it.c;
+  logRow(c, it.d, g, it.rv ? 'Обр' : isNew(c) ? 'Нов' : isLrn(c) ? 'Учёба' : g === 1 ? 'Ошибка' : 'Повтор', Math.min(120, Math.round((Date.now() - tShow) / 1000)));
+  sess.n++; if (g > 1) sess.ok++;
+  if (S.rev && !it.rv && g > 1) {          // сначала прямое направление, позже в этой же сессии — обратное
+    pend[c.id] = g; Q.splice(Math.min(Q.length, (+S.revGap || 0) + (Math.random() * 3 | 0)), 0, { c, d: it.d === 'ru-cz' ? 'cz-ru' : 'ru-cz', t: 0, rv: 1 }); next(); return;
+  }
+  let fin = g; if (it.rv) { fin = Math.min(pend[c.id] || g, g); delete pend[c.id]; }
+  apply(c, fin); next();
+}
+function done() { Object.keys(pend).forEach(id => { const c = cards.find(x => x.id === id); if (c) apply(c, pend[id]); }); pend = {}; Q = []; cur = null; if (sess) sess.end = true; flush(); renderLearn(); }
+function speak() { try { const u = new SpeechSynthesisUtterance(cur.c.cz); u.lang = 'cs-CZ'; u.rate = .9; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
+
+// ── экраны ──
+function renderLearn() {
+  const el = $('sub-learn');
+  if (!ready) { el.innerHTML = `<div class="empty">${T('Načítám…', 'Загружаю…')}</div>`; return; }
+  if (!sess) {
+    const t = today(), now = Date.now(), tc = todayCnt(), act = actv(), ds = [...new Set(live().map(c => c.deck).filter(Boolean))].sort();
+    const nw = Math.min(act.filter(isNew).length, Math.max(0, S.newPerDay - tc.nw)), lr = act.filter(c => isLrn(c) && tsOf(c.due) <= now + 20 * 6e4).length, rv = Math.min(act.filter(c => isRev(c) && c.due <= t).length, Math.max(0, S.revPerDay - tc.rev));
+    el.innerHTML = `<div class="card hero" style="margin-top:14px"><div class="caps">${T('Dnes k učení', 'Сегодня к изучению')}</div><div class="hero-row"><div class="hero-chip"><div class="caps">${T('Nové', 'Новые')}</div><div class="v num" style="color:var(--acc)">${nw}</div></div><div class="hero-chip"><div class="caps">${T('Učím se', 'Учу')}</div><div class="v red num">${lr}</div></div><div class="hero-chip"><div class="caps">${T('Opakování', 'Повторы')}</div><div class="v mint num">${rv}</div></div></div></div>`
+      + (ds.length ? `<div class="cz-chips" style="margin-top:14px"><button class="pill-btn${deckF ? '' : ' on'}" onclick="CZ.deck('')">${T('Vše', 'Все')}</button>${ds.map(d => `<button class="pill-btn${deckF === d ? ' on' : ''}" data-notr data-d="${esc(d)}" onclick="CZ.deck(this.dataset.d)">${esc(d)}</button>`).join('')}</div>` : '')
+      + (live().length ? `<button class="add-big" onclick="CZ.start()">${T('Začít učení', 'Начать учёбу')}</button>` : `<div class="empty">${T('Zatím žádné karty. Přidej je v záložce Karty.', 'Карточек пока нет. Добавь их во вкладке «Карточки».')}</div>`);
+  } else if (sess.end) {
+    el.innerHTML = `<div class="card hero" style="margin-top:14px;text-align:center"><div class="caps">${T('Hotovo!', 'Готово!')}</div><div class="hero-amount" style="justify-content:center"><span class="big num">${sess.n}</span></div><div class="hero-sub">${T('odpovědí', 'ответов')} · ${sess.n ? Math.round(sess.ok / sess.n * 100) : 0} % ${T('správně', 'верно')}</div></div><button class="add-big" onclick="CZ.back()">${T('Zpět', 'Назад')}</button>`;
+  } else {
+    const c = cur.c, f = cur.d === 'ru-cz', cn = [cur, ...Q].reduce((a, x) => { a[isNew(x.c) ? 0 : isLrn(x.c) ? 1 : 2]++; return a; }, [0, 0, 0]);
+    el.innerHTML = `<div class="cz-cnt"><span style="color:var(--acc)">${cn[0]}</span><span class="cz-bad">${cn[1]}</span><span class="cz-ok">${cn[2]}</span></div>`
+      + `<div class="card cz-card" data-notr><div class="cz-dir">${f ? 'RU → CZ' : 'CZ → RU'}${cur.rv ? ' ↺' : ''}</div><div class="cz-q">${esc(f ? c.ru : c.cz)}</div>`
+      + (!shown && S.type ? `<input class="hb-input" id="cz-typ" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${f ? 'česky' : 'rusky'}…" onkeydown="if(event.key==='Enter'){event.preventDefault();CZ.check(this.value)}">` : '')
+      + (shown ? `<div class="cz-a">${esc(f ? c.cz : c.ru)}</div>${typed ? `<div class="${typed.ok ? 'cz-ok' : 'cz-bad'}">${typed.ok ? '✓' : '✗'} ${esc(typed.val)}</div>` : ''}${S.ex && c.ex ? `<div class="cz-ex">${esc(c.ex)}</div>` : ''}` : '') + '</div>'
+      + (shown ? `<div class="cz-rate">${[1, 2, 3, 4].map(g => `<button class="r${g}" onclick="CZ.answer(${g})">${[T('Znovu', 'Снова'), T('Těžké', 'Трудно'), T('Dobře', 'Хорошо'), T('Snadné', 'Легко')][g - 1]}<small>${lab(c, g)}</small></button>`).join('')}</div>` : `<button class="add-big" onclick="CZ.reveal()">${T('Ukázat odpověď', 'Показать ответ')}</button>`)
+      + `<div class="cz-tools"><button class="pill-btn" onclick="CZ.speak()">🔊</button><button class="pill-btn" onclick="CZ.editCur()">✎</button><button class="pill-btn" onclick="CZ.stop()">${T('Ukončit', 'Закончить')}</button></div>`;
+    if (!shown && S.type) setTimeout(() => { const i = $('typ'); if (i) i.focus(); }, 30);
+  }
+}
+function stateOf(c) { return c.status === 'Пауза' ? T('pauza', 'пауза') : isNew(c) ? T('nová', 'новая') : isLrn(c) ? T('učím se', 'учу') : c.ivl + ' ' + T('d', 'д'); }
+function fillList() {
+  const q = qs.trim().toLowerCase(), L = live().filter(c => !q || (c.ru + ' ' + c.cz + ' ' + c.ex + ' ' + c.deck).toLowerCase().includes(q)).reverse();
+  $('list').innerHTML = L.length ? L.slice(0, 200).map(c => `<div class="mrow" onclick="CZ.edit('${c.id}')"><div class="inf"><div class="n" data-notr>${esc(c.cz)}</div><div class="c" data-notr>${esc(c.ru)}${c.deck ? ' · ' + esc(c.deck) : ''}</div></div><small class="caps">${stateOf(c)}</small></div>`).join('') + (L.length > 200 ? `<div class="empty">… ${L.length - 200}</div>` : '') : `<div class="empty">${T('Žádné karty', 'Нет карточек')}</div>`;
+}
+function renderCards() {
+  $('sub-cards').innerHTML = `<input class="hb-input" id="cz-q" data-notr placeholder="${T('Hledat…', 'Искать…')}" value="${esc(qs)}" oninput="CZ.search(this.value)"><button class="add-big" onclick="CZ.edit()">+ ${T('Přidat kartu', 'Добавить карточку')}</button><div style="display:flex;gap:8px"><button class="add-big" style="flex:1" onclick="CZ.bulk()">${T('Hromadný import', 'Массовый импорт')}</button></div><div class="sec-head"><div class="caps">${live().length} ${T('karet', 'карточек')}</div></div><div class="card" id="cz-list"></div>`;
+  fillList();
+}
+function renderStats() {
+  const L = live(), t = today(), N = 14, now = Date.now(), has = new Set(logs.map(l => l.d));
+  const days = [...Array(N)].map((_, i) => dk(now - (N - 1 - i) * 864e5)), per = days.map(d => logs.filter(l => l.d === d && l.k !== 'Обр').length);
+  const l30 = logs.filter(l => l.d >= dk(now - 29 * 864e5) && l.k !== 'Обр'), acc = l30.length ? Math.round(l30.filter(l => l.g > 1).length / l30.length * 100) : 0;
+  let st = 0; for (let i = has.has(t) ? 0 : 1; has.has(dk(now - i * 864e5)); i++) st++;
+  const fc = [...Array(N)].map((_, i) => { const d = dk(now + i * 864e5); return L.filter(c => c.status === 'Активна' && isRev(c) && (i ? c.due === d : c.due <= d)).length; });
+  const ch = (l, v, c) => `<div class="hero-chip"><div class="caps">${l}</div><div class="v ${c || ''} num">${v}</div></div>`;
+  const bars = a => { const m = Math.max(1, ...a); return `<div class="cz-bars">${a.map(v => `<i style="height:${Math.max(2, v / m * 100)}%" title="${v}"></i>`).join('')}</div>`; };
+  $('sub-stats').innerHTML = `<div class="card" style="margin-top:14px"><div class="stat-row">${ch(T('Série dní', 'Серия дней'), st, 'mint')}${ch(T('Dnes', 'Сегодня'), per[N - 1])}${ch(T('Úspěšnost', 'Точность'), acc + ' %')}</div></div>`
+    + `<div class="card" style="margin-top:12px"><div class="stat-row">${ch(T('Nové', 'Новые'), L.filter(isNew).length)}${ch(T('Učím se', 'Учу'), L.filter(c => isLrn(c) || (isRev(c) && c.ivl < 21)).length)}${ch(T('Zvládnuté', 'Выучено'), L.filter(c => isRev(c) && c.ivl >= 21).length, 'mint')}</div></div>`
+    + `<div class="sec-head"><div class="caps">${T('Posledních 14 dnů', 'Последние 14 дней')}</div></div><div class="card">${bars(per)}</div>`
+    + `<div class="sec-head"><div class="caps">${T('Předpověď opakování (14 dnů)', 'Прогноз повторений (14 дней)')}</div></div><div class="card">${bars(fc)}</div>`;
+}
+function renderSet() {
+  $('sub-set').innerHTML = '<div class="card" style="margin-top:14px">' + DEF.map(([k, v, t, cs, ru]) => {
+    const ctl = t === 'bool' ? `<button class="sw${S[k] ? ' on' : ''}" onclick="CZ.setVal('${k}',${S[k] ? 0 : 1})"></button>`
+      : t.startsWith('sel') ? `<div class="cz-chips">${t.slice(4).split('|').map(o => `<button class="pill-btn${S[k] === o ? ' on' : ''}" onclick="CZ.setVal('${k}','${o}')">${T(LAB[o][0], LAB[o][1])}</button>`).join('')}</div>`
+      : `<input class="hb-input" style="width:110px;margin:0" type="${t === 'num' ? 'number' : 'text'}" value="${esc(S[k])}" onchange="CZ.setVal('${k}',this.value)">`;
+    return `<div class="cz-set"><span>${T(cs, ru)}</span>${ctl}</div>`;
+  }).join('') + '</div><div class="hint" style="margin:10px 4px;font-size:12px;color:var(--t3)">' + T('Hodnoty se ukládají do listu „🎓 Čeština nastavení“ v tabulce.', 'Значения хранятся на листе «🎓 Чешский настройки» в таблице.') + '</div>';
+}
+function setVal(k, v) {
+  const i = DEF.findIndex(d => d[0] === k), t = DEF[i][2];
+  if (t === 'num') { v = Number(v); if (!isFinite(v) || v < 0) { showToast(T('Neplatná hodnota', 'Неверное значение'), 'error'); return renderSet(); } } else if (t === 'bool') v = v ? 1 : 0; else v = String(v);
+  S[k] = v; renderSet(); U.enqueue(() => put(ST, `B${F + i}`, [[v]])).catch(e => showToast((e.message || e) + '', 'error'));
+}
+
+// ── карточки: правка / импорт ──
+const ov = h => { $('ov').innerHTML = h; $('ov').classList.add('open'); };
+function close() { $('ov').classList.remove('open'); editing = null; }
+function edit(id, keepDeck) {
+  const c = id ? cards.find(x => x.id === id) : null; editing = c;
+  const ds = [...new Set(live().map(x => x.deck).filter(Boolean))];
+  ov(`<div class="sheet"><h3>${c ? T('Upravit kartu', 'Изменить карточку') : T('Nová karta', 'Новая карточка')}</h3><input class="hb-input" id="cz-f-ru" data-notr placeholder="${T('Rusky', 'По-русски')}" autocomplete="off"><input class="hb-input" id="cz-f-cz" data-notr placeholder="${T('Česky', 'По-чешски')}" autocomplete="off"><input class="hb-input" id="cz-f-ex" data-notr placeholder="${T('Příklad (nepovinné)', 'Пример (необязательно)')}" autocomplete="off"><input class="hb-input" id="cz-f-dk" data-notr list="cz-dl" placeholder="${T('Kolekce (nepovinné)', 'Колода (необязательно)')}" autocomplete="off"><datalist id="cz-dl">${ds.map(d => `<option value="${esc(d)}">`).join('')}</datalist><button class="primary" onclick="CZ.saveCard()">${T('Uložit', 'Сохранить')}</button>`
+    + (c ? `<button class="ghost" onclick="CZ.toggleCard()">${c.status === 'Пауза' ? T('Obnovit', 'Вернуть') : T('Pozastavit', 'Приостановить')}</button><button class="ghost danger" onclick="CZ.delCard()">${T('Smazat', 'Удалить')}</button>` : `<button class="ghost" onclick="CZ.saveCard(1)">${T('Uložit a přidat další', 'Сохранить и добавить ещё')}</button>`) + `<button class="ghost" onclick="CZ.close()">${T('Zavřít', 'Закрыть')}</button></div>`);
+  if (c) { $('f-ru').value = c.ru; $('f-cz').value = c.cz; $('f-ex').value = c.ex; $('f-dk').value = c.deck; } else if (keepDeck) $('f-dk').value = keepDeck;
+  setTimeout(() => $('f-ru').focus(), 30);
+}
+function saveCard(more) {
+  const ru = $('f-ru').value.trim(), cz = $('f-cz').value.trim(), ex = $('f-ex').value.trim(), dk_ = $('f-dk').value.trim();
+  if (!ru || !cz) { showToast(T('Vyplň obě strany', 'Заполни обе стороны'), 'error'); return; }
+  if (editing) { Object.assign(editing, { ru, cz, ex, deck: dk_ }); save(editing); }
+  else { const c = mk(ru, cz, ex, dk_); cards.push(c); save(c); }
+  showToast(T('Uloženo', 'Сохранено')); render();
+  if (more && !editing) edit(null, dk_); else close();
+}
+function toggleCard() { if (!editing) return; editing.status = editing.status === 'Пауза' ? 'Активна' : 'Пауза'; save(editing); close(); render(); }
+function delCard() { if (!editing || !confirm(T('Smazat kartu „', 'Удалить карточку «') + editing.cz + T('“? V tabulce zůstane se stavem Удалена.', '»? В таблице останется со статусом «Удалена».'))) return; editing.status = 'Удалена'; save(editing); close(); render(); showToast(T('Smazáno', 'Удалено')); }
+function editCur() { if (cur) edit(cur.c.id); }
+function bulk() {
+  ov(`<div class="sheet"><h3>${T('Hromadný import', 'Массовый импорт')}</h3><div class="hint">${T('Každý řádek: rusky ; česky ; příklad ; kolekce (poslední dvě nepovinné). Lze vložit i sloupce z tabulky.', 'Каждая строка: по-русски ; по-чешски ; пример ; колода (последние два необязательны). Можно вставить столбцы из таблицы.')}</div><textarea class="hb-input" id="cz-bk" data-notr rows="9" placeholder="dům ; ..."></textarea><button class="primary" onclick="CZ.doBulk()">${T('Importovat', 'Импортировать')}</button><button class="ghost" onclick="CZ.exp()">${T('Zkopírovat všechny karty', 'Скопировать все карточки')}</button><button class="ghost" onclick="CZ.close()">${T('Zavřít', 'Закрыть')}</button></div>`);
+}
+async function doBulk() {
+  const have = new Set(live().map(c => c.cz.toLowerCase())); let skip = 0;
+  const nc = []; $('bk').value.split('\n').map(l => l.split(/\t|;/).map(s => s.trim())).filter(p => p[0] && p[1]).forEach(p => { if (have.has(p[1].toLowerCase())) { skip++; return; } have.add(p[1].toLowerCase()); nc.push(mk(p[0], p[1], p[2], p[3])); });
+  if (!nc.length) { showToast(T('Nic k importu', 'Нечего импортировать') + (skip ? ` (${skip})` : ''), 'error'); return; }
+  try { await U.enqueue(async () => { const r = await U.nextFreeRow(SH); await put(SH, `A${r}:N${r + nc.length - 1}`, nc.map(rowOf)); nc.forEach((c, i) => c.row = r + i); }); cards.push(...nc); close(); render(); showToast(`+${nc.length}` + (skip ? ` · ${T('duplicit', 'дублей')}: ${skip}` : '')); }
+  catch (e) { showToast((e.message || e) + '', 'error'); }
+}
+function exp() { try { navigator.clipboard.writeText(live().map(c => [c.ru, c.cz, c.ex, c.deck].join(' ; ')).join('\n')); showToast(T('Zkopírováno', 'Скопировано')); } catch (e) {} }
+
+// ── навигация ──
+const SUBS = ['learn', 'cards', 'stats', 'set'];
+function render() { if (subName === 'learn') renderLearn(); else if (subName === 'cards') renderCards(); else if (subName === 'stats') renderStats(); else renderSet(); }
+function sub(n) {
+  subName = n; const i = SUBS.indexOf(n); $('seg').style.setProperty('--i', i);
+  $('seg').querySelectorAll('button').forEach((b, k) => b.classList.toggle('on', k === i));
+  SUBS.forEach(x => $('sub-' + x).classList.toggle('active', x === n)); if (ready) render(); else load();
+}
+function key(e, k) {
+  if (subName !== 'learn' || !sess || sess.end || !cur) return;
+  if (!shown && (k === ' ' || k === 'Enter')) { e.preventDefault(); reveal(); }
+  else if (shown && /^[1-4]$/.test(k)) { e.preventDefault(); answer(+k); }
+  else if (shown && (k === ' ' || k === 'Enter')) { e.preventDefault(); answer(3); }
+}
+window.CZ = {
+  onShow() { if (ready) render(); else load(); }, sub, rerender() { if (ready) render(); }, key, start, reveal, answer, check, setVal, edit, editCur, saveCard, toggleCard, delCard, close, bulk, doBulk, exp, speak,
+  stop() { done(); }, back() { sess = null; render(); }, deck(d) { deckF = d; renderLearn(); }, search(v) { qs = v; fillList(); },
+  _t: { sched, S, mk }
+};
+})();
+</script>
+
+<script>
 // ── NAVIGATION ──
-const SEC_OF = { dash: 'fin', add: 'fin', ledger: 'fin', hab: 'hab', notes: 'nt' };
+const SEC_OF = { dash: 'fin', add: 'fin', ledger: 'fin', hab: 'hab', notes: 'nt', cz: 'cz' };
 const FIN_VIEWS = ['dash', 'add', 'ledger'];
 let lastFin = 'dash';
-function goSec(sec) { showView(sec === 'fin' ? lastFin : sec === 'hab' ? 'hab' : 'notes'); }
+function goSec(sec) { showView(sec === 'fin' ? lastFin : sec === 'hab' ? 'hab' : sec === 'cz' ? 'cz' : 'notes'); }
 function lgPane(p) {
   const v = $('view-ledger'); v.classList.toggle('lg-plan', p === 'plan'); v.classList.toggle('lg-hist', p !== 'plan');
   $('lg-seg').querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', (i === 0) === (p === 'plan')));
@@ -2538,12 +2869,13 @@ function showView(name) {
   if (window.NT) NT.flush();
   const sec = SEC_OF[name]; if (sec === 'fin') lastFin = name;
   document.body.dataset.sec = sec;
-  ['dash', 'add', 'ledger', 'hab', 'notes'].forEach(v => $('view-' + v).classList.toggle('active', v === name));
-  ['fin', 'hab', 'nt'].forEach(x => { $('nav-' + x).classList.toggle('on', x === sec); $('tab-' + x).classList.toggle('on', x === sec); });
+  ['dash', 'add', 'ledger', 'hab', 'notes', 'cz'].forEach(v => $('view-' + v).classList.toggle('active', v === name));
+  ['fin', 'hab', 'nt', 'cz'].forEach(x => { $('nav-' + x).classList.toggle('on', x === sec); $('tab-' + x).classList.toggle('on', x === sec); });
   FIN_VIEWS.forEach(v => $('st-' + v).classList.toggle('on', v === name));
   if (name === 'dash') renderDash();
   if (name === 'hab') HB.onShow();
   if (name === 'notes') NT.onShow();
+  if (name === 'cz') CZ.onShow();
   if (name === 'ledger') { if (!dataState) refreshData(); else { renderPlan(); renderHistory(); } }
   if (name === 'ledger' && dataState && Date.now() - dataState.loadedAt > 60000) refreshData(true);
   if (name === 'add' && window.matchMedia('(min-width: 960px)').matches) { /* клавиатурный ввод — без фокуса в поле */ }
@@ -2993,7 +3325,7 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     if (!appShown()) return;
 
     // Alt+1..6 — záložky (funguje i při psaní)
-    if (e.altKey && !e.ctrlKey && !e.metaKey && /^Digit[1-3]$/.test(e.code)) { e.preventDefault(); if (typing) t.blur(); goSec(['fin', 'hab', 'nt'][+e.code.slice(5) - 1]); return; }
+    if (e.altKey && !e.ctrlKey && !e.metaKey && /^Digit[1-4]$/.test(e.code)) { e.preventDefault(); if (typing) t.blur(); goSec(['fin', 'hab', 'nt', 'cz'][+e.code.slice(5) - 1]); return; }
 
     const v = activeView();
     if (FINV.includes(v) && e.shiftKey && plain0(e) && (k === 'ArrowLeft' || k === 'ArrowRight') && !typing) {
@@ -3046,6 +3378,8 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
       else if (k === 't' || k === 'T') { e.preventDefault(); HB.goToday(); }
       else if (k === 'n' || k === 'N') { e.preventDefault(); HB.openSheet(); }
       else if (/^[1-9]$/.test(k) && sub === 'today') { e.preventDefault(); HB.toggleNth(+k - 1); }
+    } else if (v === 'cz') {
+      CZ.key(e, k);
     } else if (v === 'notes') {
       if (k === 'n' || k === 'N') { e.preventDefault(); NT.newNote(); }
       else if (k === 'f' || k === 'F') { e.preventDefault(); NT.newFolder(); }
@@ -3111,7 +3445,7 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     'Přidat záznam': 'Добавить запись', 'Příjem / výdaj': 'Доход / расход', 'Uložit záznam': 'Сохранить запись', 'Splnit návyk': 'Отметить привычку', 'Den zpět / vpřed': 'День назад / вперёд', 'Nová poznámka / složka': 'Новая заметка / папка', 'nebo': 'или', 'Uložit hned': 'Сохранить сейчас', 'Psát / číst': 'Писать / читать',
     'Tučně / kurzíva / [[odkaz]]': 'Жирный / курсив / [[ссылка]]', 'Odsadit (Shift = zpět)': 'Отступ (Shift = назад)', 'Piš číslice ·': 'Вводи цифры ·', 'kategorie ·': 'категория ·', 'typ ·': 'тип ·', 'poznámka ·': 'заметка ·', 'přidat': 'добавить', 'Měsíc zpět': 'Месяц назад', 'Částka': 'Сумма',
     // — misc
-    'Kč/den': 'Kč/день', 'Čeština': 'Čeština',
+    'Kč/den': 'Kč/день', 'Čeština': 'Čeština', 'Učit': 'Учить', 'Karty': 'Карточки', 'Statistika': 'Статистика', 'Nastavení': 'Настройки', 'Ukázat odpověď': 'Показать ответ', 'Hodnocení': 'Оценка',
   };
   const MONTHS = { leden: 'январь', únor: 'февраль', březen: 'март', duben: 'апрель', květen: 'май', červen: 'июнь', červenec: 'июль', srpen: 'август', září: 'сентябрь', říjen: 'октябрь', listopad: 'ноябрь', prosinec: 'декабрь' };
   const MONTHS_G = { ledna: 'января', února: 'февраля', března: 'марта', dubna: 'апреля', května: 'мая', června: 'июня', července: 'июля', srpna: 'августа', září: 'сентября', října: 'октября', listopadu: 'ноября', prosince: 'декабря' };
@@ -3157,6 +3491,7 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
   const origAttr = new WeakMap();
 
   function doText(n) {
+    if (n.parentNode && n.parentNode.closest && n.parentNode.closest('[data-notr]')) return;   // obsah karet se nepřekládá
     const cur = n.nodeValue;
     if (mine.has(n) && mine.get(n) === cur) {            // vlastní překlad
       if (lang !== 'ru') { n.nodeValue = orig.get(n); mine.delete(n); }
@@ -3212,6 +3547,7 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     apply();
     if (typeof renderDash === 'function') { try { renderDash(); } catch (e) {} }
     if (window.HB && HB.rerender) { try { HB.rerender(); } catch (e) {} }
+    if (window.CZ) { try { CZ.rerender(); } catch (e) {} }
   }
   // confirm() / prompt() přes překlad
   const _confirm = window.confirm.bind(window); window.confirm = m => _confirm(lang === 'ru' ? tr(String(m)) : m);
