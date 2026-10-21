@@ -84,6 +84,8 @@
 
   /* ─── SHELL ─── */
   #app-screen { display: none; flex-direction: column; flex: 1; min-height: 0; }
+  #sync-chip { display: none; align-items: center; justify-content: center; gap: 10px; margin: 2px 18px 6px; padding: 8px 14px; border-radius: 14px; background: rgba(var(--acc-rgb), .12); border: 1px solid rgba(var(--acc-rgb), .28); color: var(--t2); font-size: 12.5px; font-weight: 600; line-height: 1.35; }
+  #sync-chip button { border: none; background: var(--acc); color: var(--acc-ink); border-radius: 10px; padding: 6px 12px; font-size: 12.5px; font-weight: 800; cursor: pointer; white-space: nowrap; }
   .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 6px; gap: 12px; }
   .brand { display: flex; align-items: center; gap: 10px; cursor: default; user-select: none; }
   .brand svg { width: 30px; height: 30px; flex-shrink: 0; }
@@ -638,6 +640,7 @@
     </div>
     <div class="avatar" id="user-avatar" onclick="openAcct()">U</div>
   </div>
+  <div id="sync-chip"><span id="sync-chip-t">Zobrazena uložená data</span><button onclick="signIn()">Přihlásit</button></div>
   <div class="subtabs" id="subtabs-fin">
     <button id="st-dash" class="on" onclick="showView('dash')">Přehled</button>
     <button id="st-add" onclick="showView('add')">Přidat</button>
@@ -725,14 +728,14 @@
       <div id="pane-plan">
         <div class="month-switch">
           <div class="month-label" id="plan-month">Plán měsíce</div>
-          <button class="refresh-ic" id="plan-refresh" onclick="refreshData(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></button>
+          <button class="refresh-ic" id="plan-refresh" onclick="refreshData(true,true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></button>
         </div>
         <div id="plan-body"></div>
       </div>
       <div id="pane-hist">
         <div class="month-switch">
           <div class="month-label">Historie <span id="history-count"></span></div>
-          <button class="refresh-ic" id="hist-refresh" onclick="refreshData(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></button>
+          <button class="refresh-ic" id="hist-refresh" onclick="refreshData(true,true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></button>
         </div>
         <div id="history-body"></div>
       </div>
@@ -805,7 +808,7 @@
     <div class="month-switch">
       <div class="month-label">Moje návyky</div>
       <div class="head-btns">
-        <button class="refresh-ic" id="hb-man-refresh" onclick="HB.refresh(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></button>
+        <button class="refresh-ic" id="hb-man-refresh" onclick="HB.refresh(true,true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg></button>
       </div>
     </div>
     <div class="card" id="hb-man-list"></div>
@@ -1097,6 +1100,7 @@ let localHistory = JSON.parse(localStorage.getItem('budget_history') || '[]');
 let budgetLimit = JSON.parse(localStorage.getItem('budget_limit') || 'null');
 let dataLoading = false;
 let dataState = null;      // { months: Map, planCats, incomePlan, loadedAt }
+let finRev = 0, finPending = 0;   // идёт ли локальная запись (чтобы фоновое обновление её не затёрло)
 const now0 = new Date();
 let selY = now0.getFullYear(), selM = now0.getMonth();
 
@@ -1120,6 +1124,31 @@ function showToast(msg, type = 'success', ms = 2600) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.className = '', ms);
 }
+
+// ── CACHE: мгновенный старт ──
+// Данные из таблицы копируются в localStorage. При запуске приложение сразу показывает сохранённое,
+// а свежие данные тихо подтягиваются в фоне и обновляют экран.
+const MHC = (() => {
+  const P = 'mh-cache1:' + SHEET_ID.slice(0, 10) + ':';
+  const MAX = 3000000;
+  const getters = {}, timers = {};
+  function get(k) { try { const t = localStorage.getItem(P + k); return t ? JSON.parse(t) : null; } catch (e) { return null; } }
+  function set(k, v) { try { const t = JSON.stringify(v); if (t.length > MAX) return false; localStorage.setItem(P + k, t); return true; } catch (e) { return false; } }
+  function save(k) { const g = getters[k]; if (!g) return; let v = null; try { v = g(); } catch (e) {} if (v) set(k, v); }
+  function reg(k, fn) { getters[k] = fn; }
+  function sched(k) { clearTimeout(timers[k]); timers[k] = setTimeout(() => { timers[k] = 0; save(k); }, 400); }
+  function flush() { Object.keys(timers).forEach(k => { if (timers[k]) { clearTimeout(timers[k]); timers[k] = 0; save(k); } }); }
+  function clear() { try { Object.keys(localStorage).filter(x => x.indexOf('mh-cache1:') === 0).forEach(x => localStorage.removeItem(x)); } catch (e) {} }
+  function chip(on) {
+    const c = document.getElementById('sync-chip'); if (!c) return;
+    if (on) { const ru = window.MH && MH.lang === 'ru'; document.getElementById('sync-chip-t').textContent = ru ? 'Показаны сохранённые данные' : 'Zobrazena uložená data'; c.querySelector('button').textContent = ru ? 'Войти' : 'Přihlásit'; }
+    c.style.display = on ? 'flex' : 'none';
+  }
+  window.addEventListener('pagehide', flush);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
+  return { get, set, reg, sched, flush, clear, needAuth() { chip(true); }, authed() { chip(false); },
+    fail(e) { if (/auth|popup|denied|immediate|401|credential|invalid_grant|login/i.test(String((e && e.message) || e))) chip(true); } };
+})();
 
 // ── SLOT DIGITS ──
 function slotSet(el, text) {
@@ -1191,7 +1220,8 @@ function ensureAccessToken() {
         if (resp.error) { reject(new Error(resp.error)); return; }
         accessToken = resp.access_token;
         resolve(accessToken);
-      }
+      },
+      error_callback: err => reject(new Error((err && err.type) || 'auth'))
     });
     tokenClient.requestAccessToken();
   }));
@@ -1205,9 +1235,15 @@ async function fetchUserInfo() {
   if (u.picture) av.innerHTML = `<img src="${u.picture}" alt="" />`;
   else av.textContent = (u.name || 'U')[0].toUpperCase();
   window.__mhUser = u;
+  if (u && (u.name || u.email)) MHC.set('user', { name: u.name || '', picture: u.picture || '', email: u.email || '' });
+  MHC.authed();
   renderCategories(); renderPayments(); renderPad();
   refreshData();
-  if (window.HB) HB.repair();
+  // остальные разделы тихо подгружаем в фоне — и кэш заполняется, даже если вкладку не открывали
+  if (window.HB) setTimeout(() => { try { HB.refresh(); } catch (e) {} }, 150);
+  if (window.NT) setTimeout(() => { try { NT.prefetch(); } catch (e) {} }, 300);
+  // ремонт таблицы — раз в 12 часов, а не при каждом запуске
+  if (window.HB) { let last = 0; try { last = +localStorage.getItem('mh-repair-at') || 0; } catch (e) {} if (Date.now() - last > 12 * 3600e3) { try { localStorage.setItem('mh-repair-at', String(Date.now())); } catch (e) {} setTimeout(() => HB.repair(), 5000); } }
 }
 const accRGB = () => (getComputedStyle(document.body).getPropertyValue('--acc-rgb') || '154,149,255').trim();
 function openAcct() {
@@ -1227,7 +1263,7 @@ function closeAcct() { document.getElementById('acct-overlay').classList.remove(
 function doSignOut() { if (window.MHProxy && MHProxy.on) { MHProxy.off(); return; } signOut(); }
 function signOut() {
   if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
-  accessToken = null; dataState = null;
+  accessToken = null; dataState = null; MHC.clear();
   location.reload();
 }
 function showAuthError(msg) { const e = $('auth-error'); e.textContent = msg; e.style.display = 'block'; }
@@ -1248,9 +1284,34 @@ function parseTxDate(v) {
   return null;
 }
 
-async function refreshData(force) {
+// собирает dataState из плоского списка транзакций (свежие данные и кэш — один путь)
+function applyFin(txs, planCats, incomePlan, loadedAt) {
+  const months = new Map();
+  for (let i = txs.length - 1; i >= 0; i--) {
+    const t = txs[i], k = monthKey(t.y, t.m);
+    if (!months.has(k)) months.set(k, { income: 0, expense: 0, byCat: {}, daily: {}, txs: [] });
+    const mo = months.get(k);
+    if (t.type === 'Расход') {
+      mo.expense += t.amt;
+      mo.byCat[t.cat] = (mo.byCat[t.cat] || 0) + t.amt;
+      mo.daily[t.d] = (mo.daily[t.d] || 0) + t.amt;
+    } else if (t.type === 'Доход') mo.income += t.amt;
+    mo.txs.push({ ...t });
+  }
+  dataState = { months, txs, planCats, incomePlan, loadedAt };
+  renderAll();
+}
+function hydrateFin(c) {
+  if (dataState || !c || !Array.isArray(c.txs)) return;
+  applyFin(c.txs, (c.planCats || []).map(p => ({ ...p })), c.incomePlan || 0, 0);
+}
+MHC.reg('fin', () => dataState ? { txs: dataState.txs, planCats: dataState.planCats, incomePlan: dataState.incomePlan } : null);
+
+async function refreshData(force, manual) {
   if (dataLoading) return;
   if (dataState && !force && Date.now() - dataState.loadedAt < 30000) { renderAll(); return; }
+  if (!accessToken && !manual && dataState) { renderAll(); MHC.needAuth(); return; }
+  const rev0 = finRev;
   dataLoading = true;
   ['plan-refresh', 'hist-refresh'].forEach(id => $(id) && $(id).classList.add('spin'));
   try {
@@ -1281,43 +1342,25 @@ async function refreshData(force) {
       .filter(c => c.name)
       .map(c => { c.parts = c.name === MERGED_FOOD.name ? MERGED_FOOD.parts : [c.name]; return c; });
 
-    // агрегация транзакций по месяцам
-    const months = new Map();
     const txs = [];
     (txR.values || []).forEach(r => {
       const pd = parseTxDate(r[0]);
       if (!pd) return;
       const amt = Number(r[4]);
       if (!amt) return;
-      const type = r[1], cat = r[2] || '', desc = r[3] || '', pay = r[5] || '';
-      txs.push({ ...pd, type, cat, desc, pay, amt });
-      const k = monthKey(pd.y, pd.m);
-      if (!months.has(k)) months.set(k, { income: 0, expense: 0, byCat: {}, daily: {}, txs: [] });
-      const mo = months.get(k);
-      if (type === 'Расход') {
-        mo.expense += amt;
-        mo.byCat[cat] = (mo.byCat[cat] || 0) + amt;
-        mo.daily[pd.d] = (mo.daily[pd.d] || 0) + amt;
-      } else if (type === 'Доход') mo.income += amt;
-      mo.txs.push({ ...pd, type, cat, desc, pay, amt });
+      txs.push({ ...pd, type: r[1], cat: r[2] || '', desc: r[3] || '', pay: r[5] || '', amt });
     });
-    // общий список — от новых к старым (в один день новее та строка, что ниже в таблице)
+    // от новых к старым (в один день новее та строка, что ниже в таблице)
     txs.reverse();
     txs.sort((a, b) => (b.y * 372 + b.m * 31 + b.d) - (a.y * 372 + a.m * 31 + a.d));
-    // внутри месяца — от старых к новым (так их ждут renderRecent и добавление новых записей)
-    months.forEach(mo => mo.txs.sort((a, b) => (a.y * 372 + a.m * 31 + a.d) - (b.y * 372 + b.m * 31 + b.d)));
-
-    dataState = {
-      months, txs, planCats,
-      incomePlan: Number((incR.values || [[0]])[0][0]) || 0,
-      loadedAt: Date.now()
-    };
-    renderAll();
+    if (finRev !== rev0 || finPending > 0) { if (dataState) dataState.loadedAt = 0; return; }   // пока читали, ты добавил запись — оставляем локальное
+    applyFin(txs, planCats, Number((incR.values || [[0]])[0][0]) || 0, Date.now());
   } catch (e) {
     if (!dataState) {
       $('dash-cats').innerHTML = '<div class="empty">Data se nepodařilo načíst:<br/>' + escapeHtml(e.message || e) + '</div>';
       $('plan-body').innerHTML = '<div class="empty">Plán se nepodařilo načíst:<br/>' + escapeHtml(e.message || e) + '</div>';
     } else showToast('Obnovení selhalo: ' + (e.message || e), 'error');
+    MHC.fail(e);
   } finally {
     dataLoading = false;
     ['plan-refresh', 'hist-refresh'].forEach(id => $(id) && $(id).classList.remove('spin'));
@@ -1339,7 +1382,7 @@ function shiftMonth(dir) {
 }
 
 // ── RENDER: ALL ──
-function renderAll() { renderDash(); renderPlan(); renderHistory(); renderLimit(); }
+function renderAll() { renderDash(); renderPlan(); renderHistory(); renderLimit(); MHC.sched('fin'); }
 
 // ── RENDER: DASHBOARD ──
 function renderDash() {
@@ -1611,8 +1654,9 @@ async function nextFreeRow(sheet) {            // как в U-Budget: перва
   return Math.max((d.values || []).length + 1, FIRST_ROW);
 }
 let writeQueue = Promise.resolve(), pending = 0;
+let writeRev = 0;
 function enqueue(fn) {
-  pending++; setSync();
+  writeRev++; pending++; setSync();
   const p = writeQueue.then(fn);
   writeQueue = p.catch(() => {}).then(() => { pending--; setSync(); });
   return p;
@@ -1737,15 +1781,23 @@ async function repair() {
 }
 
 // ═════════ LOAD ═════════
-async function refreshData(force) {
+async function refreshData(force, manual) {
   if (dataLoading) return;
   if (ready && !force && Date.now() - loadedAt < 30000) { renderAll(); return; }
+  if (!accessToken && !manual && ready) { renderAll(); MHC.needAuth(); return; }
   dataLoading = true; setSpin(true);
+  const rv = writeRev;
   try {
     await ensureAccessToken();
-    await ensureSheets();
     const q = [`'${HAB_SHEET}'!A${FIRST_ROW}:F`, `'${LOG_SHEET}'!A${FIRST_ROW}:E`].map(r => 'ranges=' + encodeURIComponent(r)).join('&');
-    const data = await api(`/values:batchGet?${q}&valueRenderOption=UNFORMATTED_VALUE`);
+    const read = () => api(`/values:batchGet?${q}&valueRenderOption=UNFORMATTED_VALUE`);
+    let data;
+    try { data = await read(); }
+    catch (e) {                      // листов ещё нет (первый запуск) — создаём и читаем заново
+      if (!/range|not found|400/i.test(String((e && e.message) || e))) throw e;
+      await ensureSheets(); data = await read();
+    }
+    if (writeRev !== rv || pending > 0) return;      // пока читали, ты отметил привычку — не затираем
     const [hR, lR] = data.valueRanges;
 
     habits = [];
@@ -1771,6 +1823,7 @@ async function refreshData(force) {
   } catch (e) {
     if (!ready) $('today-list').innerHTML = '<div class="empty">Data se nepodařilo načíst:<br/>' + escapeHtml(e.message || e) + '</div>';
     else showToast('Obnovení selhalo: ' + (e.message || e), 'error');
+    MHC.fail(e);
   } finally { dataLoading = false; setSpin(false); }
 }
 function setSpin(on) { const b = $('man-refresh'); if (b) b.classList.toggle('spin', on); }
@@ -1876,7 +1929,12 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ═════════ RENDER ═════════
-function renderAll() { renderToday(); renderOver(); renderManage(); renderInsight(); }
+function renderAll() { renderToday(); renderOver(); renderManage(); renderInsight(); MHC.sched('hab'); }
+MHC.reg('hab', () => ready ? { habits, log: [...log.entries()] } : null);
+function hydrate(c) {
+  if (ready || !c || !Array.isArray(c.habits)) return;
+  habits = c.habits; log = new Map(c.log || []); reindex(); ready = true; loadedAt = 0; renderAll();
+}
 
 function renderInsight() {
   const box = $('insight'); if (!box) return;
@@ -2120,10 +2178,10 @@ async function restoreHabit(id) {
 }
 
 window.HB = {
-  sub, onShow, refresh: refreshData,
+  sub, onShow, refresh: refreshData, hydrate,
   toggleHabit, shiftDay, shiftMonth, goDay,
   rerender() { renderAll(); },
-  todayInfo() { if (!ready) return { ready: false }; const t = todayStr(), hs = dayHabits(t); return { ready: true, all: hs.map(h => h.name), left: hs.filter(h => !isDone(h, t)).map(h => h.name), total: hs.length }; },
+  todayInfo() { if (!ready || !loadedAt) return { ready: false }; const t = todayStr(), hs = dayHabits(t); return { ready: true, all: hs.map(h => h.name), left: hs.filter(h => !isDone(h, t)).map(h => h.name), total: hs.length }; },
   curSub() { return currentView; }, subIdx(d) { const n = ['today', 'over', 'manage']; sub(n[Math.max(0, Math.min(2, n.indexOf(currentView) + d))]); },
   toggleNth(i) { const r = document.querySelectorAll('#hb-today-list .hrow')[i]; if (r) r.click(); },
   goToday() { goDay(todayStr()); },
@@ -2160,7 +2218,7 @@ window.HB = {
   };
 
   // ── state ──
-  let items = [], ready = false, loading = false, loadedAt = 0;
+  let items = [], ready = false, loading = false, loadedAt = 0, rev = 0;
   let cwd = '', openId = null, curMode = 'edit', query = '';
   let saveTimer = null; const dirty = new Set();
   let nameCb = null;
@@ -2206,12 +2264,20 @@ window.HB = {
     ]) }) });
   }
 
-  async function load(force) {
+  async function load(force, manual) {
     if (loading) return;
+    if (!accessToken && !manual && ready) { render(); MHC.needAuth(); return; }
     loading = true;
+    const rev0 = rev;
     try {
-      await ensureSheet();
-      const d = await U.api(`/values/${R('A' + FIRST + ':H')}?valueRenderOption=UNFORMATTED_VALUE`);
+      const read = () => U.api(`/values/${R('A' + FIRST + ':H')}?valueRenderOption=UNFORMATTED_VALUE`);
+      let d;
+      try { d = await read(); }
+      catch (e) {
+        if (!/range|not found|400/i.test(String((e && e.message) || e))) throw e;
+        await ensureSheet(); d = await read();
+      }
+      if (rev !== rev0 || dirty.size) { loadedAt = 0; return; }      // пока читали, ты правил заметки — оставляем локальное
       items = (d.values || []).map((r, i) => ({
         row: FIRST + i, id: String(r[0] || '').trim(), type: r[1] === 'Папка' ? 'folder' : 'note',
         parent: String(r[2] || '').trim(), title: String(r[3] == null ? '' : r[3]), text: String(r[4] == null ? '' : r[4]),
@@ -2223,12 +2289,13 @@ window.HB = {
     } catch (e) {
       if (!ready) $('list').innerHTML = '<div class="card"><div class="empty">Poznámky se nepodařilo načíst:<br/>' + esc(e.message || e) + '</div></div>';
       else showToast('Obnovení selhalo: ' + (e.message || e), 'error');
+      MHC.fail(e);
     } finally { loading = false; }
   }
 
   // ── saving ──
   function setState(s) { const el = $('state'); if (el) el.textContent = s === 'saving' ? 'Ukládám…' : s === 'saved' ? 'Uloženo' : s === 'error' ? 'Chyba ukládání' : s === 'dirty' ? '…' : ''; }
-  function touch(it) { it.modified = nowStr(); dirty.add(it.id); setState('dirty'); clearTimeout(saveTimer); saveTimer = setTimeout(flush, 900); }
+  function touch(it) { rev++; MHC.sched('nt'); it.modified = nowStr(); dirty.add(it.id); setState('dirty'); clearTimeout(saveTimer); saveTimer = setTimeout(flush, 900); }
   function flush() {
     clearTimeout(saveTimer);
     const ids = [...dirty]; dirty.clear();
@@ -2236,11 +2303,12 @@ window.HB = {
   }
   function persist(it) {
     if (!it) return;
+    rev++;
     setState('saving');
     return U.enqueue(async () => {
       if (it.row) await putRaw(`A${it.row}:H${it.row}`, [rowOf(it)]);
       else { const r = await U.nextFreeRow(SHEET); await putRaw(`A${r}:H${r}`, [rowOf(it)]); it.row = r; }
-    }).then(() => { if (!dirty.size) setState('saved'); })
+    }).then(() => { MHC.sched('nt'); if (!dirty.size) setState('saved'); })
       .catch(e => { dirty.add(it.id); setState('error'); showToast('Uložení se nepodařilo:\n' + (e.message || e), 'error', 3600); });
   }
 
@@ -2476,7 +2544,10 @@ window.HB = {
  closeName, okName, closeAct,
     _t() { return { items, ready }; }
   };
-  function render() { if (openId && !desk()) return; renderList(); }
+  function render() { MHC.sched('nt'); if (openId && !desk()) return; renderList(); }
+  MHC.reg('nt', () => ready ? { items } : null);
+  api.hydrate = c => { if (ready || !c || !Array.isArray(c.items)) return; items = c.items; ready = true; loadedAt = 0; render(); };
+  api.prefetch = () => { if (!ready || Date.now() - loadedAt > 60000) load(true); };
 
   // делегирование кликов в режиме чтения
   document.addEventListener('click', e => {
@@ -2721,6 +2792,7 @@ async function submitEntry() {
   // Пишем СТРОГО A:G — колонка H («Месяц (авто)») в запросе не участвует.
   const row = [dateSerial, typeRu, selectedCat, desc, amount, selectedPayment, ''];
 
+  finRev++; finPending++;
   try {
     // 1) первая свободная строка по столбцу A
     const colARes = await fetch(
@@ -2780,6 +2852,7 @@ async function submitEntry() {
       } else mo.income += amount;
       mo.txs.push(t);
     }
+    MHC.sched('fin');
 
     const planHint = currentType === 'expense' ? planAfterSave(selectedCat, amount) : null;
     let toastMsg = `✓ ${TYPES[currentType].label} ${fmt0(amount)} Kč`;
@@ -2794,6 +2867,7 @@ async function submitEntry() {
   } catch (e) {
     showToast('Chyba: ' + e.message, 'error');
   } finally {
+    finPending--;
     btn.disabled = false;
     setType(currentType);
   }
@@ -3400,7 +3474,7 @@ function authorize() {
       const tc = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID, scope: SCOPES, login_hint: sess.email,
         callback: resp => { if (resp && resp.access_token) { accessToken = resp.access_token; window.fetchUserInfo(); } },
-        error_callback: () => {}
+        error_callback: () => { MHC.needAuth(); }
       });
       tc.requestAccessToken({ prompt: 'none' });
     } catch (e) {}
@@ -3422,7 +3496,7 @@ function authorize() {
       }).requestAccessToken({ prompt: 'none' });
     } catch (e) {}
   }, 60000);
-  window.MHAuth = { forget() { write(null); sess = null; } };
+  window.MHAuth = { forget() { write(null); sess = null; MHC.clear(); } };
   boot();
 })();
 </script>
@@ -3691,5 +3765,29 @@ function authorize() {
   if (S.on) regSW();
 })();
 </script>
+<script>
+// ═════════ МГНОВЕННЫЙ СТАРТ ═════════
+// Если ты уже входил и есть сохранённые данные — сразу открываем приложение, а не ждём Google/таблицу.
+(function () {
+  const px = !!(window.MHProxy && MHProxy.on);
+  let sess = null; try { sess = JSON.parse(localStorage.getItem('mh-session') || 'null'); } catch (e) {}
+  const user = MHC.get('user');
+  if (!user || !(px || (sess && sess.token))) return;
+  const fin = MHC.get('fin'), hab = MHC.get('hab'), nt = MHC.get('nt');
+  if (!fin && !hab && !nt) return;
+  $('auth-screen').style.display = 'none';
+  $('app-screen').style.display = 'flex';
+  const av = $('user-avatar');
+  if (user.picture) av.innerHTML = '<img src="' + escapeHtml(user.picture) + '" alt="" />'; else av.textContent = (user.name || 'U')[0].toUpperCase();
+  window.__mhUser = user;
+  renderCategories(); renderPayments(); renderPad();
+  try { if (fin) hydrateFin(fin); } catch (e) {}
+  try { if (hab) HB.hydrate(hab); } catch (e) {}
+  try { if (nt) NT.hydrate(nt); } catch (e) {}
+  // нет живого токена (сессия старше часа) — данные уже на экране, ждём тихого входа; если не выйдет, появится плашка «Přihlásit»
+  if (!px && !accessToken) setTimeout(() => { if (!accessToken) MHC.needAuth(); }, 4000);
+})();
+</script>
+
 </body>
 </html>
