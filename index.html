@@ -13,13 +13,13 @@
 <link rel="apple-touch-icon" href="icon-192.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 
   /* ═══════════ MindHub — minimal light design ═══════════ */
-  :root{color-scheme:dark;--bg:#0b0b0c;--s1:#111113;--s2:#1a1a1d;--s3:#27272b;--line:#222226;--line2:#36363c;--t1:#f2efe8;--t2:#a8a59d;--t3:#6e6c66;--red:#ff6b57;--green:#b6f24a;--acc-ink:#0b0b0c;--acc:#ffb347;--acc-rgb:255,179,71;--mint:var(--acc);--radius:0;--font-ui:'Manrope',-apple-system,'Segoe UI',sans-serif;--font-d:'Instrument Serif',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace}
-  body[data-sec="hab"]{--acc:#c8f542;--acc-rgb:200,245,66}
-  body[data-sec="nt"]{--acc:#7fd1ff;--acc-rgb:127,209,255}
+  :root{color-scheme:dark;--bg:#0b0b0c;--s1:#111113;--s2:#1a1a1d;--s3:#27272b;--line:#222226;--line2:#36363c;--t1:#f2efe8;--t2:#a8a59d;--t3:#6e6c66;--red:#ff6b57;--green:#00B894;--acc-ink:#0b0b0c;--acc:#00B894;--acc-rgb:0,184,148;--mint:var(--acc);--radius:0;--font-ui:'Manrope',-apple-system,'Segoe UI',sans-serif;--font-d:'Space Grotesk','Manrope',sans-serif;--mono:'Space Grotesk','Manrope',sans-serif}
+  body[data-sec="hab"]{--acc:#FDCB6E;--acc-rgb:253,203,110}
+  body[data-sec="nt"]{--acc:#0984E3;--acc-rgb:9,132,227}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html{background:var(--bg)}
   body{background:var(--bg);color:var(--t1);font-family:var(--font-ui);font-size:14.5px;min-height:100dvh;max-width:520px;margin:0 auto;display:flex;flex-direction:column;position:relative;-webkit-font-smoothing:antialiased}
@@ -419,7 +419,7 @@
   .text-input,.hb-input,.nt-search{background:var(--s1);border-color:var(--line2)}
   .text-input:focus,.hb-input:focus,.nt-search:focus{border-color:var(--acc)}
   .cat{background:none;border-color:var(--line2)}.cat.sel{border-color:var(--acc);background:rgba(var(--acc-rgb),.1)}.cat.sel svg,.cat.sel span{color:var(--acc)}
-  .seg.inc ~ .grid .cat.sel{border-color:var(--green);background:rgba(182,242,74,.1)}
+  .seg.inc ~ .grid .cat.sel{border-color:var(--green);background:rgba(0,184,148,.1)}
   .seg.inc ~ .grid .cat.sel svg,.seg.inc ~ .grid .cat.sel span{color:var(--green)}
   .pad button{background:none;border-color:var(--line2);font-family:var(--font-d);font-size:28px;font-weight:400}
   .submit,.sheet .primary{font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;font-size:12.5px;padding:17px;font-weight:700}
@@ -461,6 +461,29 @@
   .auth-word{font-family:var(--font-d);font-weight:400;font-size:52px;line-height:1.02}
   .auth-word em{font-style:italic;color:var(--acc)}
   @media(min-width:960px){.topbar{background:rgba(11,11,12,.85)!important}}
+
+  /* ═══ v3: шрифт Space Grotesk, нижняя панель, цвета отделов ═══ */
+  .num,.hero-amount .big,.amount-box .val,.insight .iv,.limit-card .v,.hero-chip .v,.hstat .pc,.sh-step b,.sh-d b,.month-label,.nt-title,.sheet h3,.auth-word,.pad button,.nt-md h1,.nt-md h2,.nt-md h3{font-family:var(--font-d);font-weight:500}
+  .hero-amount .big{font-size:64px;letter-spacing:-.045em}
+  .amount-box .val{font-size:66px}
+  .insight .iv{font-size:36px}.limit-card .v{font-size:28px}.hero-chip .v{font-size:21px}
+  .month-label{font-size:24px;letter-spacing:-.03em}.nt-title{font-size:32px;letter-spacing:-.035em}.sheet h3{font-size:22px}
+  .auth-word{font-size:40px;letter-spacing:-.04em;line-height:1.08}.auth-word em{font-style:normal}
+  .sh-step b{font-size:34px}.sh-d b{font-size:17px}
+  .caps,.brand b,.sec-head .link,.nav button,.subtabs button,.seg button,.lg-seg button,.nt-seg button,.hb-seg button,.submit,.sheet .primary,.sh-fill,#toast{font-family:var(--font-d)}
+  .caps{font-size:10.5px;font-weight:600;letter-spacing:.1em}
+  .brand b{font-weight:700;letter-spacing:.16em}
+  .month-label{text-transform:none}
+  /* нижняя панель разделов — квадратные сегменты, активный залит цветом отдела */
+  .nav{bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100% - 24px);max-width:496px;padding:3px;gap:3px;background:rgba(17,17,19,.94);border:1px solid var(--line2);border-radius:3px}
+  .nav button{flex-direction:row;justify-content:center;gap:8px;padding:12px 0;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.09em;color:var(--t2)}
+  .nav button svg{width:18px;height:18px}
+  .nav button.on{background:var(--acc);color:var(--acc-ink)}
+  .nav button.on::before{display:none}
+  .nav button:not(.on) span{display:none}
+  .view{padding-bottom:100px}
+  .nt-tools{bottom:calc(74px + env(safe-area-inset-bottom))}
+  #toast{bottom:92px}
 
   /* ═══════════ DESKTOP ═══════════ */
   @media (min-width: 960px) {
@@ -545,7 +568,7 @@
     #toast { bottom: 36px; }
   }
 
-  @media (min-width: 960px) { #hb-sub-shifts { max-width: 780px; margin: 0 auto; } .nt-tools { bottom: 12px; } }
+  @media (min-width: 960px) { #hb-sub-shifts { max-width: 780px; margin: 0 auto; } .nt-tools { bottom: 12px; } .sec-tabs { background: none; border: 1px solid var(--line2); border-radius: 3px; padding: 3px; gap: 3px; } .sec-tabs button { border-radius: 2px; font-family: var(--font-d); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; padding: 9px 18px; } .sec-tabs button.on { background: var(--acc); color: var(--acc-ink); } .sec-tabs button[data-k]::after { color: inherit; opacity: .55; } #toast { bottom: 36px; } }
 </style>
 </head>
 <body>
