@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>MindHub</title>
 <meta name="theme-color" content="#090912" />
 <meta name="mobile-web-app-capable" content="true" />
@@ -22,7 +22,7 @@
   body[data-sec="nt"]{--acc:#0984E3;--acc-rgb:9,132,227}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html{background:var(--bg)}
-  body{background:var(--bg);color:var(--t1);font-family:var(--font-ui);font-size:14.5px;min-height:100dvh;max-width:520px;margin:0 auto;display:flex;flex-direction:column;position:relative;-webkit-font-smoothing:antialiased}
+  body{background:var(--bg);color:var(--t1);font-family:var(--font-ui);font-size:14.5px;min-height:100vh;min-height:100dvh;max-width:520px;margin:0 auto;display:flex;flex-direction:column;position:relative;-webkit-font-smoothing:antialiased}
   ::-webkit-scrollbar{display:none}
   button{font-family:inherit}
   .caps{font-size:12px;font-weight:600;color:var(--t3)}
@@ -391,7 +391,7 @@
   .auth-links a{font-size:12.5px;color:var(--t3);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   .acct-note{font-size:12px;color:var(--t3);text-align:center;margin-top:10px;line-height:1.5}
 
-  /* ═══ фирменный стиль: «ЖУРНАЛ» — моно-подписи, крупные цифры с засечками, линии вместо карточек ═══ */
+  /* ═══ фирменный стиль: «ЖУРНАЛ» ═══ */
   html,body{background-color:var(--bg)}
   body{background-image:radial-gradient(rgba(255,255,255,.055) 1px,transparent 1px);background-size:22px 22px;background-attachment:fixed}
   .caps{font-family:var(--mono);font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.09em;color:var(--t3)}
@@ -411,7 +411,6 @@
   .sec-head{margin-top:30px}
   .sec-head .caps{color:var(--t1)}.sec-head .caps::before{content:'/ ';color:var(--acc)}
   .sec-head .link{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
-  /* квадраты и тонкие линии вместо скруглений */
   .chev,.refresh-ic,.avatar,.chk,.tx .ic,.hrow .ic,.mrow .ic,.sh-step button{border-radius:2px}
   .chev,.refresh-ic{background:none;border:1px solid var(--line2)}
   .bar,.bar>i,.dots i,.wk-bars i{border-radius:0}.bar{height:3px;background:var(--s3)}
@@ -425,7 +424,6 @@
   .submit,.sheet .primary{font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;font-size:12.5px;padding:17px;font-weight:700}
   .sheet{border-radius:0;border-top:1px solid var(--line2);background:var(--s1)}
   .sheet::before{display:none}
-  /* вкладки с подчёркиванием вместо таблеток */
   .seg,.lg-seg,.nt-seg,.hb-seg{background:none;border-radius:0;padding:0;border-bottom:1px solid var(--line2)}
   .seg .thumb{border-radius:0;top:auto;height:3px;bottom:-1px;left:0;width:50%}
   .hb-seg .thumb{top:auto;bottom:-1px;left:0;height:3px;width:calc(100% / var(--n));border-radius:0;box-shadow:none;background:var(--acc)}
@@ -437,7 +435,6 @@
   .nav{border-top:1px solid var(--line2)}
   .nav button{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;position:relative;padding-top:9px}
   .nav button.on::before{content:'';position:absolute;top:-7px;left:25%;right:25%;height:3px;background:var(--acc)}
-  /* календари: квадратная сетка */
   .hm,.hm-head{gap:2px}.hm .d{background:var(--s2);font-family:var(--mono);font-size:11px}
   .sh-week,.sh-head{gap:2px}
   .sh-d{background:var(--s2);min-height:56px;color:var(--t3);font-family:var(--mono);font-size:10px}
@@ -462,7 +459,7 @@
   .auth-word em{font-style:italic;color:var(--acc)}
   @media(min-width:960px){.topbar{background:rgba(11,11,12,.85)!important}}
 
-  /* ═══ v3: шрифт Space Grotesk, нижняя панель, цвета отделов ═══ */
+  /* ═══ v3 ═══ */
   .num,.hero-amount .big,.amount-box .val,.insight .iv,.limit-card .v,.hero-chip .v,.hstat .pc,.sh-step b,.sh-d b,.month-label,.nt-title,.sheet h3,.auth-word,.pad button,.nt-md h1,.nt-md h2,.nt-md h3{font-family:var(--font-d);font-weight:500}
   .hero-amount .big{font-size:64px;letter-spacing:-.045em}
   .amount-box .val{font-size:66px}
@@ -474,7 +471,6 @@
   .caps{font-size:10.5px;font-weight:600;letter-spacing:.1em}
   .brand b{font-weight:700;letter-spacing:.16em}
   .month-label{text-transform:none}
-  /* нижняя панель разделов — квадратные сегменты, активный залит цветом отдела */
   .nav{bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100% - 24px);max-width:496px;padding:3px;gap:3px;background:rgba(17,17,19,.94);border:1px solid var(--line2);border-radius:3px}
   .nav button{flex-direction:row;justify-content:center;gap:8px;padding:12px 0;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.09em;color:var(--t2)}
   .nav button svg{width:18px;height:18px}
@@ -484,6 +480,10 @@
   .view{padding-bottom:100px}
   .nt-tools{bottom:calc(74px + env(safe-area-inset-bottom))}
   #toast{bottom:92px}
+
+  /* ═══ OFFLINE BANNER ═══ */
+  #offline-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:300;padding:7px 12px;text-align:center;font-size:12px;font-weight:700;letter-spacing:.04em;background:var(--red);color:#fff;font-family:var(--font-d)}
+  #offline-banner.show{display:block}
 
   /* ═══════════ DESKTOP ═══════════ */
   @media (min-width: 960px) {
@@ -572,6 +572,7 @@
 </style>
 </head>
 <body>
+<div id="offline-banner">Offline — změny se uloží později</div>
 <!-- ═══ AUTH ═══ -->
 <div id="auth-screen">
   <div class="auth-logo"><svg viewBox="0 0 48 48" fill="none"><defs><linearGradient id="lg0" x1="6" y1="6" x2="42" y2="42"><stop stop-color="#9a95ff"/><stop offset=".55" stop-color="#4fe3b2"/><stop offset="1" stop-color="#ffb460"/></linearGradient></defs><rect width="48" height="48" rx="15" fill="#14142a"/><circle cx="17" cy="19" r="8" stroke="url(#lg0)" stroke-width="3"/><circle cx="31" cy="19" r="8" stroke="url(#lg0)" stroke-width="3" opacity=".75"/><circle cx="24" cy="30" r="8" stroke="url(#lg0)" stroke-width="3" opacity=".5"/></svg></div>
@@ -682,7 +683,7 @@
    </div></div>
   </div>
 
-  <!-- LEDGER: plán + historie -->
+  <!-- LEDGER -->
   <div class="view lg-plan" id="view-ledger">
     <div class="lg-seg" id="lg-seg"><button class="on" onclick="lgPane('plan')">Plán</button><button onclick="lgPane('hist')">Historie</button></div>
     <div class="lg-wrap">
@@ -835,8 +836,6 @@
   </nav>
 </div>
 
-<!-- ═══ LIMIT SHEET ═══ -->
-
 <div class="overlay" id="kb-overlay" onclick="if(event.target===this)kbClose()">
   <div class="sheet kb-sheet">
     <h3>Klávesové zkratky</h3>
@@ -941,7 +940,7 @@
     <button class="acct-btn out" id="acct-out" onclick="closeAcct();doSignOut()">Odhlásit se</button>
     <div class="acct-note" id="acct-note"></div>
     <button class="ghost" onclick="closeAcct()">Zavřít</button>
-    <div class="acct-ver">MindHub v2.4</div>
+    <div class="acct-ver">MindHub v2.5</div>
   </div>
 </div>
 
@@ -963,7 +962,6 @@
   </div>
 </div>
 
-<!-- ═══ HABIT SHEET ═══ -->
 <div class="overlay" id="hb-sheet-overlay" onclick="if(event.target===this)HB.closeSheet()">
   <div class="sheet">
     <h3 id="hb-sheet-title">Nový návyk</h3>
@@ -979,7 +977,6 @@
   </div>
 </div>
 
-<!-- ═══ NOTES: sheets ═══ -->
 <div class="overlay" id="nt-name-overlay" onclick="if(event.target===this)NT.closeName()">
   <div class="sheet">
     <h3 id="nt-name-title">Nová složka</h3>
@@ -1001,8 +998,6 @@
 <div id="toast"></div>
 <script>
 // ── CONFIG ──
-// Поставь false, чтобы скрыть экран входа: приложение откроется сразу,
-// а Google спросит разрешение при первом сохранении/загрузке данных.
 const AUTH_ENABLED = true;
 
 const SHEET_ID = '1zG-PlP8ORyqz036hfjHDbH-thBda1JdZ2OPH1QaYqig';
@@ -1012,7 +1007,6 @@ const TX_SHEET = '📋 Транзакции';
 const PLAN_SHEET = '🎯 План';
 const MERGED_FOOD = { name: 'Еда и вкусности', parts: ['Еда', 'Вкусности'] };
 
-// "ru" — точные значения для таблицы (на них завязаны списки и формулы). Не менять!
 const TYPES = {
   expense: { ru: 'Расход', label: 'Výdaj' },
   income:  { ru: 'Доход',  label: 'Příjem' }
@@ -1076,10 +1070,93 @@ let accessToken = null;
 let localHistory = JSON.parse(localStorage.getItem('budget_history') || '[]');
 let budgetLimit = JSON.parse(localStorage.getItem('budget_limit') || 'null');
 let dataLoading = false;
-let dataState = null;      // { months: Map, planCats, incomePlan, loadedAt }
-let finRev = 0, finPending = 0;   // идёт ли локальная запись (чтобы фоновое обновление её не затёрло)
+let dataState = null;
+let finRev = 0, finPending = 0;
 const now0 = new Date();
 let selY = now0.getFullYear(), selM = now0.getMonth();
+let sparkRAF = 0;
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// MindHub — все фиксы применены (append, Outbox, offline, repair-ver)
+// ═══════════════════════════════════════════════════════════════════
+
+// ── CONFIG ──
+const AUTH_ENABLED = true;
+const SHEET_ID = '1zG-PlP8ORyqz036hfjHDbH-thBda1JdZ2OPH1QaYqig';
+const CLIENT_ID = '330349583357-kb7inj4ctcs5gnvdfpf9ktkeftrco36n.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+const TX_SHEET = '📋 Транзакции';
+const PLAN_SHEET = '🎯 План';
+const MERGED_FOOD = { name: 'Еда и вкусности', parts: ['Еда', 'Вкусности'] };
+
+const TYPES = {
+  expense: { ru: 'Расход', label: 'Výdaj' },
+  income:  { ru: 'Доход',  label: 'Příjem' }
+};
+
+const ICONS = {
+  home:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>',
+  chip:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>',
+  bus:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="3" width="16" height="14" rx="3"/><path d="M4 10h16M8 21l-1-4M16 21l1-4"/><circle cx="8.5" cy="14" r=".8" fill="currentColor"/><circle cx="15.5" cy="14" r=".8" fill="currentColor"/></svg>',
+  cart:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h2l2.4 10.4a1.5 1.5 0 0 0 1.5 1.1h7.6a1.5 1.5 0 0 0 1.5-1.2L21 8H7"/><circle cx="10.5" cy="20.5" r="1"/><circle cx="17.5" cy="20.5" r="1"/></svg>',
+  coffee: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17M7 5.5c0-1 .8-1 .8-2M11 5.5c0-1 .8-1 .8-2"/></svg>',
+  heart:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-9.3-9A5.2 5.2 0 0 1 12 6.4 5.2 5.2 0 0 1 21.3 11c-1.8 4.4-9.3 9-9.3 9z"/></svg>',
+  play:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>',
+  card:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h4"/></svg>',
+  shirt:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3L4 6l2 4 2-1v12h8V9l2 1 2-4-5-3a3 3 0 0 1-6 0z"/></svg>',
+  pulse:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg>',
+  basket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l3.5-6M19 9l-3.5-6M3 9h18l-1.6 9.4a2 2 0 0 1-2 1.6H6.6a2 2 0 0 1-2-1.6L3 9z"/><path d="M9 13v4M15 13v4"/></svg>',
+  bank:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6"/><path d="M4 9v11M20 9v11M8 13v4M12 13v4M16 13v4M2 20h20"/></svg>',
+  zap:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13.5H11L9.5 22 19 10h-6.5L13 2z"/></svg>',
+  coins:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="9" r="6"/><path d="M14.5 5.4a6 6 0 1 1-9.1 9.1"/><path d="M7 9h4M9 7v4"/></svg>',
+  note:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>'
+};
+
+const CATEGORIES = {
+  expense: [
+    { ru: 'Жильё и услуги',        label: 'Bydlení',    icon: 'home' },
+    { ru: 'Техника',               label: 'Technika',   icon: 'chip' },
+    { ru: 'Транспорт',             label: 'Doprava',    icon: 'bus' },
+    { ru: 'Еда',                   label: 'Jídlo',      icon: 'cart' },
+    { ru: 'Вкусности',             label: 'Pochutiny',  icon: 'coffee' },
+    { ru: 'Помощь / переводы',     label: 'Pomoc',      icon: 'heart' },
+    { ru: 'Развлечения',           label: 'Zábava',     icon: 'play' },
+    { ru: 'Кредиты',               label: 'Úvěry',      icon: 'card' },
+    { ru: 'Одежда',                label: 'Oblečení',   icon: 'shirt' },
+    { ru: 'Здоровье и спорт',      label: 'Zdraví',     icon: 'pulse' },
+    { ru: 'Быт / дом',             label: 'Domácnost',  icon: 'basket' },
+    { ru: 'Сбережения',            label: 'Úspory',     icon: 'bank' },
+    { ru: 'Непредвиденные расходы',label: 'Nečekané',   icon: 'zap' },
+  ],
+  income: [ { ru: 'Доходы', label: 'Příjmy', icon: 'coins' } ]
+};
+const ALL_CATEGORIES = [...CATEGORIES.expense, ...CATEGORIES.income];
+function findCategory(ru) { return ALL_CATEGORIES.find(c => c.ru === ru) || { label: ru, icon: 'note' }; }
+
+const PAYMENTS = [
+  { ru: 'Карта',               label: 'Karta' },
+  { ru: 'Наличные',            label: 'Hotovost' },
+  { ru: 'Банковский перевод',  label: 'Převod' },
+  { ru: 'Другое',              label: 'Jiné' },
+];
+const GROUP_LABELS = { 'Обязательное': 'Povinné', 'По желанию': 'Navíc', 'Откладывать': 'Spoření' };
+const CS_MONTHS = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+
+// ── STATE ──
+let currentType = 'expense';
+let selectedCat = null;
+let selectedPayment = 'Карта';
+let amountStr = '';
+let tokenClient = null;
+let accessToken = null;
+let localHistory = JSON.parse(localStorage.getItem('budget_history') || '[]');
+let budgetLimit = JSON.parse(localStorage.getItem('budget_limit') || 'null');
+let dataLoading = false;
+let dataState = null;
+let finRev = 0, finPending = 0;
+const now0 = new Date();
+let selY = now0.getFullYear(), selM = now0.getMonth();
+let sparkRAF = 0;
 
 // ── HELPERS ──
 const $ = id => document.getElementById(id);
@@ -1087,10 +1164,7 @@ const fmt = n => (Math.round(n * 100) / 100).toLocaleString('cs-CZ', { maximumFr
 const fmt0 = n => Math.round(n).toLocaleString('cs-CZ');
 function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 function daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
-function daysLeftInMonth() {
-  const n = new Date();
-  return daysInMonth(n.getFullYear(), n.getMonth()) - n.getDate() + 1;
-}
+function daysLeftInMonth() { const n = new Date(); return daysInMonth(n.getFullYear(), n.getMonth()) - n.getDate() + 1; }
 function monthKey(y, m) { return y * 12 + m; }
 
 let toastTimer = null;
@@ -1102,16 +1176,124 @@ function showToast(msg, type = 'success', ms = 2600) {
   toastTimer = setTimeout(() => t.className = '', ms);
 }
 
-// ── CACHE: мгновенный старт ──
-// Данные из таблицы копируются в localStorage. При запуске приложение сразу показывает сохранённое,
-// а свежие данные тихо подтягиваются в фоне и обновляют экран.
+// ── APPEND (безопасно, без гонок, без пустых строк) ──
+async function appendRow(sheet, values) {
+  await ensureAccessToken();
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheet)}!A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ values: [values] })
+  });
+  if (r.status === 401) { accessToken = null; await ensureAccessToken(); return appendRow(sheet, values); }
+  if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error?.message || r.status); }
+  const d = await r.json();
+  const m = (d.updates?.updatedRange || '').match(/![A-Z]+(\d+)/);
+  return m ? +m[1] : 0;
+}
+
+// ── OUTBOX (offline-очередь) ──
+const Outbox = (() => {
+  const KEY = 'mh-outbox';
+  let q = [];
+  try { q = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(q)); } catch (e) {} };
+  const listeners = new Set();
+  const emit = () => listeners.forEach(fn => { try { fn(q.length); } catch (e) {} });
+  let running = false;
+
+  async function flush() {
+    if (running || !q.length || !navigator.onLine) return;
+    running = true;
+    const pending = q.slice();
+    for (const item of pending) {
+      try { await replay(item); }
+      catch (e) {
+        const m = String(e && e.message || e);
+        if (/^4\d\d\b/.test(m) || /400|invalid|bad request/i.test(m)) {
+          const i = q.indexOf(item); if (i >= 0) q.splice(i, 1); save(); continue;
+        }
+        break;
+      }
+      const i = q.indexOf(item); if (i >= 0) q.splice(i, 1); save(); emit();
+    }
+    running = false;
+  }
+
+  async function replay(item) {
+    if (item.kind === 'tx') { await appendRow(TX_SHEET, item.row); return; }
+    if (item.kind === 'habit-log') {
+      if (!item.row) {
+        item.row = await HB.util.appendRaw('🗓 Отметки привычек', [
+          Math.round((new Date(item.ds + 'T00:00:00') - new Date(1899, 11, 30)) / 86400000),
+          item.id, item.name, item.done, "'" + item.ds.slice(0, 7)
+        ]);
+      } else {
+        await HB.util.api(`/values/${HB.util.rng('🗓 Отметки привычек', 'D' + item.row)}?valueInputOption=RAW`,
+          { method: 'PUT', body: JSON.stringify({ values: [[item.done]] }) });
+      }
+      return;
+    }
+    if (item.kind === 'put-raw') {
+      await HB.util.api(`/values/${HB.util.rng(item.sheet, item.a1)}?valueInputOption=RAW`,
+        { method: 'PUT', body: JSON.stringify({ values: [item.values] }) });
+      return;
+    }
+  }
+
+  return {
+    push(item) { q.push(item); save(); emit(); if (navigator.onLine) setTimeout(flush, 200); },
+    flush,
+    get size() { return q.length; },
+    onchange(fn) { listeners.add(fn); return () => listeners.delete(fn); },
+    dump() { console.log('[Outbox]', q); return q; }
+  };
+})();
+window.Outbox = Outbox;
+
+window.addEventListener('online', () => setTimeout(() => Outbox.flush(), 500));
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') Outbox.flush(); });
+setTimeout(() => Outbox.flush(), 3000);
+
+// ── OFFLINE BANNER ──
+(function () {
+  const b = document.getElementById('offline-banner');
+  if (!b) return;
+  const upd = () => {
+    if (!navigator.onLine) {
+      b.textContent = (window.MH && MH.lang === 'ru') ? 'Офлайн — изменения сохранятся позже' : 'Offline — změny se uloží později';
+      b.classList.add('show');
+    } else if (Outbox.size > 0) {
+      b.textContent = (window.MH && MH.lang === 'ru') ? 'Отправляю отложенное…' : 'Odesílám odložené…';
+      b.classList.add('show');
+    } else {
+      b.classList.remove('show');
+    }
+  };
+  window.addEventListener('online', upd);
+  window.addEventListener('offline', upd);
+  Outbox.onchange(() => upd());
+  upd();
+})();
+
+// ── CACHE ──
 const MHC = (() => {
   const P = 'mh-cache1:' + SHEET_ID.slice(0, 10) + ':';
   const MAX = 3000000;
   const getters = {}, timers = {};
   function get(k) { try { const t = localStorage.getItem(P + k); return t ? JSON.parse(t) : null; } catch (e) { return null; } }
   function set(k, v) { try { const t = JSON.stringify(v); if (t.length > MAX) return false; localStorage.setItem(P + k, t); return true; } catch (e) { return false; } }
-  function save(k) { const g = getters[k]; if (!g) return; let v = null; try { v = g(); } catch (e) {} if (v) set(k, v); }
+  function save(k) {
+    const g = getters[k]; if (!g) return;
+    let v = null; try { v = g(); } catch (e) {}
+    if (!v) return;
+    try {
+      const t = JSON.stringify(v);
+      if (localStorage.getItem(P + k) === t) return;
+      if (t.length > MAX) return;
+      localStorage.setItem(P + k, t);
+    } catch (e) {}
+  }
   function reg(k, fn) { getters[k] = fn; }
   function sched(k) { clearTimeout(timers[k]); timers[k] = setTimeout(() => { timers[k] = 0; save(k); }, 400); }
   function flush() { Object.keys(timers).forEach(k => { if (timers[k]) { clearTimeout(timers[k]); timers[k] = 0; save(k); } }); }
@@ -1134,7 +1316,6 @@ function slotSet(el, text) {
   const pat = s => s.replace(/\d/g, '#');
   el._slot = text;
   if (pat(prev) !== pat(text) || el.childElementCount !== text.length) {
-    // rebuild: изменилась структура (количество/позиции цифр)
     el.innerHTML = '';
     for (const ch of text) {
       if (/\d/.test(ch)) {
@@ -1150,7 +1331,6 @@ function slotSet(el, text) {
     }
     return;
   }
-  // animate existing columns (структура та же — крутим барабаны)
   const cols = el.querySelectorAll('.ds');
   let ci = 0;
   for (let i = 0; i < text.length; i++) {
@@ -1170,6 +1350,7 @@ function slotSet(el, text) {
 // ── GOOGLE AUTH ──
 function loadGsi() {
   return new Promise(resolve => {
+    if (window.google && google.accounts && google.accounts.oauth2) return resolve();
     const s = document.createElement('script');
     s.src = 'https://accounts.google.com/gsi/client';
     s.onload = resolve;
@@ -1216,11 +1397,18 @@ async function fetchUserInfo() {
   MHC.authed();
   renderCategories(); renderPayments(); renderPad();
   refreshData();
-  // остальные разделы тихо подгружаем в фоне — и кэш заполняется, даже если вкладку не открывали
   if (window.HB) setTimeout(() => { try { HB.refresh(); } catch (e) {} }, 150);
   if (window.NT) setTimeout(() => { try { NT.prefetch(); } catch (e) {} }, 300);
-  // ремонт таблицы — раз в 12 часов, а не при каждом запуске
-  if (window.HB) { let last = 0; try { last = +localStorage.getItem('mh-repair-at') || 0; } catch (e) {} if (Date.now() - last > 12 * 3600e3) { try { localStorage.setItem('mh-repair-at', String(Date.now())); } catch (e) {} setTimeout(() => HB.repair(), 5000); } }
+  // repair: только при новой версии логики
+  if (window.HB) {
+    const REPAIR_VER = 2;
+    let ver = 0, last = 0;
+    try { ver = +localStorage.getItem('mh-repair-ver') || 0; last = +localStorage.getItem('mh-repair-at') || 0; } catch (e) {}
+    if (ver < REPAIR_VER || Date.now() - last > 7 * 24 * 3600e3) {
+      try { localStorage.setItem('mh-repair-ver', String(REPAIR_VER)); localStorage.setItem('mh-repair-at', String(Date.now())); } catch (e) {}
+      setTimeout(() => HB.repair(), 5000);
+    }
+  }
 }
 const accRGB = () => (getComputedStyle(document.body).getPropertyValue('--acc-rgb') || '154,149,255').trim();
 function openAcct() {
@@ -1239,14 +1427,13 @@ function openAcct() {
 function closeAcct() { document.getElementById('acct-overlay').classList.remove('open'); }
 function doSignOut() { if (window.MHProxy && MHProxy.on) { MHProxy.off(); return; } signOut(); }
 function signOut() {
-  if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
+  if (accessToken && google.accounts.oauth2.revoke) google.accounts.oauth2.revoke(accessToken, () => {});
   accessToken = null; dataState = null; MHC.clear();
   location.reload();
 }
 function showAuthError(msg) { const e = $('auth-error'); e.textContent = msg; e.style.display = 'block'; }
-</script>
-<script>
-// ── DATA (Google Sheets) ──
+
+// ── DATA ──
 function parseTxDate(v) {
   if (v == null || v === '') return null;
   if (typeof v === 'number') {
@@ -1261,7 +1448,6 @@ function parseTxDate(v) {
   return null;
 }
 
-// собирает dataState из плоского списка транзакций (свежие данные и кэш — один путь)
 function applyFin(txs, planCats, incomePlan, loadedAt) {
   const months = new Map();
   for (let i = txs.length - 1; i >= 0; i--) {
@@ -1327,10 +1513,9 @@ async function refreshData(force, manual) {
       if (!amt) return;
       txs.push({ ...pd, type: r[1], cat: r[2] || '', desc: r[3] || '', pay: r[5] || '', amt });
     });
-    // от новых к старым (в один день новее та строка, что ниже в таблице)
     txs.reverse();
     txs.sort((a, b) => (b.y * 372 + b.m * 31 + b.d) - (a.y * 372 + a.m * 31 + a.d));
-    if (finRev !== rev0 || finPending > 0) { if (dataState) dataState.loadedAt = 0; return; }   // пока читали, ты добавил запись — оставляем локальное
+    if (finRev !== rev0 || finPending > 0) { if (dataState) dataState.loadedAt = 0; return; }
     applyFin(txs, planCats, Number((incR.values || [[0]])[0][0]) || 0, Date.now());
   } catch (e) {
     if (!dataState) {
@@ -1358,10 +1543,8 @@ function shiftMonth(dir) {
   renderDash();
 }
 
-// ── RENDER: ALL ──
 function renderAll() { renderDash(); renderPlan(); renderHistory(); renderLimit(); MHC.sched('fin'); }
 
-// ── RENDER: DASHBOARD ──
 function renderDash() {
   $('dash-month').innerHTML = CS_MONTHS[selM] + ' <span>' + selY + '</span>';
   const n = new Date();
@@ -1463,8 +1646,8 @@ function renderRecent(mo) {
     : '<div class="empty">Žádné záznamy</div>';
 }
 
-// ── SPARKLINE ──
 function drawSpark(mo) {
+  cancelAnimationFrame(sparkRAF);
   const cv = $('spark');
   const dpr = window.devicePixelRatio || 1;
   const W = cv.clientWidth || 320, H = 64;
@@ -1486,19 +1669,11 @@ function drawSpark(mo) {
   const px = i => 4 + i / Math.max(1, cum.length - 1) * (W - 8);
   const py = v => H - 8 - (v / max) * (H - 18);
 
-  // fill
   const grad = ctx.createLinearGradient(0, 0, 0, H);
   grad.addColorStop(0, `rgba(${accRGB()},.28)`);
   grad.addColorStop(1, `rgba(${accRGB()},0)`);
-  ctx.beginPath();
-  ctx.moveTo(px(0), py(cum[0]));
-  cum.forEach((v, i) => ctx.lineTo(px(i), py(v)));
-  ctx.lineTo(px(cum.length - 1), H - 4); ctx.lineTo(px(0), H - 4); ctx.closePath();
-  ctx.fillStyle = grad; ctx.fill();
 
-  // line — постепенное «прорисовывание»
   const total = cum.length;
-  let step = 0;
   const t0 = performance.now();
   function frame(t) {
     const p = Math.min(1, (t - t0) / 550);
@@ -1514,33 +1689,28 @@ function drawSpark(mo) {
     for (let i = 1; i < upto; i++) ctx.lineTo(px(i), py(cum[i]));
     ctx.strokeStyle = `rgb(${accRGB()})`; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     ctx.stroke();
-    // endpoint
     const ex = px(upto - 1), ey = py(cum[upto - 1]);
     ctx.beginPath(); ctx.arc(ex, ey, 3.2, 0, 7); ctx.fillStyle = `rgb(${accRGB()})`; ctx.fill();
     ctx.beginPath(); ctx.arc(ex, ey, 6.5, 0, 7); ctx.fillStyle = `rgba(${accRGB()},.25)`; ctx.fill();
-    if (p < 1) requestAnimationFrame(frame);
+    if (p < 1) sparkRAF = requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+  sparkRAF = requestAnimationFrame(frame);
 }
 </script>
 <script>
 // ═════════ ПРИВЫЧКИ (HB) ═════════
 (function () {
 
-
-// Новые листы (создаются автоматически при первом запуске, остальные листы не трогаются)
 const HAB_SHEET = '✅ Привычки';
 const LOG_SHEET = '🗓 Отметки привычек';
-const FIRST_ROW = 3;                         // строка 1 — заголовок, 2 — шапка, данные с 3-й (как в «Транзакциях»)
+const FIRST_ROW = 3;
 
-// В таблице дни хранятся по-русски (как остальной лист), на экране — по-чешски
 const DAYS_RU = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const DAYS_CS = ['Po','Út','St','Čt','Pá','So','Ne'];
 const CS_MONTHS = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 const CS_MONTHS_GEN = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince'];
-const CS_WEEKDAYS = ['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota']; // getDay()
+const CS_WEEKDAYS = ['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
 
-// Стартовые привычки (записываются один раз при создании листа; потом правятся в приложении или в таблице)
 const SEED_HABITS = [
   { name: 'Чешский 30+ минут',                  icon: 'book' },
   { name: 'Фрукты',                             icon: 'apple' },
@@ -1571,14 +1741,13 @@ const ICONS = {
 const PICKABLE = ['book','apple','ban','dumbbell','walk','drop','moon','pen','heart','sun','leaf','clock','music','star','coins'];
 const icon = k => ICONS[k] || ICONS.star;
 
-// ═════════ HELPERS ═════════
 const $ = id => document.getElementById('hb-' + id);
 const pad = n => String(n).padStart(2, '0');
 const dstr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const parseD = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
-  const dateSerial = ds => Math.round((parseD(ds) - new Date(1899, 11, 30)) / 86400000);
+const dateSerial = ds => Math.round((parseD(ds) - new Date(1899, 11, 30)) / 86400000);
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
-const wdMon = d => (d.getDay() + 6) % 7;            // Пн = 0
+const wdMon = d => (d.getDay() + 6) % 7;
 function todayStr() { return dstr(new Date()); }
 const pct = x => Math.round(x * 100) + ' %';
 const dnu = n => n === 1 ? 'den' : (n >= 2 && n <= 4 ? 'dny' : 'dní');
@@ -1598,12 +1767,10 @@ function daysText(days) {
   return days.map(i => DAYS_CS[i]).join(', ');
 }
 
-
-// ═════════ STATE ═════════
-let habits = [];              // { id, name, icon, days:[0..6], created:'YYYY-MM-DD', archived, row }
-let log = new Map();          // 'YYYY-MM-DD|id' -> { row, done }
-let byHabit = new Map();      // id -> Map(date -> 0/1)
-let firstLog = new Map();     // id -> earliest date
+let habits = [];
+let log = new Map();
+let byHabit = new Map();
+let firstLog = new Map();
 let loadedAt = 0, dataLoading = false, ready = false;
 let currentView = 'today';
 let selDate = todayStr();
@@ -1612,7 +1779,6 @@ const n0 = new Date();
 let selY = n0.getFullYear(), selM = n0.getMonth();
 let editingId = null, formIcon = 'star', formDays = [0,1,2,3,4,5,6];
 
-// ═════════ SHEETS API ═════════
 async function api(path, opts = {}) {
   const go = () => fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}${path}`, {
     ...opts, headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' }
@@ -1626,21 +1792,19 @@ async function api(path, opts = {}) {
 const rng = (sheet, a) => encodeURIComponent(`'${sheet}'!${a}`);
 const putValues = (sheet, a, values) =>
   api(`/values/${rng(sheet, a)}?valueInputOption=USER_ENTERED`, { method: 'PUT', body: JSON.stringify({ values }) });
-async function nextFreeRow(sheet) {            // как в U-Budget: первая свободная строка по столбцу A
+async function nextFreeRow(sheet) {
   const d = await api(`/values/${rng(sheet, 'A:A')}`);
   return Math.max((d.values || []).length + 1, FIRST_ROW);
 }
 let writeQueue = Promise.resolve(), pending = 0;
 let writeRev = 0;
 function enqueue(fn) {
-  writeRev++; pending++; setSync();
+  writeRev++; pending++;
   const p = writeQueue.then(fn);
-  writeQueue = p.catch(() => {}).then(() => { pending--; setSync(); });
+  writeQueue = p.catch(() => {}).then(() => { pending--; });
   return p;
 }
-function setSync() {}
 
-// ── создание листов при первом запуске ──
 const rgb = h => ({ red: parseInt(h.slice(0, 2), 16) / 255, green: parseInt(h.slice(2, 4), 16) / 255, blue: parseInt(h.slice(4, 6), 16) / 255 });
 function sheetFormat(id, ncols, widths, extra = []) {
   const cell = (r0, r1, fmt, fields) => ({ repeatCell: { range: { sheetId: id, startRowIndex: r0, endRowIndex: r1, startColumnIndex: 0, endColumnIndex: ncols }, cell: { userEnteredFormat: fmt }, fields } });
@@ -1700,8 +1864,6 @@ async function ensureSheets() {
   await api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: fmt }) });
 }
 
-// ═════════ РЕМОНТ ТАБЛИЦЫ (один раз, тихо) ═════════
-// колонка «Месяц» в журнале привычек — обычный текст (формула давала #ERROR!)
 function fixMonths(rows) {
   const data = [];
   rows.forEach((r, i) => {
@@ -1711,34 +1873,28 @@ function fixMonths(rows) {
   if (data.length) api('/values:batchUpdate', { method: 'POST', body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data }) }).catch(() => {});
 }
 const RU_MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-// 24 месяца подряд с сентября 2026 — ровно как столбцы B:Y листа «Отчёт по месяцам»
 const REPORT_MONTHS = Array.from({ length: 24 }, (_, i) => `${2026 + Math.floor((8 + i) / 12)} \u00b7 ${RU_MONTHS[(8 + i) % 12]}`);
 async function repair() {
   try {
     const meta = await api('?fields=sheets.properties(sheetId,title)');
     const ids = new Map((meta.sheets || []).map(s => [s.properties.title, s.properties.sheetId]));
     const PLAN = '🎯 План', CH = '📈 Графики';
-    // 1) журнал привычек
     if (ids.has(LOG_SHEET)) {
       const lg = await api(`/values/${rng(LOG_SHEET, 'A' + FIRST_ROW + ':E')}?valueRenderOption=UNFORMATTED_VALUE`);
       fixMonths(lg.values || []);
     }
-    // 2) «План» и «Графики»: списки месяцев с сентября 2026
     if (!ids.has(PLAN) || !ids.has(CH)) return;
     const q = [`'${PLAN}'!J2`, `'${CH}'!B43`, `'${CH}'!C72`].map(r => 'ranges=' + encodeURIComponent(r)).join('&');
     const chk = await api(`/values:batchGet?${q}&valueRenderOption=FORMULA`);
     const v = chk.valueRanges.map(r => (r.values && r.values[0] && r.values[0][0]) || '');
-    if (v[0] === REPORT_MONTHS[0] && v[1] === REPORT_MONTHS[0] && String(v[2]).includes('-8')) return;   // уже исправлено
+    if (v[0] === REPORT_MONTHS[0] && v[1] === REPORT_MONTHS[0] && String(v[2]).includes('-8')) return;
     const str = t => ({ userEnteredValue: { stringValue: t } });
-    const fml = t => ({ userEnteredValue: { formulaValue: t } });     // формулы в этом поле — всегда английские, без привязки к языку таблицы
+    const fml = t => ({ userEnteredValue: { formulaValue: t } });
     const col = (sheetId, r0, c0, cells) => ({ updateCells: { start: { sheetId, rowIndex: r0, columnIndex: c0 }, rows: cells.map(c => ({ values: [c] })), fields: 'userEnteredValue' } });
     const grid = (sheetId, r0, c0, rows) => ({ updateCells: { start: { sheetId, rowIndex: r0, columnIndex: c0 }, rows: rows.map(r => ({ values: r })), fields: 'userEnteredValue' } });
     const reqs = [];
-    // «План»: J2:J25
     reqs.push(col(ids.get(PLAN), 1, 9, REPORT_MONTHS.map(str)));
-    // «Графики»: B43:B66 — список месяцев
     reqs.push(col(ids.get(CH), 42, 1, REPORT_MONTHS.map(str)));
-    // «Графики»: годовой блок (строки 72–83): месяц n календарного года → номер столбца отчёта (сентябрь 2026 = 1)
     const yr = [];
     for (let n = 1; n <= 12; n++) {
       const r = 71 + n;
@@ -1751,13 +1907,11 @@ async function repair() {
       ]);
     }
     reqs.push(grid(ids.get(CH), 71, 2, yr));
-    // выбор года: 2026, 2027, 2028
     reqs.push({ setDataValidation: { range: { sheetId: ids.get(CH), startRowIndex: 2, endRowIndex: 3, startColumnIndex: 2, endColumnIndex: 3 }, rule: { condition: { type: 'ONE_OF_LIST', values: ['2026', '2027', '2028'].map(x => ({ userEnteredValue: x })) }, showCustomUi: true, strict: false } } });
     await api(':batchUpdate', { method: 'POST', body: JSON.stringify({ requests: reqs }) });
-  } catch (e) { /* ремонт необязателен — приложение работает и без него */ }
+  } catch (e) { /* repair необязателен */ }
 }
 
-// ═════════ LOAD ═════════
 async function refreshData(force, manual) {
   if (dataLoading) return;
   if (ready && !force && Date.now() - loadedAt < 30000) { renderAll(); return; }
@@ -1770,11 +1924,11 @@ async function refreshData(force, manual) {
     const read = () => api(`/values:batchGet?${q}&valueRenderOption=UNFORMATTED_VALUE`);
     let data;
     try { data = await read(); }
-    catch (e) {                      // листов ещё нет (первый запуск) — создаём и читаем заново
+    catch (e) {
       if (!/range|not found|400/i.test(String((e && e.message) || e))) throw e;
       await ensureSheets(); data = await read();
     }
-    if (writeRev !== rv || pending > 0) return;      // пока читали, ты отметил привычку — не затираем
+    if (writeRev !== rv || pending > 0) return;
     const [hR, lR] = data.valueRanges;
 
     habits = [];
@@ -1814,7 +1968,6 @@ function reindex() {
   });
 }
 
-// ═════════ STATS ═════════
 const active = () => habits.filter(h => !h.archived);
 const isDone = (h, ds) => byHabit.get(h.id)?.get(ds) === 1;
 function startOf(h) { let s = h.created; const f = firstLog.get(h.id); if (f && f < s) s = f; return s; }
@@ -1847,7 +2000,6 @@ function bestStreak(h) {
   }
   return best;
 }
-// habits, которые «в игре» в конкретный день
 function dayHabits(ds) { const d = parseD(ds); return active().filter(h => scheduled(h, d) && ds >= startOf(h)); }
 function dayStat(ds) { const hs = dayHabits(ds); return { total: hs.length, done: hs.filter(h => isDone(h, ds)).length }; }
 function perfectStreak() {
@@ -1871,8 +2023,8 @@ function rangeStat(fromDs, toDs) {
 const monthStart = (y, m) => `${y}-${pad(m + 1)}-01`;
 const monthEnd = (y, m) => `${y}-${pad(m + 1)}-${pad(new Date(y, m + 1, 0).getDate())}`;
 const weekStart = d => dstr(addDays(d, -wdMon(d)));
+const monthKey = (y, m) => y * 12 + m;
 
-// ═════════ NAV ═════════
 function sub(name) {
   currentView = name;
   const names = ['today', 'over', 'manage', 'shifts'];
@@ -1898,7 +2050,6 @@ function shiftMonth(delta) {
   if (monthKey(y, m) > monthKey(n0.getFullYear(), new Date().getMonth())) return;
   selY = y; selM = m; renderOver();
 }
-const monthKey = (y, m) => y * 12 + m;
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState !== 'visible' || !ready || !$('sub-today').offsetParent) return;
   const t = todayStr();
@@ -1906,7 +2057,6 @@ document.addEventListener('visibilitychange', () => {
   if (Date.now() - loadedAt > 60000) refreshData(true); else renderAll();
 });
 
-// ═════════ RENDER ═════════
 function renderAll() { renderToday(); renderOver(); renderManage(); renderInsight(); MHC.sched('hab'); }
 MHC.reg('hab', () => ready ? { habits, log: [...log.entries()] } : null);
 function hydrate(c) {
@@ -1926,7 +2076,7 @@ function renderInsight() {
   const bars = [0, 1, 2, 3, 4, 5, 6].map(i => {
     const ds = dstr(addDays(parseD(ws), i)), st = i <= wd ? dayStat(ds) : { total: 0, done: 0 };
     const h = st.total ? Math.max(8, st.done / st.total * 100) : 8;
-    return `<i class="${i === wd ? 'today' : ''}" style="height:${h}%;${st.total && st.done === st.total ? '' : ''}"></i>`;
+    return `<i class="${i === wd ? 'today' : ''}" style="height:${h}%;"></i>`;
   }).join('');
   let delta = '';
   if (p0 !== null && cur.sch) { const d = p1 - p0; if (d !== 0) delta = `<small class="${d < 0 ? 'up' : 'down'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)} p. b. oproti minulému týdnu</small>`; }
@@ -2017,7 +2167,7 @@ function renderOver() {
     const ds = `${selY}-${pad(selM + 1)}-${pad(day)}`, st = dayStat(ds), fut = ds > t;
     const f = st.total ? st.done / st.total : 0;
     const style = f > 0 ? `background:rgba(${accRGB()},${(0.18 + 0.82 * f).toFixed(2)})` : '';
-    cells += `<div class="d${fut ? ' fut' : ''}${f >= 1 ? ' full' : (f >= .6 ? ' full' : '')}${ds === t ? ' today' : ''}" style="${style}" onclick="HB.goDay('${ds}')">${day}</div>`;
+    cells += `<div class="d${fut ? ' fut' : ''}${f >= 1 ? ' full' : ''}${ds === t ? ' today' : ''}" style="${style}" onclick="HB.goDay('${ds}')">${day}</div>`;
   }
   $('hm').innerHTML = cells;
 
@@ -2082,7 +2232,6 @@ function renderManage() {
     ar.map(h => `<div class="mrow arch"><div class="ic">${icon(h.icon)}</div><div class="inf"><div class="n">${escapeHtml(h.name)}</div><div class="c">${daysText(h.days)}</div></div><button class="pill-btn" onclick="HB.restoreHabit('${h.id}')">Obnovit</button></div>`).join('') + '</div>' : '';
 }
 
-// ═════════ ACTIONS ═════════
 function toggleHabit(id, ds) {
   const h = habits.find(x => x.id === id); if (!h) return;
   const key = ds + '|' + id;
@@ -2093,17 +2242,16 @@ function toggleHabit(id, ds) {
   enqueue(async () => {
     if (rec.row) await putValues(LOG_SHEET, `D${rec.row}`, [[nv]]);
     else {
-      const row = await nextFreeRow(LOG_SHEET);
-      await putValues(LOG_SHEET, `A${row}:E${row}`, [[dateSerial(ds), id, h.name, nv, "'" + ds.slice(0, 7)]]);
+      const row = await HB.util.appendRaw(LOG_SHEET, [dateSerial(ds), id, h.name, nv, "'" + ds.slice(0, 7)]);
       rec.row = row;
     }
   }).catch(e => {
-    rec.done = prev; reindex(); renderAll();
-    showToast('Uložení se nepodařilo:\n' + (e.message || e), 'error', 3600);
+    // в Outbox — не откатываем UI
+    Outbox.push({ kind: 'habit-log', ds, id, name: h.name, done: nv, row: rec.row });
+    showToast('Uloží se později (offline)', 'warn', 1800);
   });
 }
 
-// ── форма привычки ──
 function openSheet(id) {
   editingId = id || null;
   const h = id ? habits.find(x => x.id === id) : null;
@@ -2137,7 +2285,7 @@ async function saveHabit() {
       h.name = name; h.icon = formIcon; h.days = [...formDays];
     } else {
       const id = 'h' + Date.now().toString(36), created = todayStr();
-      const row = await enqueue(async () => { const r = await nextFreeRow(HAB_SHEET); await putValues(HAB_SHEET, `A${r}:F${r}`, [[id, name, formIcon, dayTxt, created, 'Активна']]); return r; });
+      const row = await enqueue(async () => HB.util.appendRaw(HAB_SHEET, [id, name, formIcon, dayTxt, created, 'Активна']));
       habits.push({ id, name, icon: formIcon, days: [...formDays], created, archived: false, row });
     }
     closeSheet(); renderAll(); showToast('Uloženo');
@@ -2164,14 +2312,25 @@ window.HB = {
   toggleNth(i) { const r = document.querySelectorAll('#hb-today-list .hrow')[i]; if (r) r.click(); },
   goToday() { goDay(todayStr()); },
   openSheet, closeSheet, saveHabit, archiveHabit, restoreHabit, toggleFormDay, repair,
-  util: { api, rng, nextFreeRow, rgb, sheetFormat, enqueue },
+  util: {
+    api, rng, nextFreeRow, rgb, sheetFormat, enqueue,
+    appendRaw: async (sheet, values) => {
+      await ensureAccessToken();
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(sheet)}!A1:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
+      const r = await fetch(url, { method: 'POST', headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' }, body: JSON.stringify({ values: [values] }) });
+      if (r.status === 401) { accessToken = null; await ensureAccessToken(); return HB.util.appendRaw(sheet, values); }
+      if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error?.message || r.status); }
+      const d = await r.json();
+      const m = (d.updates?.updatedRange || '').match(/![A-Z]+(\d+)/);
+      return m ? +m[1] : 0;
+    }
+  },
   setIcon(k) { formIcon = k; renderForm(); }
 };
 })();
 </script>
 <script>
-// ═════════ POZNÁMKY (NT) ═════════
-// Папки и заметки лежат в одном листе «📝 Заметки»: одна строка = одна папка или заметка.
+// ═════════ ПОЗНАМКИ (NT) ═════════
 (function () {
   const U = HB.util;
   const SHEET = '📝 Заметки', FIRST = 3;
@@ -2195,7 +2354,6 @@ window.HB = {
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>'
   };
 
-  // ── state ──
   let items = [], ready = false, loading = false, loadedAt = 0, rev = 0;
   let cwd = '', openId = null, curMode = 'edit', query = '';
   let saveTimer = null; const dirty = new Set();
@@ -2217,7 +2375,6 @@ window.HB = {
   const noteCount = id => descendants(id).filter(x => x.type === 'note').length;
   const cmp = (a, b) => folderName(a).localeCompare(folderName(b), 'cs', { sensitivity: 'base', numeric: true });
 
-  // ── Sheets ──
   const R = a => U.rng(SHEET, a);
   const putRaw = (a, values) => U.api(`/values/${R(a)}?valueInputOption=RAW`, { method: 'PUT', body: JSON.stringify({ values }) });
   const rowOf = it => [it.id, it.type === 'folder' ? 'Папка' : 'Заметка', it.parent, it.title, it.text.slice(0, MAXLEN), it.created, it.modified, it.deleted ? 'Удалена' : 'Активна'];
@@ -2255,7 +2412,7 @@ window.HB = {
         if (!/range|not found|400/i.test(String((e && e.message) || e))) throw e;
         await ensureSheet(); d = await read();
       }
-      if (rev !== rev0 || dirty.size) { loadedAt = 0; return; }      // пока читали, ты правил заметки — оставляем локальное
+      if (rev !== rev0 || dirty.size) { loadedAt = 0; return; }
       items = (d.values || []).map((r, i) => ({
         row: FIRST + i, id: String(r[0] || '').trim(), type: r[1] === 'Папка' ? 'folder' : 'note',
         parent: String(r[2] || '').trim(), title: String(r[3] == null ? '' : r[3]), text: String(r[4] == null ? '' : r[4]),
@@ -2271,7 +2428,6 @@ window.HB = {
     } finally { loading = false; }
   }
 
-  // ── saving ──
   function setState(s) { const el = $('state'); if (el) el.textContent = s === 'saving' ? 'Ukládám…' : s === 'saved' ? 'Uloženo' : s === 'error' ? 'Chyba ukládání' : s === 'dirty' ? '…' : ''; }
   function touch(it) { rev++; MHC.sched('nt'); it.modified = nowStr(); dirty.add(it.id); setState('dirty'); clearTimeout(saveTimer); saveTimer = setTimeout(flush, 900); }
   function flush() {
@@ -2285,12 +2441,20 @@ window.HB = {
     setState('saving');
     return U.enqueue(async () => {
       if (it.row) await putRaw(`A${it.row}:H${it.row}`, [rowOf(it)]);
-      else { const r = await U.nextFreeRow(SHEET); await putRaw(`A${r}:H${r}`, [rowOf(it)]); it.row = r; }
+      else { const r = await U.appendRaw(SHEET, rowOf(it)); it.row = r; }
     }).then(() => { MHC.sched('nt'); if (!dirty.size) setState('saved'); })
-      .catch(e => { dirty.add(it.id); setState('error'); showToast('Uložení se nepodařilo:\n' + (e.message || e), 'error', 3600); });
+      .catch(e => {
+        dirty.add(it.id);
+        setState('error');
+        if (it.row) {
+          Outbox.push({ kind: 'put-raw', sheet: SHEET, a1: `A${it.row}:H${it.row}`, values: rowOf(it) });
+          showToast('Uloží se později (offline)', 'warn', 1800);
+        } else {
+          showToast('Uložení se nepodařilo:\n' + (e.message || e), 'error', 3600);
+        }
+      });
   }
 
-  // ── markdown ──
   function inline(raw) {
     const parts = String(raw).split(/(`[^`]+`)/g);
     return parts.map((p, i) => {
@@ -2328,7 +2492,6 @@ window.HB = {
   }
   const findNote = t => { const k = t.trim().toLowerCase(); return live().find(x => x.type === 'note' && x.title.trim().toLowerCase() === k); };
 
-  // ── list ──
   function snippet(it, q) {
     const t = it.text.replace(/\r/g, '');
     if (q) {
@@ -2373,7 +2536,6 @@ window.HB = {
     box.innerHTML = html;
   }
 
-  // ── editor ──
   const desk = () => window.matchMedia('(min-width: 900px)').matches;
   function showPane(edit) { document.getElementById('view-notes').classList.toggle('editing', !!edit); $('list-pane').style.display = edit ? 'none' : 'block'; $('edit-pane').style.display = edit ? 'block' : 'none'; }
   function grow() { const x = $('x'); x.style.height = 'auto'; x.style.height = Math.max(x.scrollHeight, window.innerHeight * 0.46) + 'px'; }
@@ -2400,7 +2562,6 @@ window.HB = {
     if (it && !it.row && !it.title.trim() && !it.text.trim()) { items = items.filter(x => x !== it); dirty.delete(it.id); }
     openId = null; showPane(false); renderList();
   }
-  // прокручивает так, чтобы строка с курсором не пряталась под панелью кнопок
   function reveal() {
     const x = $('x'), tb = $('tools'); if (!x || x.style.display === 'none') return;
     const cs = getComputedStyle(x), mir = document.createElement('div');
@@ -2443,7 +2604,6 @@ window.HB = {
     it.text = lines.join('\n'); $('x').value = it.text; touch(it); setMode('view');
   }
 
-  // ── create / rename / move / delete ──
   function createNote(parent, title) {
     const t = nowStr();
     const it = { row: 0, id: uid('n'), type: 'note', parent: parent || '', title: title || '', text: '', created: t, modified: t, deleted: false };
@@ -2461,7 +2621,7 @@ window.HB = {
   function closeAct() { $('act-overlay').classList.remove('open'); }
   const actBtn = (icon, label, fn, cls) => `<button class="nt-act ${cls || ''}" onclick="${fn}">${icon}<span>${label}</span></button>`;
 
-  function pickFolder(it, done) {          // выбор папки для переноса
+  function pickFolder(it, done) {
     const bad = new Set([it.id, ...(it.type === 'folder' ? descendants(it.id).map(x => x.id) : [])]);
     const rows = [`<button class="nt-act ${it.parent === '' ? 'sel' : ''}" onclick="NT._mv('')">${IC.folder}<span>Poznámky (kořen)</span></button>`];
     (function walk(pid, depth) {
@@ -2482,7 +2642,6 @@ window.HB = {
   function removeItem(it) {
     const all = [it, ...(it.type === 'folder' ? descendants(it.id) : [])];
     all.forEach(x => { x.deleted = true; x.modified = nowStr(); if (x.row) persist(x); });
-    // заметки, которых ещё нет в таблице, просто выбрасываем
     items = items.filter(x => !(x.deleted && !x.row));
   }
 
@@ -2531,7 +2690,7 @@ window.HB = {
     save() { flush(); showToast('Uloženo', 'success'); },
     toggleMode() { if (openId) setMode(curMode === 'edit' ? 'view' : 'edit'); },
     focusBody() { if (openId && curMode === 'edit') $('x').focus(); },
- closeName, okName, closeAct,
+    closeName, okName, closeAct,
     _t() { return { items, ready }; }
   };
   function render() { MHC.sched('nt'); if (openId && !desk()) return; renderList(); }
@@ -2539,7 +2698,6 @@ window.HB = {
   api.hydrate = c => { if (ready || !c || !Array.isArray(c.items)) return; items = c.items; ready = true; loadedAt = 0; render(); };
   api.prefetch = () => { if (!ready || Date.now() - loadedAt > 60000) load(true); };
 
-  // делегирование кликов в режиме чтения
   document.addEventListener('click', e => {
     const wl = e.target.closest && e.target.closest('#nt-md .wl'); if (wl) { openByTitle(wl.dataset.t); return; }
     const cb = e.target.closest && e.target.closest('#nt-md .cb'); if (cb) toggleCheck(+cb.dataset.ln);
@@ -2548,7 +2706,6 @@ window.HB = {
   window.addEventListener('pagehide', () => api.flush());
   window.addEventListener('resize', () => { if (openId && curMode === 'edit') grow(); });
   window.matchMedia('(min-width: 900px)').addEventListener('change', () => { showPane(!!openId); if (!openId) renderList(); });
-  // клавиатура в редакторе (ПК)
   document.addEventListener('keydown', e => {
     const t = e.target;
     if (!t || (t.id !== 'nt-x' && t.id !== 'nt-t')) return;
@@ -2582,9 +2739,8 @@ window.HB = {
   window.NT = api;
 })();
 </script>
-
 <script>
-// ── NAVIGATION ──
+// ═════════ НАВИГАЦИЯ ═════════
 const SEC_OF = { dash: 'fin', add: 'fin', ledger: 'fin', hab: 'hab', notes: 'nt' };
 const FIN_VIEWS = ['dash', 'add', 'ledger'];
 let lastFin = 'dash';
@@ -2607,11 +2763,10 @@ function showView(name) {
   if (name === 'notes') NT.onShow();
   if (name === 'ledger') { if (!dataState) refreshData(); else { renderPlan(); renderHistory(); } }
   if (name === 'ledger' && dataState && Date.now() - dataState.loadedAt > 60000) refreshData(true);
-  if (name === 'add' && window.matchMedia('(min-width: 960px)').matches) { /* клавиатурный ввод — без фокуса в поле */ }
   window.scrollTo(0, 0);
 }
 
-// ── TÝDENNÍ SHRNUTÍ (finance) ──
+// ── TÝDENNÍ SHRNUTÍ ──
 function renderWeekInsight() {
   const box = $('wk-card'); if (!box) return;
   if (!dataState) { box.style.display = 'none'; return; }
@@ -2735,11 +2890,14 @@ function parseAmount() {
   return isNaN(v) ? 0 : Math.round(v * 100) / 100;
 }
 
+// теперь описания берутся из dataState (актуально для всех устройств)
 function refreshDescList() {
   const dl = $('desc-list');
+  if (!dl) return;
   dl.innerHTML = '';
   const seen = new Set();
-  localHistory.forEach(h => {
+  const src = (dataState && dataState.txs.length) ? dataState.txs : localHistory;
+  src.forEach(h => {
     if (h.desc && !seen.has(h.desc)) { seen.add(h.desc); const o = document.createElement('option'); o.value = h.desc; dl.appendChild(o); }
   });
 }
@@ -2756,7 +2914,7 @@ function planAfterSave(catRu, amount) {
   return { warn: false, text: `${info.label}: zbývá ${fmt0(rem)} Kč` + (isCurrentMonth() ? ` (≈ ${fmt0(rem / daysLeftInMonth())} Kč/den)` : '') };
 }
 
-// ── SUBMIT ──
+// ── SUBMIT — append + Outbox ──
 async function submitEntry() {
   const amount = parseAmount();
   if (!amount || amount <= 0) { showToast('Zadej částku', 'error'); return; }
@@ -2778,84 +2936,47 @@ async function submitEntry() {
   const dateSerial = Math.floor((now - new Date(1899, 11, 30)) / 86400000);
   const desc = $('desc').value.trim();
   const typeRu = TYPES[currentType].ru;
-
-  // Пишем СТРОГО A:G — колонка H («Месяц (авто)») в запросе не участвует.
   const row = [dateSerial, typeRu, selectedCat, desc, amount, selectedPayment, ''];
 
   finRev++; finPending++;
-  try {
-    // 1) первая свободная строка по столбцу A
-    const colARes = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TX_SHEET)}!A:A`,
-      { headers: { Authorization: 'Bearer ' + accessToken } }
-    );
-    if (!colARes.ok) {
-      if (colARes.status === 401) { accessToken = null; tokenClient.requestAccessToken(); return; }
-      const e = await colARes.json();
-      throw new Error(e.error?.message || colARes.status);
-    }
-    const colAData = await colARes.json();
-    const targetRow = (colAData.values || []).length + 1;
 
-    // 2) запись строки
-    const range = `${encodeURIComponent(TX_SHEET)}!A${targetRow}:G${targetRow}`;
-    const res = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`,
-      {
-        method: 'PUT',
-        headers: { Authorization: 'Bearer ' + accessToken, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ values: [row] })
-      }
-    );
-    if (!res.ok) {
-      if (res.status === 401) { accessToken = null; tokenClient.requestAccessToken(); return; }
-      const e = await res.json();
-      throw new Error(e.error?.message || res.status);
-    }
-
-    // локальная история (для подсказок в описании)
-    localHistory.unshift({
-      typeKey: currentType, catRu: selectedCat, amount, desc,
-      payment: selectedPayment, date: now.toLocaleDateString('cs-CZ')
-    });
+  // локальное обновление (одинаковое для online/offline)
+  const applyLocal = () => {
+    localHistory.unshift({ typeKey: currentType, catRu: selectedCat, amount, desc, payment: selectedPayment, date: now.toLocaleDateString('cs-CZ') });
     if (localHistory.length > 50) localHistory.pop();
     localStorage.setItem('budget_history', JSON.stringify(localHistory));
     refreshDescList();
-
-    // лимит
-    if (currentType === 'expense' && budgetLimit) {
-      budgetLimit.remaining -= amount;
-      saveLimit(); renderLimit();
-    }
-
-    // обновить локальный кэш данных
+    if (currentType === 'expense' && budgetLimit) { budgetLimit.remaining -= amount; saveLimit(); renderLimit(); }
     if (dataState) {
       const t = { y: now.getFullYear(), m: now.getMonth(), d: now.getDate(), type: typeRu, cat: selectedCat, desc, pay: selectedPayment, amt: amount };
       dataState.txs.unshift(t);
       const k = monthKey(t.y, t.m);
       if (!dataState.months.has(k)) dataState.months.set(k, { income: 0, expense: 0, byCat: {}, daily: {}, txs: [] });
       const mo = dataState.months.get(k);
-      if (typeRu === 'Расход') {
-        mo.expense += amount;
-        mo.byCat[t.cat] = (mo.byCat[t.cat] || 0) + amount;
-        mo.daily[t.d] = (mo.daily[t.d] || 0) + amount;
-      } else mo.income += amount;
+      if (typeRu === 'Расход') { mo.expense += amount; mo.byCat[t.cat] = (mo.byCat[t.cat] || 0) + amount; mo.daily[t.d] = (mo.daily[t.d] || 0) + amount; }
+      else mo.income += amount;
       mo.txs.push(t);
     }
     MHC.sched('fin');
-
-    const planHint = currentType === 'expense' ? planAfterSave(selectedCat, amount) : null;
-    let toastMsg = `✓ ${TYPES[currentType].label} ${fmt0(amount)} Kč`;
-    if (planHint) toastMsg += '\n' + planHint.text;
-    showToast(toastMsg, planHint && planHint.warn ? 'warn' : 'success', planHint ? 4200 : 2400);
-
     amountStr = ''; renderAmount();
     $('desc').value = '';
     selectedCat = null;
     renderCategories();
     renderDash();
+  };
+
+  try {
+    await appendRow(TX_SHEET, row);
+    applyLocal();
+    const planHint = currentType === 'expense' ? planAfterSave(selectedCat, amount) : null;
+    let toastMsg = `✓ ${TYPES[currentType].label} ${fmt0(amount)} Kč`;
+    if (planHint) toastMsg += '\n' + planHint.text;
+    showToast(toastMsg, planHint && planHint.warn ? 'warn' : 'success', planHint ? 4200 : 2400);
   } catch (e) {
-    showToast('Chyba: ' + e.message, 'error');
+    // offline / ошибка — в очередь, UI обновляем как при успехе
+    Outbox.push({ kind: 'tx', row });
+    applyLocal();
+    showToast('✓ Uloženo lokálně — odešle se později', 'warn', 2600);
   } finally {
     finPending--;
     btn.disabled = false;
@@ -2876,8 +2997,6 @@ function renderPlan() {
     body.innerHTML = `<div class="empty">V listu „${PLAN_SHEET}“ zatím nejsou vyplněné částky plánu.<br/>Vyplň žluté buňky v tabulce a klepni na obnovit.</div>`;
     return;
   }
-
-  // сводка
   const free = dataState.incomePlan - pt;
   let html = `<div class="card">
     <div class="group-row">
@@ -2896,7 +3015,6 @@ function renderPlan() {
     </div>
   </div>`;
 
-  // группы
   const groups = ['Обязательное', 'По желанию', 'Откладывать'];
   html += '<div class="sec-head"><div class="caps">Skupiny</div></div><div class="card">';
   groups.forEach(gname => {
@@ -2913,7 +3031,6 @@ function renderPlan() {
   });
   html += '</div>';
 
-  // категории
   html += '<div class="sec-head"><div class="caps">Kategorie</div></div><div class="card">';
   cats.filter(c => c.plan > 0 || c.fact > 0).sort((a, b) => b.fact - a.fact).forEach(c => {
     const over = c.fact > c.plan && c.plan > 0;
@@ -2930,7 +3047,7 @@ function renderPlan() {
   body.innerHTML = html;
 }
 
-// ── HISTORY VIEW ──
+// ── HISTORY ──
 function renderHistory() {
   const body = $('history-body');
   if (!dataState) { body.innerHTML = '<div class="empty">Načítám…</div>'; return; }
@@ -3020,7 +3137,7 @@ if (!AUTH_ENABLED) {
 window.addEventListener('resize', () => { if (dataState) drawSpark(curMonth()); });
 </script>
 <script>
-// ═════════ KLÁVESNICE (PC) ═════════
+// ═════════ КЛАВИАТУРА ═════════
 function kbOpen() { document.getElementById('kb-overlay').classList.add('open'); }
 function kbClose() { document.getElementById('kb-overlay').classList.remove('open'); }
 (function () {
@@ -3044,7 +3161,6 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     if (e.isComposing) return;
     const t = e.target, typing = isTyping(t), k = e.key, plain = !e.ctrlKey && !e.metaKey && !e.altKey;
 
-    // оверлеи (шиты / диалоги)
     const ov = document.querySelector('.overlay.open');
     if (ov) {
       if (k === 'Escape') { e.preventDefault(); ov.click(); return; }
@@ -3056,7 +3172,6 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     }
     if (!appShown()) return;
 
-    // Alt+1..6 — záložky (funguje i při psaní)
     if (e.altKey && !e.ctrlKey && !e.metaKey && /^Digit[1-3]$/.test(e.code)) { e.preventDefault(); if (typing) t.blur(); goSec(['fin', 'hab', 'nt'][+e.code.slice(5) - 1]); return; }
 
     const v = activeView();
@@ -3120,11 +3235,9 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
 })();
 </script>
 <script>
-// ═════════ JAZYK / ЯЗЫК (cs ⇄ ru) ═════════
-// Zdroj je česky. Ruština = překlad textu při zobrazení (slovník + pravidla), data v tabulce se nemění.
+// ═════════ ЯЗЫК ═════════
 (function () {
   const PH = {
-    // — obecné
     'Směny': 'Смены', 'Denní': 'Дневная', 'Noční': 'Ночная', 'Smazat': 'Стереть', 'Co zapisuji': 'Что отмечаю', 'Hodin celkem': 'Часов всего', 'Směn': 'Смен', 'Po–Pá': 'Пн–Пт', 'Načítám…': 'Загружаю…',
     '☀ Denní': '☀ Дневная', '☾ Noční': '☾ Ночная',
     'Klepej na dny v kalendáři — zapíše se vybraná směna. Opakované klepnutí ji smaže. Tlačítko Po–Pá vyplní celý týden.': 'Нажимай на дни в календаре — отметится выбранная смена. Повторное нажатие стирает её. Кнопка «Пн–Пт» заполняет всю неделю.',
@@ -3133,52 +3246,42 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     'Uložit': 'Сохранить', 'Uloženo': 'Сохранено', 'Ukládám…': 'Сохраняю…', 'Zpět': 'Назад', 'Více': 'Ещё', 'více': 'больше', 'méně': 'меньше', 'teď': 'сейчас', 'Hledat v poznámkách…': 'Поиск по заметкам…', 'Hledat': 'Искать',
     'Jazyk': 'Язык', 'Odhlásit se': 'Выйти', 'Chyba přihlášení: ': 'Ошибка входа: ', 'Přihlášení do Google selhalo': 'Не удалось войти в Google', 'Chyba ukládání': 'Ошибка сохранения', 'Chyba: ': 'Ошибка: ',
     'Pokračovat přes Google': 'Продолжить через Google',
-    // — auth
     'Tvoje mysl,': 'Твой разум,', 'vše': 'всё', 'na jednom místě.': 'в одном месте.',
     'Peníze, návyky a poznámky v jedné aplikaci. Všechno se ukládá přímo do tvé tabulky v Google Sheets.': 'Деньги, привычки и заметки в одном приложении. Всё сохраняется прямо в твою таблицу Google Sheets.',
     'Finance — výdaje, plán a zůstatek na den': 'Финансы — расходы, план и остаток на день', 'Návyky — série, týdenní přehled a statistiky': 'Привычки — серии, недельный обзор и статистика', 'Poznámky — složky a Markdown jako v Obsidianu': 'Заметки — папки и Markdown, как в Obsidian',
-    // — finance
     'Utraceno tento měsíc': 'Потрачено в этом месяце', 'Příjmy': 'Доходы', 'Příjem': 'Доход', 'Výdaj': 'Расход', 'Bilance': 'Баланс', 'Na den zbývá': 'Остаток на день', 'Průměr / den': 'В среднем за день',
     'Limit měsíce': 'Лимит месяца', 'Nastav si limit a hlídej si ho': 'Задай лимит и следи за ним', 'Průběh měsíce': 'Динамика месяца', 'Kategorie vs. plán': 'Категории и план', 'Celý plán ›': 'Весь план ›', 'Poslední záznamy': 'Последние записи', 'Vše ›': 'Все ›',
-    'Týdenní shrnutí': 'Итог недели', 'oproti minulému týdnu': 'к прошлой неделе', 'Nejvíc šlo na': 'Больше всего ушло на', 'V průměru': 'В среднем', 'za den': 'в день', 'Největší výdaj:': 'Самая крупная трата:', 'Tento týden zatím žádné výdaje.': 'На этой неделе пока нет расходов.', 'Tento týden zatím nic naplánováno.': 'На этой неделе пока ничего не запланировано.',
-    'Nejlepší:': 'Лучшая:', 'Pozor na:': 'Обрати внимание:', 'Dokonalých dnů:': 'Идеальных дней:', 'série': 'серия', 'p. b.': 'п. п.',
+    'Týdenní shrnutí': 'Итог недели', 'oproti minulému týdnu': 'к прошлой неделе', 'Nejvíc šlo na': 'Больше всего ушло на', 'V průměru': 'В среднем', 'za den': 'в день', 'Největší výdaj:': 'Самая крупная трата:', 'Tento týden zatím žádné výdaje.': 'На этой неделе пока нет расходов.',
+    'Nejlepší:': 'Лучшая:', 'Pozor na:': 'Обрати внимание:', 'Dokonalých dnů:': 'Идеальных дней:', 'série': 'серия',
     'Kategorie': 'Категории', 'Poznámka (nepovinné)': 'Заметка (необязательно)', 'Poznámka': 'Заметка', 'Přidat výdaj': 'Добавить расход', 'Přidat příjem': 'Добавить доход', 'Zadej částku limitu': 'Введи сумму лимита', 'Zadej částku': 'Введи сумму', 'Vyber kategorii': 'Выбери категорию', 'Nejdřív nastav limit': 'Сначала задай лимит',
     'Karta': 'Карта', 'Hotovost': 'Наличные', 'Převod': 'Перевод', 'Jiné': 'Другое',
     'Bydlení': 'Жильё', 'Technika': 'Техника', 'Doprava': 'Транспорт', 'Jídlo a pochutiny': 'Еда и вкусности', 'Jídlo': 'Еда', 'Pochutiny': 'Вкусности', 'Pomoc': 'Помощь', 'Zábava': 'Развлечения', 'Úvěry': 'Кредиты', 'Oblečení': 'Одежда', 'Zdraví': 'Здоровье', 'Domácnost': 'Быт', 'Úspory': 'Сбережения', 'Nečekané': 'Непредвиденное',
     'Skupiny': 'Группы', 'Povinné': 'Обязательное', 'Navíc': 'По желанию', 'Spoření': 'Откладывать', 'Celkem utraceno': 'Всего потрачено', 'Nerozděleno z plánu': 'Не распределено из плана',
     'Vyplň plán v tabulce (žluté buňky)': 'Заполни план в таблице (жёлтые ячейки)', 'a uvidíš tady postup kategorií.': 'и здесь появится прогресс по категориям.',
     'Vyplň žluté buňky v tabulce a klepni na obnovit.': 'Заполни жёлтые ячейки в таблице и нажми «обновить».', 'zatím nejsou vyplněné částky plánu.': 'суммы плана пока не заполнены.', 'V listu': 'На листе',
-    'plán zatím není vyplněný': 'план пока не заполнен', 'Tento měsíc zatím bez záznamů': 'В этом месяце пока нет записей', 'Načítám data z tabulky…': 'Загружаю данные из таблицы…', 'Načítám plán…': 'Загружаю план…', 'Načítám…': 'Загружаю…',
+    'plán zatím není vyplněný': 'план пока не заполнен', 'Tento měsíc zatím bez záznamů': 'В этом месяце пока нет записей', 'Načítám data z tabulky…': 'Загружаю данные из таблицы…', 'Načítám plán…': 'Загружаю план…',
     'z plánu': 'из плана', '— zbývá': '— осталось', 'překročen o': 'превышен на', 'zbývá z': 'осталось из', 'překročeno o': 'превышено на', 'zbývá': 'осталось', 'přes plán o': 'сверх плана на', 'celkem': 'всего', 'tento týden': 'на этой неделе', 'Zatím žádné záznamy': 'Пока нет записей', 'Žádné záznamy': 'Нет записей',
     'Data se nepodařilo načíst:': 'Не удалось загрузить данные:', 'Plán se nepodařilo načíst:': 'Не удалось загрузить план:', 'Poznámky se nepodařilo načíst:': 'Не удалось загрузить заметки:',
     'Nový limit, Kč': 'Новый лимит, Kč', 'Nastavit': 'Установить', 'Obnovit zůstatek na plný limit': 'Сбросить остаток до полного лимита', '✓ Zůstatek obnoven': '✓ Остаток сброшен', '✓ Limit nastaven:': '✓ Лимит задан:',
     'Jednoduchý počítadlo: nastav částku, výdaje se od ní odečítají. Ukládá se jen v tomto zařízení.': 'Простой счётчик: задай сумму, расходы вычитаются из неё. Хранится только на этом устройстве.', '− Odečíst': '− Вычесть', '+ Přidat': '+ Добавить',
     'Částka, Kč': 'Сумма, Kč', 'Částka': 'Сумма', 'Plán ·': 'План ·', 'záznamů': 'записей',
-    // — habits
-    'Splněno dnes': 'Выполнено сегодня', 'Splněno': 'Выполнено', 'Série': 'Серия', 'Týden': 'Неделя', 'Měsíc zpět / vpřed': 'Месяц назад / вперёд', 'Měsíc': 'Месяц', 'Upravit ›': 'Изменить ›', 'Zbývá ještě': 'Осталось ещё', 'Všechno splněno': 'Всё выполнено', 'skvělá práce': 'отличная работа',
+    'Splněno dnes': 'Выполнено сегодня', 'Splněno': 'Выполнено', 'Série': 'Серия', 'Týden': 'Неделя', 'Měsíc': 'Месяц', 'Upravit ›': 'Изменить ›', 'Zbývá ještě': 'Осталось ещё', 'Všechno splněno': 'Всё выполнено', 'skvělá práce': 'отличная работа',
     'Začni sérii': 'Начни серию', 'Zatím žádné návyky.': 'Привычек пока нет.', 'Přidej první tlačítkem níže.': 'Добавь первую кнопкой ниже.', 'Přidej první v záložce Návyky.': 'Добавь первую во вкладке «Привычки».', 'Na tento den nemáš naplánované žádné návyky.': 'На этот день привычек не запланировано.', 'Na tento den nemáš žádné návyky': 'На этот день у тебя нет привычек',
     'Úspěšnost': 'Успешность', 'Dokonalé dny': 'Идеальные дни', 'Posledních 8 týdnů': 'Последние 8 недель', 'Podle návyků': 'По привычкам', 'Rekord': 'Рекорд', 'Moje návyky': 'Мои привычки', 'Přidat návyk': 'Добавить привычку', 'Nový návyk': 'Новая привычка', 'Upravit návyk': 'Изменить привычку', 'Název návyku': 'Название привычки',
-    'Jak se bude jmenovat?': 'Как будет называться?', 'Ikona': 'Иконка', 'Dny v týdnu': 'Дни недели', 'Co chceš dělat pravidelně?': 'Что хочешь делать регулярно?', 'Archivovat': 'В архив', 'Obnovit': 'Вернуть', 'Archivováno': 'В архиве', 'Obnoveno': 'Возвращено', 'Obnovení selhalo: ': 'Не удалось вернуть: ',
-    'Každý den': 'Каждый день', 'Po–Pá': 'Пн–Пт', 'So–Ne': 'Сб–Вс', 'Napiš název návyku': 'Напиши название привычки', 'Vyber alespoň jeden den': 'Выбери хотя бы один день', 'Napiš název': 'Напиши название', 'Historie zůstane v tabulce.': 'История останется в таблице.', 'Archivovat „': 'Архивировать «', '“? ': '»? ',
-    // — notes
+    'Jak se bude jmenovat?': 'Как будет называться?', 'Ikona': 'Иконка', 'Dny v týdnu': 'Дни недели', 'Co chceš dělat pravidelně?': 'Что хочешь делать регулярно?', 'Archivovat': 'В архив', 'Obnovit': 'Вернуть', 'Archivováno': 'В архиве', 'Obnoveno': 'Возвращено',
+    'Každý den': 'Каждый день', 'So–Ne': 'Сб–Вс', 'Napiš název návyku': 'Напиши название привычки', 'Vyber alespoň jeden den': 'Выбери хотя бы один день', 'Napiš název': 'Напиши название', 'Historie zůstane v tabulce.': 'История останется в таблице.',
     'Poznámky (kořen)': 'Заметки (корень)', 'Nová složka': 'Новая папка', 'Nová podsložka': 'Новая подпапка', 'Nová poznámka': 'Новая заметка', 'Přejmenovat složku': 'Переименовать папку', 'Přejmenovat': 'Переименовать', 'Přesunout do složky…': 'Переместить в папку…', 'Přesunout do…': 'Переместить в…', 'Přesunout…': 'Переместить…', 'Přesunuto': 'Перемещено',
-    'Smazat poznámku': 'Удалить заметку', 'Smazat složku': 'Удалить папку', 'Smazáno': 'Удалено', 'Smazat „': 'Удалить «', 'i s': 'вместе с', 'položkami uvnitř': 'элементами внутри', 'V tabulce zůstane se stavem': 'В таблице останется со статусом', 'Bez názvu': 'Без названия', 'Prázdná poznámka': 'Пустая заметка', 'Hledání': 'Поиск', 'Psát': 'Писать', 'Číst': 'Читать', 'Název': 'Название',
-    'Zatím nic. Začni složkou nebo poznámkou.': 'Пока пусто. Начни с папки или заметки.', 'Tato složka je prázdná.': 'Эта папка пуста.', 'Přidej poznámku nebo podsložku tlačítky nahoře.': 'Добавь заметку или подпапку кнопками сверху.', 'Složka se přesune i se vším uvnitř.': 'Папка переместится вместе со всем содержимым.',
-    'Vyber poznámku vlevo': 'Выбери заметку слева', 'nebo stiskni': 'или нажми', 'pro novou': 'для новой', 'Piš sem… (Markdown, odkazy [[na jiné poznámky]])': 'Пиши здесь… (Markdown, ссылки [[на другие заметки]])', 'Uložení se nepodařilo:': 'Не удалось сохранить:', 'Uvnitř „': 'Внутри «', 'vznikne uvnitř „': 'появится внутри «', 'vznikne v kořeni': 'появится в корне', 'Složka ': 'Папка ', 'Složka': 'Папка',
-    // — sheets / kb
+    'Smazat poznámku': 'Удалить заметку', 'Smazat složku': 'Удалить папку', 'Smazáno': 'Удалено', 'Bez názvu': 'Без названия', 'Prázdná poznámka': 'Пустая заметка', 'Hledání': 'Поиск', 'Psát': 'Писать', 'Číst': 'Читать', 'Název': 'Название',
+    'Zatím nic. Začni složkou nebo poznámkou.': 'Пока пусто. Начни с папки или заметки.', 'Tato složka je prázdná.': 'Эта папка пуста.', 'Přidej poznámku nebo podsložku tlačítky nahoře.': 'Добавь заметку или подпапку кнопками сверху.',
+    'Vyber poznámku vlevo': 'Выбери заметку слева', 'nebo stiskni': 'или нажми', 'pro novou': 'для новой', 'Piš sem… (Markdown, odkazy [[na jiné poznámky]])': 'Пиши здесь… (Markdown, ссылки [[на другие заметки]])', 'Uložení se nepodařilo:': 'Не удалось сохранить:',
     'Připomínky': 'Напоминания', 'Kdy a jak ti má MindHub připomínat návyky, výdaje a týdenní shrnutí.': 'Когда и как MindHub будет напоминать о привычках, тратах и итоге недели.', 'Zapnout připomínky': 'Включить напоминания', 'Zapnout': 'Включить',
     'Oznámení povolena': 'Уведомления разрешены', 'Oznámení jsou v prohlížeči zablokována — povol je v nastavení webu': 'Уведомления заблокированы в браузере — разреши их в настройках сайта', 'Tento prohlížeč oznámení nepodporuje': 'Этот браузер не поддерживает уведомления', 'Při zapnutí se zeptáme na povolení': 'При включении спросим разрешение',
-    'Co připomínat': 'О чём напоминать', 'Ranní plán návyků': 'Утренний план привычек', 'Co tě dnes čeká': 'Что ждёт тебя сегодня', 'Večerní kontrola návyků': 'Вечерняя проверка привычек', 'Jen když něco zbývá': 'Только если что-то осталось', 'Zapsat výdaje': 'Записать траты', 'Jen když dnes nic nezapsáno': 'Только если сегодня ничего не записано', 'Týdenní shrnutí': 'Итог недели', 'Každou neděli': 'Каждое воскресенье',
+    'Co připomínat': 'О чём напоминать', 'Ranní plán návyků': 'Утренний план привычек', 'Co tě dnes čeká': 'Что ждёт тебя сегодня', 'Večerní kontrola návyků': 'Вечерняя проверка привычек', 'Jen když něco zbývá': 'Только если что-то осталось', 'Zapsat výdaje': 'Записать траты', 'Jen když dnes nic nezapsáno': 'Только если сегодня ничего не записано', 'Každou neděli': 'Каждое воскресенье',
     'Charakter zpráv': 'Характер сообщений', 'Vibrace': 'Вибрация', 'Doručení': 'Доставка', 'Spolehlivě přes Kalendář Google': 'Надёжно через Google Календарь', 'Upozornění přijdou i se zavřenou aplikací. Vytvoří se kalendář „MindHub“.': 'Уведомления придут и при закрытом приложении. Будет создан календарь «MindHub».', 'Poslat zkušební upozornění': 'Отправить тестовое уведомление',
-    'Jemný': 'Мягкий', 'Motivační': 'Мотивирующий', 'Přísný': 'Строгий', 'Stručný': 'Кратко', 
+    'Jemný': 'Мягкий', 'Motivační': 'Мотивирующий', 'Přísný': 'Строгий', 'Stručný': 'Кратко',
     'Režim bez přihlášení': 'Режим без входа', 'Vypnout režim bez přihlášení': 'Отключить режим без входа', 'Zapomenout přihlášení': 'Забыть вход', 'Zapomenuto': 'Забыто', 'Kód zkopírován': 'Код скопирован',
-    'Režim bez přihlášení je zapnutý — aplikace se nikdy neptá na Google účet.': 'Режим без входа включён — приложение больше не спрашивает аккаунт Google.', 'Google drží přihlášení jen 1 hodinu. Nechceš se přihlašovat vůbec? Zapni „Režim bez přihlášení“.': 'Google держит вход только 1 час. Не хочешь входить вообще? Включи «Режим без входа».',
-    'Přihlášení je zapamatováno do': 'Вход запомнен до', '(Google dovoluje jen 1 hodinu)': '(Google разрешает только 1 час)',
-    'Klávesové zkratky': 'Горячие клавиши', 'Na telefonu se nic nemění — jen na počítači.': 'На телефоне ничего не меняется — только на компьютере.', 'Všude': 'Везде', 'Finance / Návyky / Poznámky': 'Финансы / Привычки / Заметки', 'Podzáložky': 'Подвкладки', 'Tato nápověda': 'Эта подсказка', 'Zavřít / zrušit': 'Закрыть / отмена',
-    'Přidat záznam': 'Добавить запись', 'Příjem / výdaj': 'Доход / расход', 'Uložit záznam': 'Сохранить запись', 'Splnit návyk': 'Отметить привычку', 'Den zpět / vpřed': 'День назад / вперёд', 'Nová poznámka / složka': 'Новая заметка / папка', 'nebo': 'или', 'Uložit hned': 'Сохранить сейчас', 'Psát / číst': 'Писать / читать',
-    'Tučně / kurzíva / [[odkaz]]': 'Жирный / курсив / [[ссылка]]', 'Odsadit (Shift = zpět)': 'Отступ (Shift = назад)', 'Piš číslice ·': 'Вводи цифры ·', 'kategorie ·': 'категория ·', 'typ ·': 'тип ·', 'poznámka ·': 'заметка ·', 'přidat': 'добавить', 'Měsíc zpět': 'Месяц назад', 'Částka': 'Сумма',
-    // — misc
-    'Kč/den': 'Kč/день', 'Čeština': 'Čeština',
+    'Režim bez přihlášení je zapnutý — aplikace se nikdy neptá na Google účet.': 'Режим без входа включён — приложение больше не спрашивает аккаунт Google.',
+    'Klávesové zkratky': 'Горячие клавиши', 'Na telefonu se nic nemění — jen na počítači.': 'На телефоне ничего не меняется — только на компьютере.', 'Všude': 'Везде', 'Podzáložky': 'Подвкладки', 'Tato nápověda': 'Эта подсказка', 'Zavřít / zrušit': 'Закрыть / отмена',
   };
   const MONTHS = { leden: 'январь', únor: 'февраль', březen: 'март', duben: 'апрель', květen: 'май', červen: 'июнь', červenec: 'июль', srpen: 'август', září: 'сентябрь', říjen: 'октябрь', listopad: 'ноябрь', prosinec: 'декабрь' };
   const MONTHS_G = { ledna: 'января', února: 'февраля', března: 'марта', dubna: 'апреля', května: 'мая', června: 'июня', července: 'июля', srpna: 'августа', září: 'сентября', října: 'октября', listopadu: 'ноября', prosince: 'декабря' };
@@ -3201,7 +3304,6 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
   function tr(text) {
     if (!text || !/[A-Za-zÀ-ž]/.test(text)) return text;
     let t = text;
-    // pravidla s čísly / skloňováním
     t = t.replace(/(\d+) (?:den|dny|dní) v řadě/g, (m, n) => `${n} ${rp(+n, 'день', 'дня', 'дней')} подряд`);
     t = t.replace(/(\d+) (?:den|dny|dní)(?![\p{L}])/gu, (m, n) => `${n} ${rp(+n, 'день', 'дня', 'дней')}`);
     t = t.replace(/(\d+) (?:poznámka|poznámky|poznámek)(?![\p{L}])/gu, (m, n) => `${n} ${rp(+n, 'заметка', 'заметки', 'заметок')}`);
@@ -3225,7 +3327,7 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
 
   function doText(n) {
     const cur = n.nodeValue;
-    if (mine.has(n) && mine.get(n) === cur) {            // vlastní překlad
+    if (mine.has(n) && mine.get(n) === cur) {
       if (lang !== 'ru') { n.nodeValue = orig.get(n); mine.delete(n); }
       return;
     }
@@ -3280,9 +3382,7 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
     if (typeof renderDash === 'function') { try { renderDash(); } catch (e) {} }
     if (window.HB && HB.rerender) { try { HB.rerender(); } catch (e) {} }
   }
-  // confirm() / prompt() přes překlad
   const _confirm = window.confirm.bind(window); window.confirm = m => _confirm(lang === 'ru' ? tr(String(m)) : m);
-  // skrytý přepínač: trojklik na logo
   let clicks = [];
   document.addEventListener('click', e => {
     if (!e.target.closest || !e.target.closest('#brand')) return;
@@ -3294,8 +3394,7 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
 })();
 </script>
 <script>
-// ═════════ REŽIM BEZ PŘIHLÁŠENÍ (Apps Script proxy) ═════════
-// Volání Google Sheets API jdou přes malý skript ve tvé tabulce (běží pod tvým účtem) → v aplikaci se nepřihlašuješ vůbec.
+// ═════════ PROXY-РЕЖИМ ═════════
 (function () {
   const KEY = 'mh-proxy';
   const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
@@ -3327,7 +3426,7 @@ function kbClose() { document.getElementById('kb-overlay').classList.remove('ope
   let draftKey = (cfg && cfg.key) || ''; try { draftKey = draftKey || localStorage.getItem('mh-px-draft') || ''; } catch (e) {}
   const newKey = () => { draftKey = genKey(); try { localStorage.setItem('mh-px-draft', draftKey); } catch (e) {} return draftKey; };
   function script(key) {
-    return `// MindHub — proxy pro Google Sheets (běží pod tvým účtem)
+    return `// MindHub — proxy для Google Sheets
 const SHEET_ID = '${SHEET_ID}';
 const KEY = '${key}';
 
@@ -3348,7 +3447,6 @@ function doGet() { return out(200, { ok: true }); }
 function out(status, body) {
   return ContentService.createTextOutput(JSON.stringify({ status: status, body: JSON.stringify(body) })).setMimeType(ContentService.MimeType.JSON);
 }
-// Spusť tuto funkci JEDNOU ručně (Spustit) a povol přístup — Google tak přidělí práva na tabulky i na UrlFetchApp.
 function authorize() {
   SpreadsheetApp.openById(SHEET_ID);
   UrlFetchApp.fetch('https://sheets.googleapis.com/$discovery/rest?version=v4', { muteHttpExceptions: true });
@@ -3373,11 +3471,11 @@ function authorize() {
       g('px-go').disabled = true; msg('Ověřuji…');
       try {
         const j = await viaProxy(c, 'GET', '/v4/spreadsheets/' + SHEET_ID + '?fields=properties.title');
-        if (j.status === 403) { let m = ''; try { m = JSON.parse(j.body).error.message; } catch (e) {} msg(m === 'bad key' ? 'Klíč ve skriptu nesouhlasí — zkopíruj kód znovu (tlačítko výše), vlož ho a nasaď NOVOU verzi (Nasadit → Spravovat nasazení → Upravit → Nová verze).' : 'Google odmítl přístup: ' + m, 'err'); return; }
+        if (j.status === 403) { let m = ''; try { m = JSON.parse(j.body).error.message; } catch (e) {} msg(m === 'bad key' ? 'Klíč ve skriptu nesouhlasí — zkopíruj kód znovu a nasaď NOVOU verzi.' : 'Google odmítl přístup: ' + m, 'err'); return; }
         if (j.status !== 200) {
           let m = j.body; try { m = JSON.parse(j.body).error.message; } catch (e) {}
-          if (/external_request|UrlFetchApp|permission|разрешени/i.test(m)) m = 'Skript ještě nemá oprávnění. V editoru Apps Script vyber nahoře funkci „authorize“ → Spustit → povol přístup (Upřesnit → Přejít na projekt → Povolit). Potom: Nasadit → Spravovat nasazení → tužka → Verze: Nová verze → Nasadit. A klikni znovu na „Ověřit“.';
-          else if (/Sheets API|has not been used|disabled/i.test(m)) m = 'Zapni v editoru vlevo Služby (+) → Google Sheets API → Přidat, nasaď novou verzi a zkus znovu.';
+          if (/external_request|UrlFetchApp|permission/i.test(m)) m = 'Skript ještě nemá oprávnění. V editoru Apps Script vyber funkci „authorize“ → Spustit → povol přístup. Potom: Nasadit → Správce nasazení → tužka → Nová verze. A klikni znovu „Ověřit“.';
+          else if (/Sheets API|has not been used|disabled/i.test(m)) m = 'Zapni v editoru Služby (+) → Google Sheets API → Přidat, nasaď novou verzi.';
           msg(m, 'err'); return; }
         const title = (JSON.parse(j.body).properties || {}).title || '';
         try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {}
@@ -3395,7 +3493,6 @@ function authorize() {
   window.PX = PX;
   window.MHProxy = PX;
 
-  // start: rovnou dovnitř
   if (cfg) {
     accessToken = 'proxy';
     document.getElementById('auth-screen').style.display = 'none';
@@ -3404,11 +3501,7 @@ function authorize() {
 })();
 </script>
 <script>
-// ═════════ ZAPAMATOVANÉ PŘIHLÁŠENÍ ═════════
-// Přidává se NAD původní přihlášení (signIn / ensureAccessToken zůstávají funkční):
-//  1) token se uloží i s časem vypršení → po znovuotevření do ~1 hodiny se vstoupí rovnou;
-//  2) po vypršení se zkusí tiché obnovení (login_hint = tvůj e-mail), když selže, ukáže se obvyklé tlačítko;
-//  3) vlastní token se nikam neposílá, jen se drží v tomto zařízení (localStorage).
+// ═════════ ЗАПОМИНАНИЕ ВХОДА ═════════
 (function () {
   const KEY = 'mh-session';
   const read = () => { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } };
@@ -3421,7 +3514,6 @@ function authorize() {
     write(sess);
   }
 
-  // 1) zapamatuj každý nový token (původní callbacky zůstanou, jen je obalíme)
   function hook() {
     if (!(window.google && google.accounts && google.accounts.oauth2) || google.accounts.oauth2.__mh) return;
     const o = google.accounts.oauth2, init = o.initTokenClient.bind(o);
@@ -3437,7 +3529,6 @@ function authorize() {
   const _load = window.loadGsi;
   window.loadGsi = function () { return _load().then(() => { hook(); }); };
 
-  // e-mail po úspěšném přihlášení
   const _fui = window.fetchUserInfo;
   window.fetchUserInfo = async function () {
     await _fui();
@@ -3448,12 +3539,11 @@ function authorize() {
   const _out = window.signOut;
   window.signOut = function () { write(null); sess = null; _out(); };
 
-  // 2) při startu
   async function boot() {
     if (window.MHProxy && MHProxy.on) return;
     if (!sess || !sess.token) return;
     const left = sess.exp - Date.now();
-    if (left > 0) {                       // token ještě platí → rovnou dovnitř
+    if (left > 0) {
       accessToken = sess.token;
       try {
         const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + accessToken } });
@@ -3461,7 +3551,6 @@ function authorize() {
       } catch (e) {}
       accessToken = null;
     }
-    // vypršelo → tiché obnovení (bez okna). Když to prohlížeč nedovolí, zůstane tlačítko.
     try {
       await window.loadGsi();
       const tc = google.accounts.oauth2.initTokenClient({
@@ -3472,12 +3561,10 @@ function authorize() {
       tc.requestAccessToken({ prompt: 'none' });
     } catch (e) {}
   }
-  // Tlačítko: ukáž, jako kdo se přihlásí
   function label() {
     if (sess && sess.email) { const b = document.querySelector('.google-btn'); if (b) b.lastChild.nodeValue = '\n    Pokračovat jako ' + sess.email + '\n  '; }
   }
   label();
-  // obnov token před vypršením během práce (jen když je okno aktivní)
   setInterval(() => {
     if (!sess || !window.google || !google.accounts || document.visibilityState !== 'visible' || !accessToken) return;
     if (sess.exp - Date.now() > 5 * 60 * 1000) return;
@@ -3494,9 +3581,7 @@ function authorize() {
 })();
 </script>
 <script>
-// ═════════ PŘIPOMÍNKY (NF) ═════════
-// Dvě vrstvy: (1) upozornění přímo v aplikaci/telefonu (service worker) — když je aplikace otevřená nebo se k ní vrátíš;
-// (2) volitelně opakované události v kalendáři Google „MindHub“ — ty přijdou přesně na čas i se zavřenou aplikací.
+// ═════════ НАПОМИНАНИЯ (NF) ═════════
 (function () {
   const KEY = 'mh-notif', CALKEY = 'mh-cal-id', FIRED = 'mh-notif-fired';
   const CAL_SCOPE = 'https://www.googleapis.com/auth/calendar.app.created';
@@ -3509,7 +3594,6 @@ function authorize() {
   try { const r = JSON.parse(localStorage.getItem(KEY) || 'null'); if (r) { S = Object.assign(clone(DEF), r); S.items = Object.assign(clone(DEF.items), r.items || {}); } } catch (e) {}
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
 
-  // ── texty podle charakteru ──
   const TONES = {
     gentle:  { cs: ['Jemný', 'klidně a mile'], ru: ['Мягкий', 'спокойно и по-доброму'] },
     motiv:   { cs: ['Motivační', 'nakopne tě'], ru: ['Мотивирующий', 'подбодрит'] },
@@ -3546,15 +3630,13 @@ function authorize() {
     const t = TXT[kind][S.tone] || TXT[kind].gentle; const L = ru() ? 'ru' : 'cs';
     return { title: 'MindHub · ' + TITLE[kind][ru() ? 1 : 0], body: fmt(t[L], vars) };
   }
-  const SAMPLE = { n: 2, nw: '', names: '', sum: '1 250' };
-  function sampleVars(kind) {   // náhled: skutečné nesplněné návyky, jinak obecný text
+  function sampleVars(kind) {
     let names = '';
     try { const h = window.HB && HB.todayInfo ? HB.todayInfo() : null; if (h && h.ready) { const l = (h.left.length ? h.left : h.all).slice(0, 3); names = l.join(', '); } } catch (e) {}
     const n = names ? names.split(', ').length : 2;
     return { n, nw: plural(n), names: names || (ru() ? 'твои привычки' : 'tvé návyky'), sum: '1 250' };
   }
 
-  // ── stav pro dynamické zprávy ──
   const fmtN = n => Math.round(n).toLocaleString('cs-CZ').replace(/\u00a0/g, ' ');
   function ctx() {
     const hb = window.HB && HB.todayInfo ? HB.todayInfo() : { ready: false };
@@ -3569,7 +3651,7 @@ function authorize() {
     const today = Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5), mon = today - wd;
     return fin.txs.filter(t => t.type === 'Расход' && u(t) >= mon && u(t) <= today).reduce((a, t) => a + t.amt, 0);
   }
-  function build(kind) {   // → {title, body} | null (nic neposílat) | 'wait' (data nejsou načtená)
+  function build(kind) {
     const { hb, fin } = ctx();
     if (kind === 'hab_morn' || kind === 'hab_eve') {
       if (!hb.ready) return 'wait';
@@ -3583,7 +3665,6 @@ function authorize() {
     return null;
   }
 
-  // ── zobrazení upozornění ──
   let swReg = null;
   async function regSW() {
     if (!('serviceWorker' in navigator)) return null;
@@ -3602,13 +3683,12 @@ function authorize() {
   }
   const perm = () => ('Notification' in window) ? Notification.permission : 'unsupported';
 
-  // ── plánovač (když je aplikace otevřená) ──
   const dstr = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   let fired = {}; try { fired = JSON.parse(localStorage.getItem(FIRED) || '{}'); } catch (e) {}
   const markFired = k => { fired[k] = 1; const keep = {}; const t = dstr(new Date()); Object.keys(fired).forEach(x => { if (x.startsWith(t)) keep[x] = 1; }); fired = keep; try { localStorage.setItem(FIRED, JSON.stringify(fired)); } catch (e) {} };
   const VIEW = { hab_morn: 'hab', hab_eve: 'hab', exp: 'add', week: 'dash' };
   let warmAt = 0;
-  function warm() {   // data návyků se načítají až při otevření záložky → načti je na pozadí
+  function warm() {
     if (Date.now() - warmAt < 120000) return; warmAt = Date.now();
     try { if (window.HB && !(HB.todayInfo().ready)) HB.refresh(true); } catch (e) {}
   }
@@ -3637,7 +3717,6 @@ function authorize() {
     if (e.data && e.data.type === 'mh-open') { const v = e.data.view; if (v && typeof showView === 'function') showView(v === 'hab' ? 'hab' : v === 'add' ? 'add' : 'dash'); }
   });
 
-  // ── UI ──
   const SW = (id, on) => { const b = g(id); if (b) b.classList.toggle('on', !!on); };
   function msg(text, err, html) { const m = g('nf-msg'); if (!m) return; m.className = 'nf-msg' + (text ? ' show' : '') + (err ? ' err' : ''); if (html) m.innerHTML = text; else m.textContent = text || ''; }
   function permNote() {
@@ -3661,7 +3740,6 @@ function authorize() {
     permNote(); return r === 'granted';
   }
 
-  // ── Kalendář Google ──
   function calToken() {
     return new Promise((resolve, reject) => {
       const go = () => {
@@ -3708,7 +3786,6 @@ function authorize() {
       let id = ''; try { id = localStorage.getItem(CALKEY) || ''; } catch (e) {}
       if (id) { try { await cal(tok, '/calendars/' + encodeURIComponent(id)); } catch (e) { if (e.status === 404 || e.status === 403) id = ''; else throw e; } }
       if (!id) { const c = await cal(tok, '/calendars', { method: 'POST', body: JSON.stringify({ summary: 'MindHub', description: 'Připomínky z aplikace MindHub', timeZone: tz() }) }); id = c.id; try { localStorage.setItem(CALKEY, id); } catch (e) {} }
-      // smaž staré události
       const old = await cal(tok, '/calendars/' + encodeURIComponent(id) + '/events?maxResults=100&singleEvents=false');
       for (const ev of (old.items || [])) { try { await cal(tok, '/calendars/' + encodeURIComponent(id) + '/events/' + ev.id, { method: 'DELETE' }); } catch (e) {} }
       if (S.on && S.cal) {
@@ -3720,7 +3797,7 @@ function authorize() {
             recurrence: [k === 'week' ? 'RRULE:FREQ=WEEKLY;BYDAY=SU' : 'RRULE:FREQ=DAILY'],
             reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 0 }] }, transparency: 'transparent' }) });
         }
-        msg('Hotovo — v kalendáři „MindHub“ jsou opakované události s upozorněním. Jestli ti nechodí, otevři aplikaci Kalendář Google → Nastavení → MindHub → zapni oznámení.');
+        msg('Hotovo — v kalendáři „MindHub“ jsou opakované události s upozorněním.');
       } else msg('Události z kalendáře odstraněny.');
       return true;
     } catch (e) {
@@ -3733,9 +3810,18 @@ function authorize() {
   let syncT = null;
   const resync = () => { if (!S.cal) return; clearTimeout(syncT); syncT = setTimeout(() => { syncCal(); }, 1200); };
 
-  // ── veřejné API ──
   const NF = {
-    open() { regSW(); paint(); msg(''); g('nf-overlay').classList.add('open'); if (window.MH) MH.syncLang(); },
+    open() {
+      regSW(); paint(); msg('');
+      // в proxy-режиме Google-аккаунта нет — Календарь недоступен
+      const isProxy = !!(window.MHProxy && MHProxy.on);
+      const calRow = document.getElementById('nf-cal')?.closest('.nf-row');
+      if (calRow) calRow.style.display = isProxy ? 'none' : '';
+      const calCap = [...document.querySelectorAll('.nf-cap')].find(x => /Doručení|Доставка/.test(x.textContent));
+      if (calCap) calCap.style.display = isProxy ? 'none' : '';
+      g('nf-overlay').classList.add('open');
+      if (window.MH) MH.syncLang();
+    },
     close() { g('nf-overlay').classList.remove('open'); },
     async toggleMaster() {
       if (!S.on) { if (!(await ensurePerm())) { S.on = false; save(); paint(); return; } S.on = true; regSW(); } else S.on = false;
@@ -3759,7 +3845,7 @@ function authorize() {
 })();
 </script>
 <script>
-// ═════════ SMĚNY (SH) — вкладка трекера смен внутри «Návyky» ═════════
+// ═════════ СМЕНЫ (SH) ═════════
 (function () {
   const U = HB.util, SHEET = '⏱ Смены', FIRST = 3;
   const $ = id => document.getElementById('sh-' + id), pad = n => String(n).padStart(2, '0');
@@ -3768,7 +3854,7 @@ function authorize() {
   const fh = n => (Math.round(n * 10) / 10).toString().replace('.', ',');
   const now = new Date(); let y = now.getFullYear(), m = now.getMonth();
   let map = new Map(), rows = new Map(), ready = false, loading = false, loadedAt = 0, rev = 0, pend = 0;
-  let B = { t: 'd', h: { d: 8, n: 8 } };       // «кисть»: тип смены + часы для каждого типа (запоминаются)
+  let B = { t: 'd', h: { d: 8, n: 8 } };
   try { const o = JSON.parse(localStorage.getItem('mh-shift-brush') || 'null'); if (o && o.h) B = o; } catch (e) {}
   const saveB = () => { try { localStorage.setItem('mh-shift-brush', JSON.stringify(B)); } catch (e) {} };
   MHC.reg('sh', () => ready ? { items: [...map.entries()], rows: [...rows.entries()] } : null);
@@ -3788,7 +3874,7 @@ function authorize() {
     try {
       const rd = () => U.api(`/values/${U.rng(SHEET, 'A' + FIRST + ':C')}?valueRenderOption=UNFORMATTED_VALUE`);
       let d; try { d = await rd(); } catch (e) { if (!/range|not found|400/i.test(String((e && e.message) || e))) throw e; await ensure(); d = await rd(); }
-      if (rev !== r0 || pend) return;               // пока читали, ты отмечал смены — оставляем локальное
+      if (rev !== r0 || pend) return;
       map = new Map(); rows = new Map();
       (d.values || []).forEach((r, i) => {
         const k = String(r[0] || '').trim(); if (!k) return;
@@ -3804,9 +3890,13 @@ function authorize() {
     rev++; pend++; MHC.sched('sh');
     U.enqueue(async () => {
       const v = map.get(k); let r = rows.get(k);
-      if (!v && !r) return;                           // стирать нечего
-      if (!r) { r = await U.nextFreeRow(SHEET); rows.set(k, r); }
-      await U.api(`/values/${U.rng(SHEET, `A${r}:C${r}`)}?valueInputOption=RAW`, { method: 'PUT', body: JSON.stringify({ values: [[k, v ? (v.t === 'n' ? 'Ночная' : 'Дневная') : '', v ? v.h : '']] }) });
+      if (!v && !r) return;
+      if (!r) {
+        r = await U.appendRaw(SHEET, [k, v ? (v.t === 'n' ? 'Ночная' : 'Дневная') : '', v ? v.h : '']);
+        rows.set(k, r);
+      } else {
+        await U.api(`/values/${U.rng(SHEET, `A${r}:C${r}`)}?valueInputOption=RAW`, { method: 'PUT', body: JSON.stringify({ values: [[k, v ? (v.t === 'n' ? 'Ночная' : 'Дневная') : '', v ? v.h : '']] }) });
+      }
     }).catch(e => showToast('Uložení se nepodařilo:\n' + (e.message || e), 'error', 3600)).then(() => { pend--; });
   }
   function set(k, v, toggle) {
@@ -3816,7 +3906,7 @@ function authorize() {
   }
   const brush = () => B.t === 'x' ? null : { t: B.t, h: B.h[B.t] };
   function tap(k) { if (!ready) { showToast('Načítám…', 'warn'); return; } set(k, brush(), true); render(); if (navigator.vibrate) navigator.vibrate(8); }
-  function fill(w) {                                  // Po–Pá выбранной недели
+  function fill(w) {
     if (!ready) return;
     const first = (new Date(y, m, 1).getDay() + 6) % 7, dim = new Date(y, m + 1, 0).getDate();
     for (let i = 0; i < 5; i++) { const d = w * 7 + i - first + 1; if (d >= 1 && d <= dim) set(key(y, m, d), brush(), false); }
@@ -3860,7 +3950,6 @@ function authorize() {
 </script>
 <script>
 // ═════════ МГНОВЕННЫЙ СТАРТ ═════════
-// Если ты уже входил и есть сохранённые данные — сразу открываем приложение, а не ждём Google/таблицу.
 (function () {
   const px = !!(window.MHProxy && MHProxy.on);
   let sess = null; try { sess = JSON.parse(localStorage.getItem('mh-session') || 'null'); } catch (e) {}
@@ -3873,12 +3962,13 @@ function authorize() {
   const av = $('user-avatar');
   if (user.picture) av.innerHTML = '<img src="' + escapeHtml(user.picture) + '" alt="" />'; else av.textContent = (user.name || 'U')[0].toUpperCase();
   window.__mhUser = user;
+  // не выставляем протухший токен
+  if (!px && sess && sess.token && sess.exp > Date.now()) accessToken = sess.token;
   renderCategories(); renderPayments(); renderPad();
   try { if (fin) hydrateFin(fin); } catch (e) {}
   try { if (hab) HB.hydrate(hab); } catch (e) {}
   try { if (nt) NT.hydrate(nt); } catch (e) {}
   try { const sh = MHC.get('sh'); if (sh && window.SH) SH.hydrate(sh); } catch (e) {}
-  // нет живого токена (сессия старше часа) — данные уже на экране, ждём тихого входа; если не выйдет, появится плашка «Přihlásit»
   if (!px && !accessToken) setTimeout(() => { if (!accessToken) MHC.needAuth(); }, 4000);
 })();
 </script>
